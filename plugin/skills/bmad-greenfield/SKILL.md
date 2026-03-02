@@ -109,9 +109,9 @@ Domain: {detected domain}
 Mandatory phases: Security Review (always included)
 
 Optional phases:
-1. Experience Designer (UX Design) — Include? [y/n]
-2. Facilitator (Sprint Planning) — Include? [y/n]
-3. PRD Validation — Include? [y/n]
+1. PRD Validation — Include? [y/n]
+2. Experience Designer (UX Design) — Include? [y/n]
+3. Facilitator (Sprint Planning) — Include? [y/n]
 ```
 
 **Generate step sequence** based on selections.
@@ -279,7 +279,7 @@ After the validate-prd step (if included):
 
    Fix the issues with /bmad:bmad-prioritize, then re-run /bmad:bmad-validate-prd.
    ```
-3. Loop back to prioritize step
+3. Update `session-state.json` with `current_step: "prioritize"` and add a checkpoint entry, then loop back to the prioritize step
 4. If PASS or PASS with notes: advance to next step (ux or arch)
 
 ### Gate 1: Security P0 Block
