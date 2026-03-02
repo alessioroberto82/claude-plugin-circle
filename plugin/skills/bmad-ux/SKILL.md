@@ -39,7 +39,7 @@ Detect the project domain by analyzing files in the current directory:
 
 Read from `~/.claude/bmad/projects/{project}/output/`:
 - Requirements: `scope/requirements.md` or `prioritize/PRD.md`
-- If requirements missing: "Requirements needed for UX design. Run `/bmad-scope` first."
+- If requirements missing: "Requirements needed for UX design. Run `/bmad:bmad-scope` first."
 
 ## Domain-Specific Behavior
 

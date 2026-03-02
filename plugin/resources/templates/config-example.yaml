@@ -20,17 +20,17 @@ greenfield_defaults:
   facilitate: false
   validate_prd: true     # PRD quality validation after prioritize (default: true since v0.8.0)
 
-# Test-Driven Development (TDD) enforcement
-# TDD is enabled by default. bmad-impl uses red-green-refactor cycle via bmad-tdd
-# for each implementation unit. bmad-qa verifies TDD compliance by inspecting commit
-# history for test(red): → feat(green): → refactor: pattern.
-# When the workflow doesn't involve testable code, bmad-impl prompts to disable.
 # Guardrails — self-verification before handoff
 # Roles verify their output covers upstream requirements before completing.
 # Adds a Traceability section to output documents.
 guardrails:
   self_check: true        # Enable self-verification (default: true)
 
+# Test-Driven Development (TDD) enforcement
+# TDD is enabled by default. bmad-impl uses red-green-refactor cycle via bmad-tdd
+# for each implementation unit. bmad-qa verifies TDD compliance by inspecting commit
+# history for test(red): → feat(green): → refactor: pattern.
+# When the workflow doesn't involve testable code, bmad-impl prompts to disable.
 tdd:
   enabled: true           # Enable TDD workflow (default: true)
   enforcement: hard       # hard = QA blocks on violation; soft = QA warns only

@@ -55,7 +55,7 @@ agents:
       Follow project coding standards and existing conventions.
 
 # TDD (Test-Driven Development)
-# Enabled by default. The Implementer enforces red-green-refactor via /bmad-tdd.
+# Enabled by default. The Implementer enforces red-green-refactor via /bmad:bmad-tdd.
 # The Quality Guardian verifies TDD compliance in commit history.
 tdd:
   enabled: true           # Set to false to disable TDD workflow

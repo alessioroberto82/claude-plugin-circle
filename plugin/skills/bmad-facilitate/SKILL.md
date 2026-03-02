@@ -41,7 +41,7 @@ Read from `~/.claude/bmad/projects/{project}/output/`:
 - PRD: `prioritize/PRD-*.md`
 - Architecture: `arch/architecture.md`
 - Optional: `qa/test-plan-*.md`
-- If PRD missing: "PRD needed for sprint planning. Run `/bmad-prioritize` first."
+- If PRD missing: "PRD needed for sprint planning. Run `/bmad:bmad-prioritize` first."
 
 ## Process
 

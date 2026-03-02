@@ -180,28 +180,29 @@ Dependencies:
   Update all:      bash <plugin-root>/resources/scripts/update-deps.sh
 
 Available roles:
-  /bmad-scope       - Scope Clarifier (requirements, user stories)
-  /bmad-arch        - Architecture Owner (design, ADRs, trade-offs)
-  /bmad-impl        - Implementer (implementation, code review)
-  /bmad-qa          - Quality Guardian (test strategy, QA)
-  /bmad-ux          - Experience Designer (UI/UX design)
-  /bmad-prioritize  - Prioritizer (prioritization, roadmap)
-  /bmad-facilitate  - Facilitator (sprint planning, coordination)
-  /bmad-security    - Security Guardian (audits, threat modeling)
-  /bmad-docs        - Documentation Steward (doc generation)
+  /bmad:bmad-scope       - Scope Clarifier (requirements, user stories)
+  /bmad:bmad-arch        - Architecture Owner (design, ADRs, trade-offs)
+  /bmad:bmad-impl        - Implementer (implementation, code review)
+  /bmad:bmad-qa          - Quality Guardian (test strategy, QA)
+  /bmad:bmad-ux          - Experience Designer (UI/UX design)
+  /bmad:bmad-prioritize  - Prioritizer (prioritization, roadmap)
+  /bmad:bmad-facilitate  - Facilitator (sprint planning, coordination)
+  /bmad:bmad-security    - Security Guardian (audits, threat modeling)
+  /bmad:bmad-docs        - Documentation Steward (doc generation)
 
 Review:
-  /bmad-code-review - Multi-agent PR code review with CLAUDE.md compliance
-  /bmad-triage      - Triage PR review comments
+  /bmad:bmad-code-review - Multi-agent PR code review with CLAUDE.md compliance
+  /bmad:bmad-triage      - Triage PR review comments
 
 Orchestrators:
-  /bmad-greenfield - Full workflow (analysis → QA)
-  /bmad-sprint     - Sprint planning ceremony
+  /bmad:bmad-greenfield - Full workflow (analysis → QA)
+  /bmad:bmad-sprint     - Sprint planning ceremony
 
 Utilities:
-  /bmad-tdd        - TDD red-green-refactor cycle
-  /bmad-shard      - Split large documents into shards
-  /bmad-init       - Project initialization (already done)
+  /bmad:bmad-validate-prd - Validate PRD quality (8 checks)
+  /bmad:bmad-tdd          - TDD red-green-refactor cycle
+  /bmad:bmad-shard        - Split large documents into shards
+  /bmad:bmad-init         - Project initialization (already done)
 
-Start with: /bmad-scope to gather requirements, or /bmad-greenfield for the full workflow.
+Start with: /bmad:bmad-scope to gather requirements, or /bmad:bmad-greenfield for the full workflow.
 ```

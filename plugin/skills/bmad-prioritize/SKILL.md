@@ -39,7 +39,7 @@ Detect the project domain by analyzing files in the current directory:
 
 Read from `~/.claude/bmad/projects/{project}/output/`:
 - Requirements: `scope/requirements.md`
-- If requirements missing: "Requirements needed. Run `/bmad-scope` first to gather requirements."
+- If requirements missing: "Requirements needed. Run `/bmad:bmad-scope` first to gather requirements."
 
 ## Process
 

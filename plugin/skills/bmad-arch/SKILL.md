@@ -40,7 +40,7 @@ Detect the project domain by analyzing files in the current directory:
 Read requirements from `~/.claude/bmad/projects/{project}/output/`:
 - Check for: `scope/requirements.md`
 - Also check: `prioritize/PRD.md` (if Prioritizer has refined requirements)
-- If none found: "Requirements missing. Run `/bmad-scope` first to gather requirements."
+- If none found: "Requirements missing. Run `/bmad:bmad-scope` first to gather requirements."
 
 Also check for project config: `~/.claude/bmad/projects/{project}/config.yaml`
 - If `extra_instructions` for bmad-arch exists, incorporate them

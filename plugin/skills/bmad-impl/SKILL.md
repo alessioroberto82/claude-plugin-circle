@@ -40,7 +40,7 @@ Detect the project domain by analyzing files in the current directory:
 Read design from `~/.claude/bmad/projects/{project}/output/`:
 - Check for: `arch/architecture.md`
 - Also useful: `scope/requirements.md`, `prioritize/PRD.md`
-- If architecture missing: "Design missing. Run `/bmad-arch` first."
+- If architecture missing: "Design missing. Run `/bmad:bmad-arch` first."
 
 Also check for project config: `~/.claude/bmad/projects/{project}/config.yaml`
 - If `context_files` defined, read those for additional context

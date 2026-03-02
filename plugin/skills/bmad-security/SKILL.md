@@ -40,7 +40,7 @@ Detect the project domain by analyzing files in the current directory:
 Read from `~/.claude/bmad/projects/{project}/output/`:
 - Architecture: `arch/architecture.md`
 - Also useful: `scope/requirements.md`, `prioritize/PRD.md`
-- If architecture missing: "Architecture missing. Run `/bmad-arch` first."
+- If architecture missing: "Architecture missing. Run `/bmad:bmad-arch` first."
 
 Also check for project config: `~/.claude/bmad/projects/{project}/config.yaml`
 - If `extra_instructions` for bmad-security exists, incorporate them

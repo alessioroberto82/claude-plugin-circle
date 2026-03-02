@@ -41,7 +41,7 @@ Read from `~/.claude/bmad/projects/{project}/output/`:
 - Requirements: `scope/requirements.md` or `prioritize/PRD.md`
 - Architecture: `arch/architecture.md`
 - Implementation notes: `impl/implementation-notes-*.md`
-- If requirements missing: "Requirements needed for test planning. Run `/bmad-scope` first."
+- If requirements missing: "Requirements needed for test planning. Run `/bmad:bmad-scope` first."
 - **Upstream for self-verification**: `scope/requirements.md` or `prioritize/PRD.md` (loaded before handoff if guardrails enabled)
 
 ## Domain-Specific Behavior
