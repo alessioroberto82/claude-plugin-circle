@@ -1,6 +1,6 @@
 {
   "name": "bmad",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Multi-agent development workflow plugin with holacracy roles, quality gates, and full customization",
   "author": {
     "name": "Alessio Roberto",

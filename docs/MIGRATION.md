@@ -210,3 +210,21 @@ guardrails:
 6. **Extensibility**: Add a role = create a directory with SKILL.md. Done.
 7. **Holacracy alignment**: Roles have purposes and accountabilities, not personas
 8. **TDD by default**: Red-green-refactor cycle enforced by the Implementer, verified by the Quality Guardian
+
+## What Changes (v0.9.0 — Anti-Overcomplication & Coherence)
+
+### Simplicity Assessment (bmad-impl)
+
+The Implementer now evaluates the architecture for overcomplication before writing code. It checks for unnecessary infrastructure, excessive dependencies, and components not traced to MVP user stories. This is an advisory check — the developer decides whether to simplify.
+
+- **Enabled by default** — no config needed
+- **Advisory only** — does not block implementation
+- **Simplification decisions** are recorded in implementation notes
+
+### Coherence & Scope Drift Check (bmad-qa)
+
+The Quality Guardian now verifies big-picture coherence and detects scope drift during verification. It traces implemented components back to PRD user stories and checks for consistent patterns, missing integration points, and circular dependencies.
+
+- **Enabled by default** — integrated into existing verification mode
+- **Uses existing severity system**: scope drift = P1, circular dependency = P0
+- **No new config options** — works with existing quality gate behavior

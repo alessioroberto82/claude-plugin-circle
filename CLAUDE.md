@@ -36,7 +36,7 @@ docs/                                  # CUSTOMIZATION.md, GETTING-STARTED.md, M
 
 **Version bump**: After feature work, update version in `plugin.json`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match.
 
-**Workflow order**: arch → security (P0 blocks impl) → impl → qa (REJECT loops to impl) → commit → push → PR → code-review. Never suggest `/bmad-code-review` before a PR exists.
+**Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → code-review. Never suggest `/bmad-code-review` before a PR exists.
 
 **TDD**: On by default. `bmad-impl` uses `/bmad-tdd` for red-green-refactor. `bmad-qa` verifies via commit history. Disable: `tdd.enabled: false` in config.yaml. Enforcement: `hard` (blocks) or `soft` (warns).
 

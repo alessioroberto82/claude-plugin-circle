@@ -288,15 +288,56 @@ Run when invoked with `/bmad:bmad-qa lint`. Validates internal consistency of th
       - `tdd.enforcement: hard` (default) + any FAIL → verdict = **REJECT** (P0: TDD cycle violated)
       - `tdd.enforcement: soft` + any FAIL → add P1 warning, do not override existing verdict
 
-6. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `prioritize/PRD.md`.
+6. **Coherence & Scope Drift Check**:
 
-7. **Save** to `~/.claude/bmad/projects/$PROJECT_NAME/output/qa/test-report-{date}.md`
+   Read the PRD (`prioritize/PRD.md`) and architecture (`arch/architecture.md`), then verify against the implemented code:
 
-8. **MCP Integration** (if available):
+   **A) Scope Drift Detection:**
+   - Map all Must Have user stories from the PRD
+   - Scan implemented code for routes, endpoints, services, modules, and configurations
+   - For each implemented component, trace it back to a PRD user story
+   - Produce a traceability table in the test report:
+     ```markdown
+     ## Scope Drift Analysis
+
+     | Implemented Component | PRD User Story | Status |
+     |---|---|---|
+     | /api/users endpoint | US-1: User registration | Traced |
+     | /api/analytics endpoint | — | UNTRACED |
+     ```
+   - Components marked UNTRACED = scope drift → P1
+
+   **B) Big Picture Coherence:**
+   - Verify implemented features use consistent patterns (error handling, authentication, data flow, naming conventions)
+   - Check that integration points declared in the architecture are actually implemented
+   - Check for circular dependencies or undeclared coupling between components
+   - Produce a coherence section in the test report:
+     ```markdown
+     ## Coherence Analysis
+
+     | Check | Status | Details |
+     |---|---|---|
+     | Consistent error handling | PASS/FAIL | {details} |
+     | Consistent auth pattern | PASS/FAIL | {details} |
+     | Integration points implemented | PASS/FAIL | {missing points} |
+     | No circular dependencies | PASS/FAIL | {cycles found} |
+     ```
+
+   **C) Severity:**
+   - Scope drift (feature not in PRD) → P1
+   - Pattern inconsistency between components → P2
+   - Missing declared integration point → P1
+   - Circular dependency → P0
+
+7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `prioritize/PRD.md`.
+
+8. **Save** to `~/.claude/bmad/projects/$PROJECT_NAME/output/qa/test-report-{date}.md`
+
+9. **MCP Integration** (if available):
    - **Linear**: Link test results to issues, comment on verification outcomes
    - **claude-mem**: Search for past test patterns. Save test strategy decisions at completion.
 
-9. **Handoff**:
+10. **Handoff**:
    > **Quality Guardian — Complete.**
    > Verdict: **{PASS/CONDITIONAL PASS/REJECT}**
    > Output saved to: `~/.claude/bmad/projects/{project}/output/qa/`
@@ -308,3 +349,5 @@ Run when invoked with `/bmad:bmad-qa lint`. Validates internal consistency of th
 - Quality gates matter: P0 = hard block, no exceptions
 - Coverage that matters: test critical paths, not getters/setters
 - Speak up: flag risks early and honestly
+- Big picture matters: verify system coherence, not just individual feature correctness
+- Scope discipline: flag implemented features not traced to requirements

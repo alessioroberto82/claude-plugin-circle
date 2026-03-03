@@ -151,6 +151,8 @@ Built-in safety checks prevent the workflow from advancing when something isn't 
 - **Security Block**: The greenfield orchestrator won't move to implementation if critical security issues are found
 - **QA Reject Gate**: If the Quality Guardian rejects the implementation, the workflow sends it back to the Implementer for fixes
 - **TDD Compliance**: The Quality Guardian verifies commit history follows the `test(red):` → `feat(green):` → `refactor:` pattern. Hard enforcement blocks merge; soft enforcement warns only
+- **Simplicity Assessment**: Before coding, the Implementer evaluates the architecture for overcomplication — flagging unnecessary infrastructure, excessive dependencies, and components not traced to MVP stories. Advisory check; the developer decides whether to simplify
+- **Coherence & Scope Drift**: The Quality Guardian verifies that implemented features are traced to PRD requirements (scope drift detection) and that the system works as an integrated whole (consistent patterns, no circular dependencies)
 - **Completeness Check**: The orchestrator verifies output files exist before moving to the next step
 
 ### Context Sharding

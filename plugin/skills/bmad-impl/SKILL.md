@@ -83,11 +83,26 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 2. **Read architecture and requirements**: Understand what to build and how
 
-3. **Explore the codebase**: Identify existing patterns, conventions, and style
+3. **Simplicity Assessment**: Before writing any code, evaluate the design for overcomplication:
 
-4. **Check TDD configuration**:
+   Read the architecture (`arch/architecture.md`) and PRD (`prioritize/PRD.md`), then assess:
+
+   **a) Scope check**: Does the design contain components, services, or modules not directly required by Must Have user stories? If yes, list them and ask the user:
+   > "These components are in the architecture but not traced to MVP user stories: {list}. Proceed with full design, or simplify?"
+
+   **b) Technology check**: Does the design introduce infrastructure (containers, orchestration, message queues, caching layers, managed services) not strictly necessary for an MVP? If yes, propose the simplest alternative:
+   > "The architecture specifies {technology}. For MVP, {simpler alternative} would suffice. Proceed with original, or simplify?"
+
+   **c) Dependency check**: Count external dependencies introduced by the design. If more than what's strictly needed for MVP requirements, flag:
+   > "The design introduces {N} external dependencies. {list of potentially unnecessary ones} could be deferred post-MVP. Proceed, or simplify?"
+
+   This assessment is **advisory** — the user decides whether to proceed or simplify. If the user chooses to simplify, note the simplifications in the implementation notes.
+
+4. **Explore the codebase**: Identify existing patterns, conventions, and style
+
+5. **Check TDD configuration**:
    Read `~/.claude/bmad/projects/{project}/config.yaml` for `tdd` settings.
-   - If `tdd.enabled: false`: skip to step 5 (test as you go).
+   - If `tdd.enabled: false`: skip to step 6 (test as you go).
    - Otherwise (TDD is enabled by default): check if TDD applies:
      - If non-software domain (general): prompt the user:
        > "TDD is enabled but this project may not require it. Disable TDD for this session? [y/n]"
@@ -96,30 +111,30 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
      - If TDD applies: implement each unit of work via `/bmad-tdd` sub-workflow.
        For each feature, story, or bugfix: invoke the TDD cycle (red → green → refactor).
        Do NOT write implementation code before writing tests.
-       After all TDD cycles complete, skip to step 6 (self-review).
+       After all TDD cycles complete, skip to step 7 (self-review).
 
-5. **Implement** (when TDD is disabled): Write code/documents following the architecture
+6. **Implement** (when TDD is disabled): Write code/documents following the architecture
    - Follow existing patterns in the codebase
    - Write clear, maintainable code
    - Add tests alongside implementation
 
-6. **Self-review**: Before handoff, verify:
+7. **Self-review**: Before handoff, verify:
    - Code follows the architecture design
    - Tests pass
    - No obvious issues or regressions
 
-7. **CLAUDE.md compliance**: If a `CLAUDE.md` exists in the repo root, verify your implementation follows its standards before handoff.
+8. **CLAUDE.md compliance**: If a `CLAUDE.md` exists in the repo root, verify your implementation follows its standards before handoff.
 
-8. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `arch/architecture.md`.
+9. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `arch/architecture.md`.
 
-9. **Save implementation notes** to: `~/.claude/bmad/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md`
+10. **Save implementation notes** to: `~/.claude/bmad/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md`
 
-10. **MCP Integration** (if available):
+11. **MCP Integration** (if available):
     - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
     - **Linear**: Update issue status, comment on implementation progress
     - **claude-mem**: Search for past implementation patterns. Save key decisions at completion.
 
-11. **Handoff**:
+12. **Handoff**:
    > **Implementer — Complete.**
    > Output saved to: `~/.claude/bmad/projects/{project}/output/impl/`
    > Next suggested role: `/bmad:bmad-qa` for testing and validation.
@@ -129,3 +144,4 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 - TDD first: when enabled (default), use `/bmad-tdd` for disciplined red-green-refactor. When disabled, test as you go
 - Context isolation: if using sharding, focus only on current task
 - No gold-plating: solve the problem at hand, nothing more
+- Simplicity first: assess design complexity before coding — simpler is better for MVPs
