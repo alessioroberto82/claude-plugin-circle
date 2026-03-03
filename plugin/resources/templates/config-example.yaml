@@ -26,6 +26,8 @@ greenfield_defaults:
 guardrails:
   self_check: true        # Enable self-verification (default: true)
 
+# ─────────────────────────────────────────────────────────────────
+
 # Test-Driven Development (TDD) enforcement
 # TDD is enabled by default. bmad-impl uses red-green-refactor cycle via bmad-tdd
 # for each implementation unit. bmad-qa verifies TDD compliance by inspecting commit
