@@ -1,7 +1,7 @@
 ---
 name: bmad-code-review
 description: "Code Review — Multi-agent PR review with CLAUDE.md compliance. Use on any open pull request."
-allowed-tools: Read, Grep, Glob, Task, Bash(gh issue view:*), Bash(gh search:*), Bash(gh issue list:*), Bash(gh pr comment:*), Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr list:*), Bash(git rev-parse:*), Bash(git log:*), Bash(mkdir -p ~/.claude/bmad/*)
+allowed-tools: Read, Grep, Glob, Task, Bash(gh pr comment:*), Bash(gh pr diff:*), Bash(gh pr view:*), Bash(mkdir -p ~/.claude/bmad/*)
 metadata:
   context: same
   agent: general-purpose
@@ -32,14 +32,16 @@ If no argument is provided, ask the user which PR to review.
 ### 1. Preflight (you, inline — no agent)
 
 Gather context directly (no subagent needed):
-1. Run `gh pr view $ARGUMENTS` — if closed/draft/merged, stop and explain why
-2. Run `gh pr diff $ARGUMENTS` — save the diff for agents
+1. Run `gh pr view $ARGUMENTS --json number,title,state,isDraft,baseRefName,headRefName,headRefOid,url` — if closed/draft/merged, stop and explain why. Save `headRefOid` (full SHA), `number`, owner/repo from URL
+2. Run `gh pr diff $ARGUMENTS` — save the full diff text for agents
 3. Read the root `CLAUDE.md` (if it exists) — extract all standards, conventions, forbidden patterns
 4. Summarize: what changed, why, risk areas (2-3 sentences max — this is internal context, not output)
 
+**Important**: After preflight you must have: full diff text, CLAUDE.md content, full SHA, owner, repo, PR number. Pass ALL of this as text input to agents so they never need to run bash commands.
+
 ### 2. Parallel Review (2 Agents)
 
-Launch **2 parallel agents in a single message** (default: sonnet; override via `code_review.agent_a_model` and `code_review.agent_b_model` in config.yaml). Each receives the diff and CLAUDE.md standards. Each must return issues with: file, line range, description, category, and a self-assessed confidence score (0-100).
+Launch **2 parallel agents in a single message** (default: sonnet; override via `code_review.agent_a_model` and `code_review.agent_b_model` in config.yaml). Each receives the full diff text and CLAUDE.md standards as inline text in the prompt — **agents must NOT run any bash commands**. They analyze the provided text only. If agents need to read source files for context, they use the Read tool (not cat/bash). Each must return issues with: file, line range, description, category, and a self-assessed confidence score (0-100).
 
 **Model selection**: Pass `model: "sonnet"` (or config override) to each Task tool invocation. Use Sonnet for both agents by default — code review is pattern-matching work that doesn't require Opus-level reasoning.
 
@@ -51,9 +53,11 @@ Launch **2 parallel agents in a single message** (default: sonnet; override via 
 
 **Agent A — Standards & Bugs**
 Audit changes against CLAUDE.md rules. Also scan for logic errors, inconsistencies between files, wrong paths, stale references. Check code comments (TODOs, warnings, invariants) in modified files for compliance. For CLAUDE.md issues, verify the rule actually exists — if not, cap score at 25.
+**Tools**: Read, Grep, Glob only. **No Bash.** All diff and metadata are provided in the prompt.
 
 **Agent B — Security**
 Scan the diff for: injection patterns (SQL, command, XSS, path traversal), auth/authz gaps (missing checks, hardcoded secrets), crypto issues (weak algorithms, plaintext secrets), data exposure (PII in logs, verbose errors, sensitive data in URLs). Only flag issues introduced by this PR.
+**Tools**: Read, Grep, Glob only. **No Bash.** All diff and metadata are provided in the prompt.
 
 ### 3. Filter
 
@@ -94,7 +98,7 @@ Generated with [Claude Code](https://claude.ai/code) | BMAD Code Review
 ```
 
 **Link format**: `https://github.com/{owner}/{repo}/blob/{full-sha}/{path}#L{start}-L{end}`
-- Always use the full git SHA (not abbreviated, not a shell command)
+- Use the `headRefOid` from preflight step 1 — never run `git rev-parse` or any bash command for this
 - Provide at least 1 line of context before and after the issue line
 
 ### 5. Save & Handoff
