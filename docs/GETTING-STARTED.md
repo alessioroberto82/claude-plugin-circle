@@ -137,6 +137,7 @@ Each role saves their work in their own subfolder (e.g., `scope/`, `arch/`, `imp
 
 - **You can invoke any role at any time.** There's no strict order — use whoever makes sense for what you need right now.
 - **Roles access context within a session.** If the Scope Clarifier creates requirements, the Prioritizer can read them when you invoke it to create a product plan.
+- **Make BMAD know your project.** Create a Knowledge Pack — a set of Markdown files in `docs/bmad/` that describe your project's domain, architecture, build system, and integrations. Every role automatically loads the relevant files. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **You can customize how roles behave** per project. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **All dependencies are optional.** BMAD works out of the box. Extra integrations (like Linear for issue tracking) add functionality but aren't required.
 

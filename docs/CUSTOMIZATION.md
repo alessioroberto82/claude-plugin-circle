@@ -8,16 +8,18 @@ If you just want to tweak how BMAD works for your project, here are the most com
 
 | What you want to do | How |
 |---|---|
-| Give a role extra instructions for your project | Create a config file (see Section 1 below) |
+| **Make BMAD understand your project** | **Create a Knowledge Pack (see Section 1 below)** |
+| Give a role extra instructions for your project | Create a config file (see Section 2 below) |
 | Change the team's working principles | Edit `plugin/resources/soul.md` — plain text, takes effect immediately |
 | Add a document template for the Documentation Steward | Drop a `.md` file in `plugin/resources/templates/docs/` |
-| Add a new role to the circle | Create a folder and skill file (see Section 2 below) |
+| Add a new role to the circle | Create a folder and skill file (see Section 3 below) |
 
 ## Customization Layers
 
 | Layer | What | Where | Friction |
 |---|---|---|---|
 | **Soul** | Team principles | `plugin/resources/soul.md` | Edit file, instant effect |
+| **Knowledge Pack** | Project-aware roles | `docs/bmad/` in your repo | Create Markdown files |
 | **Per-project config** | Role overrides, templates | `~/.claude/bmad/projects/<project>/config.yaml` | Create YAML file |
 | **Role behavior** | Role definitions | `plugin/skills/bmad-<name>/SKILL.md` | Edit SKILL.md |
 | **Templates** | Document templates | `plugin/resources/templates/` | Drop .md file |
@@ -26,9 +28,118 @@ If you just want to tweak how BMAD works for your project, here are the most com
 
 ---
 
-## 1. Per-Project Configuration
+## 1. Project Knowledge Packs
 
-This is a settings file that tells BMAD roles how to behave differently for a specific project. Copy the example and change the values to match your project.
+A Knowledge Pack makes BMAD understand your project. It's a set of Markdown files committed to your repo that every BMAD role can access. CLAUDE.md handles coding standards; the Knowledge Pack handles everything else — domain, architecture, build, integrations.
+
+### Step 1: Create knowledge files
+
+Create `docs/bmad/` (or `Docs/bmad/`) in your repo with these files:
+
+| File | What to include | Target size |
+|---|---|---|
+| `project.md` | Product name, team, stakeholders, multi-region context, business rules | ~80 lines |
+| `domain.md` | Domain vocabulary, data types, terminology glossary, canonical names | ~120 lines |
+| `architecture.md` | Layer diagram, DI patterns, navigation, state management, migration boundaries | ~150 lines |
+| `build.md` | Build commands, CI pipelines, test commands, release process, environments | ~80 lines |
+| `integrations.md` | SDKs, health platforms, analytics, auth, feature flags, project management | ~100 lines |
+
+Each file starts with a metadata comment for staleness tracking:
+
+```markdown
+<!-- bmad-knowledge | last-reviewed: 2026-03-04 | owner: @yourhandle -->
+# Your Title
+
+Content organized with ## headers...
+```
+
+For cross-platform projects sharing domain vocabulary, add a sync marker:
+
+```markdown
+<!-- shared-origin: my-domain | sync-with: other-repo/docs/bmad/domain.md -->
+```
+
+### Step 2: Create config template
+
+Add `docs/bmad/config.yaml` to your repo. This maps knowledge files to BMAD roles:
+
+```yaml
+project:
+  name: my-project
+  domain: software
+
+reading_order:
+  - CLAUDE.md
+  - soul.md
+
+agents:
+  bmad-scope:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/domain.md
+
+  bmad-arch:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/domain.md
+      - docs/bmad/architecture.md
+      - docs/bmad/integrations.md
+    extra_instructions: |
+      Use domain-specific skills for architecture decisions.
+
+  bmad-impl:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/domain.md
+      - docs/bmad/architecture.md
+      - docs/bmad/build.md
+      - docs/bmad/integrations.md
+    extra_instructions: |
+      Run build verification before committing.
+
+  bmad-qa:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/domain.md
+      - docs/bmad/architecture.md
+      - docs/bmad/build.md
+
+  bmad-code-review:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/architecture.md
+      - docs/bmad/build.md
+
+  bmad-ux:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/domain.md
+
+  bmad-security:
+    context_files:
+      - docs/bmad/project.md
+      - docs/bmad/architecture.md
+      - docs/bmad/integrations.md
+```
+
+### Step 3: Activate
+
+Run `/bmad:bmad-init`. It detects the config template at `docs/bmad/config.yaml` and copies it to `~/.claude/bmad/projects/<project>/config.yaml`. Every BMAD role now loads project knowledge automatically.
+
+New team members: clone the repo → `/bmad:bmad-init` → done.
+
+### Design principles
+
+- **Complement, don't duplicate**: CLAUDE.md owns coding standards. Knowledge Pack owns domain, architecture, build, integrations. Never overlap.
+- **Shard by concern, not by role**: 5 files by topic. Roles compose what they need via config. One vocabulary change propagates to all roles.
+- **Budget tokens**: Keep each file under 500 lines (~2000 tokens). The heaviest role (Implementer) loads ~5000 tokens of knowledge pack — about 2.5% of the context window.
+- **Dual purpose**: Knowledge files serve as both AI context and human-readable project documentation.
+
+---
+
+## 2. Per-Project Configuration
+
+This is a settings file that tells BMAD roles how to behave differently for a specific project. You can create it manually or use a Knowledge Pack config template (see above).
 
 Create `~/.claude/bmad/projects/<project-name>/config.yaml`:
 
@@ -66,7 +177,7 @@ See `plugin/resources/templates/config-example.yaml` for a full example with all
 
 ---
 
-## 2. Adding a New Role
+## 3. Adding a New Role
 
 1. Create the directory: `plugin/skills/bmad-<name>/`
 2. Create `SKILL.md` with this template:
@@ -112,7 +223,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 
 ---
 
-## 3. Adding a New Template
+## 4. Adding a New Template
 
 1. Drop a `.md` file in the appropriate directory:
    - `plugin/resources/templates/docs/` — for the Documentation Steward
@@ -124,7 +235,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 
 ---
 
-## 4. Modifying the Soul
+## 5. Modifying the Soul
 
 Edit `plugin/resources/soul.md`. Changes take effect on the next skill invocation.
 
@@ -132,7 +243,7 @@ The Soul is loaded by every role and sets the behavioral foundation. It includes
 
 ---
 
-## 5. Adding to the Greenfield Workflow
+## 6. Adding to the Greenfield Workflow
 
 To add a new role to the greenfield orchestrator:
 
@@ -143,7 +254,7 @@ To add a new role to the greenfield orchestrator:
 
 ---
 
-## 6. Model Routing
+## 7. Model Routing
 
 BMAD assigns a default Claude model to each fork-context role based on task complexity. Opus handles deep reasoning (architecture, security, implementation), Sonnet handles structured work (scope, prioritization, QA), and Haiku handles lightweight coordination.
 
