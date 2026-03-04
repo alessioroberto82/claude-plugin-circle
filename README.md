@@ -111,6 +111,53 @@ bash plugin/resources/scripts/update-deps.sh
 
 The dependency manifest is at `plugin/resources/deps-manifest.yaml`. Per-project overrides go in `config.yaml` under the `dependencies:` key.
 
+## Project Knowledge Packs
+
+**Make BMAD understand your project.** A Knowledge Pack is a set of focused Markdown files in your repo that give every BMAD role deep awareness of your project — its architecture, domain vocabulary, build system, and integrations. CLAUDE.md handles coding standards; the Knowledge Pack handles everything else.
+
+```
+your-repo/
+└── docs/bmad/           # or Docs/bmad/
+    ├── project.md       # Product identity, team, multi-region context
+    ├── domain.md        # Domain vocabulary, data models, terminology glossary
+    ├── architecture.md  # Layers, DI patterns, navigation, migration boundaries
+    ├── build.md         # Build commands, CI pipelines, release process
+    ├── integrations.md  # SDKs, APIs, analytics, auth, feature flags
+    └── config.yaml      # Template — bmad-init copies to ~/.claude/bmad/projects/
+```
+
+### How it works
+
+1. **Knowledge files live in your repo** — committed, versioned, available to the whole team
+2. **`config.yaml` maps files to roles** — each role loads only the slices relevant to its accountability
+3. **`/bmad:bmad-init` auto-detects the config template** and copies it to `~/.claude/bmad/projects/<project>/`
+
+A new team member clones the repo, runs `/bmad:bmad-init`, and BMAD immediately knows the project. No manual setup.
+
+### Role-aware injection
+
+Not every role needs every file. The config maps knowledge by concern:
+
+| Role | Loads |
+|---|---|
+| Scope Clarifier, Prioritizer | project + domain |
+| Architecture Owner | project + domain + architecture + integrations |
+| Implementer | project + domain + architecture + build + integrations |
+| Quality Guardian | project + domain + architecture + build |
+| Code Review | project + architecture + build |
+| Security Guardian | project + architecture + integrations |
+
+### Getting started
+
+1. Create `docs/bmad/` in your repo with the 5 knowledge files
+2. Add a `config.yaml` template with `agents.<role>.context_files` mappings
+3. Run `/bmad:bmad-init` — it detects and activates the config
+4. Every BMAD role now produces project-aware output
+
+See [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) for the full Knowledge Pack configuration guide.
+
+---
+
 ## Architecture
 
 ### Zero Footprint

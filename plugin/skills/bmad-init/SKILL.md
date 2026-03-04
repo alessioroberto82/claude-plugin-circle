@@ -165,7 +165,13 @@ Write to `~/.claude/bmad/projects/$PROJECT_NAME/output/session-state.json`:
 ### 5. Check for project config
 
 - If `~/.claude/bmad/projects/$PROJECT_NAME/config.yaml` exists, report it
-- If not, suggest: "Create `~/.claude/bmad/projects/$PROJECT_NAME/config.yaml` for project-specific customization."
+- If not, search for a config template in the repo:
+  - Check: `docs/bmad/config.yaml`, `Docs/bmad/config.yaml`, `.bmad/config.yaml`
+  - If found: copy it to `~/.claude/bmad/projects/$PROJECT_NAME/config.yaml` and report:
+    ```
+    Found project BMAD config template at <path>. Copied to ~/.claude/bmad/projects/<project>/config.yaml
+    ```
+  - If not found: suggest: "Create `~/.claude/bmad/projects/$PROJECT_NAME/config.yaml` for project-specific customization."
 
 ### 6. Confirm
 

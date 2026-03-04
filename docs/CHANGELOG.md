@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.10.0 — Project Knowledge Packs
+
+### Knowledge Packs
+
+BMAD roles can now understand your project deeply — not just coding standards (CLAUDE.md), but domain vocabulary, architecture patterns, build pipelines, and integrations. Create a set of Markdown files in `docs/bmad/` in your repo, and every role loads the relevant slices automatically.
+
+- **5 knowledge files**: `project.md`, `domain.md`, `architecture.md`, `build.md`, `integrations.md`
+- **Role-aware injection**: each role loads only what it needs via `config.yaml` `context_files` mapping
+- **Team distribution**: config template lives in the repo; `bmad-init` auto-detects and copies it
+- **Complement, don't duplicate**: Knowledge Pack owns domain/architecture/build/integrations; CLAUDE.md owns coding standards
+
+### bmad-init Config Template Detection
+
+`/bmad:bmad-init` now searches for a config template at `docs/bmad/config.yaml` (or `Docs/bmad/`, `.bmad/`) in the repo. If found, it copies it to `~/.claude/bmad/projects/<project>/config.yaml` automatically. New team members: clone → `/bmad:bmad-init` → project-aware BMAD.
+
+See [Customization Guide — Section 1](CUSTOMIZATION.md) for the full Knowledge Pack setup guide.
+
 ## v0.9.0 — Anti-Overcomplication & Coherence
 
 ### Simplicity Assessment (bmad-impl)
