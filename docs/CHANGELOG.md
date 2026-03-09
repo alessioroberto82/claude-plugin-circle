@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.11.0 — Shape Up Workflow
+
+### Shape Up Replaces Scrum
+
+BMAD's workflow now follows Shape Up methodology instead of Scrum. Appetite-based sizing replaces story points. Cycles replace sprints. Pitches replace backlog items.
+
+- **New skill: `bmad-cycle`** — Interactive 4-step cycle planning ceremony (shaping review → appetite sizing → cycle commitment → quality notes). Replaces `bmad-sprint`.
+- **Appetite sizing**: ☕ Cappuccino (1 person, ≤2 weeks), 🥪 Sandwich (few people, ≤1 cycle), 🍲 Hutspot (many people, >1 cycle)
+- **Pitch-based PRD**: `bmad-prioritize` now generates pitches with problem, appetite, solution sketch, rabbit holes, and no-gos
+- **`bmad-facilitate` rewritten**: Produces cycle plans with bets and appetite instead of sprint plans with story points
+- **`bmad-greenfield` updated**: References cycle planning instead of sprint planning
+- **Removed: `bmad-sprint`** — Use `bmad-cycle` instead
+
+### Breaking Changes
+
+- `/bmad:bmad-sprint` no longer exists — use `/bmad:bmad-cycle`
+- Cycle plan output moved from `facilitate/sprint-plan-*.md` to `facilitate/cycle-plan-*.md`
+- PRD template no longer includes "Release Plan" section — replaced by "Pitches" section
+
 ## v0.10.0 — Project Knowledge Packs
 
 ### Knowledge Packs
