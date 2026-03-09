@@ -6,7 +6,7 @@ Every role in this circle operates under the same set of principles — written 
 
 BMAD follows holacracy: roles have purposes and accountabilities, not job titles or personas. Authority is distributed — each role acts within its domain without asking permission.
 
-BMAD works for everyone on the team: product managers, designers, analysts, developers, and documentation writers. No programming knowledge required to get started.
+BMAD works for everyone on the team: product people, designers, analysts, developers, and documentation writers. No programming knowledge required to get started.
 
 **New to BMAD?** Start with the [Getting Started Guide](docs/GETTING-STARTED.md) — it walks you through your first conversation with no technical setup.
 

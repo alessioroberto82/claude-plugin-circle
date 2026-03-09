@@ -8,10 +8,10 @@ You talk to them using simple commands in Claude Code. No programming knowledge 
 
 BMAD is designed for everyone involved in building a product:
 
-- **Product Managers** — define what to build, prioritize features, create roadmaps
-- **Business Analysts** — gather requirements, write user stories, clarify scope
+- **Product people** — define what to build, prioritize features, create roadmaps
+- **Analysts** — gather requirements, write user stories, clarify scope
 - **Designers** — create UI/UX designs, map user journeys, build wireframes
-- **Team Leads** — plan work cycles, coordinate the team, track progress
+- **Coordinators** — plan work cycles, coordinate the team, track progress
 - **Developers** — implement features, review code, run tests
 - **Documentation writers** — generate docs from templates, keep things consistent
 
@@ -50,7 +50,7 @@ That's it. Each role works the same way: type the command, have a conversation, 
 
 ## Quick paths by role
 
-### If you're a Product Manager
+### If you define the product
 
 Start with the Scope Clarifier to gather requirements, then invoke the Prioritizer to create a product requirements document (PRD) and prioritize features:
 
