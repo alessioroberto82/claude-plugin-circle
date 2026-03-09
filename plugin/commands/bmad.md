@@ -40,13 +40,13 @@ Your circle:
   /bmad-qa          — Quality Guardian (testing, quality)
   /bmad-ux          — Experience Designer (UI/UX design)
   /bmad-prioritize  — Prioritizer (prioritization, roadmap)
-  /bmad-facilitate  — Facilitator (sprint planning)
+  /bmad-facilitate  — Facilitator (cycle planning)
   /bmad-security    — Security Guardian (audits, threat modeling)
   /bmad-docs        — Documentation Steward
 
 Workflows:
   /bmad-greenfield — Full workflow start to finish
-  /bmad-sprint     — Sprint planning session
+  /bmad-cycle      — Cycle planning session (Shape Up)
 
 Review:
   /bmad-code-review — PR code review
@@ -83,7 +83,7 @@ Output directory: ~/.claude/bmad/projects/<project-name>/output/
 
 Active workflow details:
 ```
-Active workflow: <greenfield/sprint/none>
+Active workflow: <greenfield/cycle/none>
 Completed steps: <list or N/A>
 ```
 
