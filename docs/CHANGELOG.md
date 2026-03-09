@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.0.0 — Circle
+
+### BMAD → Circle
+
+The plugin has been renamed from "BMAD" to "Circle" — aligning the name with holacracy's core concept. All commands change from `/bmad:bmad-*` to `/circle:*`.
+
+- **Plugin name**: `bmad` → `circle`
+- **Skill names**: `bmad-scope` → `scope`, `bmad-arch` → `arch`, etc. (prefix removed)
+- **Commands**: `/bmad:bmad-scope` → `/circle:scope`, etc.
+- **Output path**: `~/.claude/bmad/` → `~/.claude/circle/`
+- **Config keys**: `agents.bmad-scope` → `agents.scope`
+- **Repo**: `claude-plugin-bmad` → `claude-plugin-circle`
+
+### Breaking Changes
+
+- All user commands changed
+- Output directory moved (no automatic migration)
+- Config keys changed (re-create config.yaml)
+- Run `/circle:init` after upgrading
+
 ## v0.11.0 — Shape Up Workflow
 
 ### Shape Up Replaces Scrum

@@ -1,14 +1,14 @@
-# BMAD — Customization Guide
+# Circle — Customization Guide
 
-This guide explains how to customize BMAD for your team and projects. You can change everything from team principles to individual role behavior.
+This guide explains how to customize Circle for your team and projects. You can change everything from team principles to individual role behavior.
 
 ## Quick Customization
 
-If you just want to tweak how BMAD works for your project, here are the most common changes:
+If you just want to tweak how Circle works for your project, here are the most common changes:
 
 | What you want to do | How |
 |---|---|
-| **Make BMAD understand your project** | **Create a Knowledge Pack (see Section 1 below)** |
+| **Make Circle understand your project** | **Create a Knowledge Pack (see Section 1 below)** |
 | Give a role extra instructions for your project | Create a config file (see Section 2 below) |
 | Change the team's working principles | Edit `plugin/resources/soul.md` — plain text, takes effect immediately |
 | Add a document template for the Documentation Steward | Drop a `.md` file in `plugin/resources/templates/docs/` |
@@ -20,17 +20,17 @@ If you just want to tweak how BMAD works for your project, here are the most com
 |---|---|---|---|
 | **Soul** | Team principles | `plugin/resources/soul.md` | Edit file, instant effect |
 | **Knowledge Pack** | Project-aware roles | `docs/bmad/` in your repo | Create Markdown files |
-| **Per-project config** | Role overrides, templates | `~/.claude/bmad/projects/<project>/config.yaml` | Create YAML file |
-| **Role behavior** | Role definitions | `plugin/skills/bmad-<name>/SKILL.md` | Edit SKILL.md |
+| **Per-project config** | Role overrides, templates | `~/.claude/circle/projects/<project>/config.yaml` | Create YAML file |
+| **Role behavior** | Role definitions | `plugin/skills/<name>/SKILL.md` | Edit SKILL.md |
 | **Templates** | Document templates | `plugin/resources/templates/` | Drop .md file |
-| **New role** | Add a circle member | `plugin/skills/bmad-<name>/SKILL.md` | Create directory + file |
-| **Code review** | PR review with CLAUDE.md compliance | `/bmad:bmad-code-review <PR>` | Invoke on any open PR |
+| **New role** | Add a circle member | `plugin/skills/<name>/SKILL.md` | Create directory + file |
+| **Code review** | PR review with CLAUDE.md compliance | `/circle:code-review <PR>` | Invoke on any open PR |
 
 ---
 
 ## 1. Project Knowledge Packs
 
-A Knowledge Pack makes BMAD understand your project. It's a set of Markdown files committed to your repo that every BMAD role can access. CLAUDE.md handles coding standards; the Knowledge Pack handles everything else — domain, architecture, build, integrations.
+A Knowledge Pack makes Circle understand your project. It's a set of Markdown files committed to your repo that every Circle role can access. CLAUDE.md handles coding standards; the Knowledge Pack handles everything else — domain, architecture, build, integrations.
 
 ### Step 1: Create knowledge files
 
@@ -61,7 +61,7 @@ For cross-platform projects sharing domain vocabulary, add a sync marker:
 
 ### Step 2: Create config template
 
-Add `docs/bmad/config.yaml` to your repo. This maps knowledge files to BMAD roles:
+Add `docs/bmad/config.yaml` to your repo. This maps knowledge files to Circle roles:
 
 ```yaml
 project:
@@ -73,12 +73,12 @@ reading_order:
   - soul.md
 
 agents:
-  bmad-scope:
+  scope:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/domain.md
 
-  bmad-arch:
+  arch:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/domain.md
@@ -87,7 +87,7 @@ agents:
     extra_instructions: |
       Use domain-specific skills for architecture decisions.
 
-  bmad-impl:
+  impl:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/domain.md
@@ -97,25 +97,25 @@ agents:
     extra_instructions: |
       Run build verification before committing.
 
-  bmad-qa:
+  qa:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/domain.md
       - docs/bmad/architecture.md
       - docs/bmad/build.md
 
-  bmad-code-review:
+  code-review:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/architecture.md
       - docs/bmad/build.md
 
-  bmad-ux:
+  ux:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/domain.md
 
-  bmad-security:
+  security:
     context_files:
       - docs/bmad/project.md
       - docs/bmad/architecture.md
@@ -124,9 +124,9 @@ agents:
 
 ### Step 3: Activate
 
-Run `/bmad:bmad-init`. It detects the config template at `docs/bmad/config.yaml` and copies it to `~/.claude/bmad/projects/<project>/config.yaml`. Every BMAD role now loads project knowledge automatically.
+Run `/circle:init`. It detects the config template at `docs/bmad/config.yaml` and copies it to `~/.claude/circle/projects/<project>/config.yaml`. Every Circle role now loads project knowledge automatically.
 
-New team members: clone the repo → `/bmad:bmad-init` → done.
+New team members: clone the repo → `/circle:init` → done.
 
 ### Design principles
 
@@ -139,9 +139,9 @@ New team members: clone the repo → `/bmad:bmad-init` → done.
 
 ## 2. Per-Project Configuration
 
-This is a settings file that tells BMAD roles how to behave differently for a specific project. You can create it manually or use a Knowledge Pack config template (see above).
+This is a settings file that tells Circle roles how to behave differently for a specific project. You can create it manually or use a Knowledge Pack config template (see above).
 
-Create `~/.claude/bmad/projects/<project-name>/config.yaml`:
+Create `~/.claude/circle/projects/<project-name>/config.yaml`:
 
 ```yaml
 # What kind of project this is (software or general)
@@ -155,18 +155,18 @@ greenfield_defaults:
 
 # Instructions for specific roles
 agents:
-  bmad-arch:
+  arch:
     context_files:
       - docs/ARCHITECTURE.md
     extra_instructions: |
       This project uses a layered architecture with dependency injection.
 
-  bmad-impl:
+  impl:
     extra_instructions: |
       Follow project coding standards and existing conventions.
 
 # TDD (Test-Driven Development)
-# Enabled by default. The Implementer enforces red-green-refactor via /bmad:bmad-tdd.
+# Enabled by default. The Implementer enforces red-green-refactor via /circle:tdd.
 # The Quality Guardian verifies TDD compliance in commit history.
 tdd:
   enabled: true           # Set to false to disable TDD workflow
@@ -179,12 +179,12 @@ See `plugin/resources/templates/config-example.yaml` for a full example with all
 
 ## 3. Adding a New Role
 
-1. Create the directory: `plugin/skills/bmad-<name>/`
+1. Create the directory: `plugin/skills/<name>/`
 2. Create `SKILL.md` with this template:
 
 ```yaml
 ---
-name: bmad-<name>
+name: <name>
 description: "<Role Name> — <One-line purpose>. <When to use>."
 allowed-tools: Read, Grep, Glob, Bash
 metadata:
@@ -194,7 +194,7 @@ metadata:
 
 # <Role Name>
 
-You energize the **<Role Name>** role in the BMAD circle.
+You energize the **<Role Name>** role in the Circle.
 
 ## Soul
 Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
@@ -210,7 +210,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 
 ## Process
 1. <Step-by-step execution>
-2. <Save output to ~/.claude/bmad/projects/{project}/output/<name>/>
+2. <Save output to ~/.claude/circle/projects/{project}/output/<name>/>
 
 ## Handoff
 > **<Role Name> — Complete.**
@@ -219,7 +219,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 ```
 
 3. Done. Claude Code auto-discovers the skill.
-4. Optionally add to `bmad-greenfield/SKILL.md` workflow sequence.
+4. Optionally add to `greenfield/SKILL.md` workflow sequence.
 
 ---
 
@@ -247,7 +247,7 @@ The Soul is loaded by every role and sets the behavioral foundation. It includes
 
 To add a new role to the greenfield orchestrator:
 
-1. Edit `plugin/skills/bmad-greenfield/SKILL.md`
+1. Edit `plugin/skills/greenfield/SKILL.md`
 2. Add the role to the workflow sequence
 3. Add to the "Role Sequence Detail" table
 4. Add checkpoint handling in the execution phase
@@ -256,7 +256,7 @@ To add a new role to the greenfield orchestrator:
 
 ## 7. Model Routing
 
-BMAD assigns a default Claude model to each fork-context role based on task complexity. Opus handles deep reasoning (architecture, security, implementation), Sonnet handles structured work (scope, prioritization, QA), and Haiku handles lightweight coordination.
+Circle assigns a default Claude model to each fork-context role based on task complexity. Opus handles deep reasoning (architecture, security, implementation), Sonnet handles structured work (scope, prioritization, QA), and Haiku handles lightweight coordination.
 
 ### Default Assignments
 
@@ -271,17 +271,17 @@ BMAD assigns a default Claude model to each fork-context role based on task comp
 | Implementer | opus | Code generation quality |
 | Quality Guardian | sonnet | Criteria-based validation |
 
-Code review agents (spawned by `bmad-code-review` via Task tool) also default to **sonnet**. Configure via `code_review.agent_a_model` and `code_review.agent_b_model` in config.yaml. Note: `bmad-code-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
+Code review agents (spawned by `code-review` via Task tool) also default to **sonnet**. Configure via `code_review.agent_a_model` and `code_review.agent_b_model` in config.yaml. Note: `code-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
 
 ### Override via config.yaml
 
 ```yaml
 agents:
-  bmad-arch:
+  arch:
     model: opus       # deep reasoning tasks
-  bmad-scope:
+  scope:
     model: sonnet     # structured tasks
-  bmad-facilitate:
+  facilitate:
     model: haiku      # lightweight tasks
 
 # Code review agent models
@@ -304,7 +304,7 @@ Model routing lets you optimize cost without sacrificing quality where it matter
 
 ## For Developers: Context Model Reference
 
-> This section is for developers who are modifying or creating roles. You can skip this if you're just using BMAD.
+> This section is for developers who are modifying or creating roles. You can skip this if you're just using Circle.
 
 | Context | When to Use | Effect |
 |---|---|---|
@@ -328,13 +328,13 @@ Model routing lets you optimize cost without sacrificing quality where it matter
 
 ## For Developers: MCP Integration
 
-> This section is for developers who want to connect BMAD roles to external services via MCP (Model Context Protocol).
+> This section is for developers who want to connect Circle roles to external services via MCP (Model Context Protocol).
 
 Roles reference MCP tools (Linear, claude-mem, and domain-specific servers) but degrade gracefully if unavailable. To configure:
 
 - **Linear**: Set up Linear MCP server in Claude Code settings
 - **claude-mem**: Install claude-mem plugin for cross-session memory
-- **Domain-specific tools**: Configured via `deps-manifest.yaml` groups (e.g., Cupertino for iOS, installed automatically by `bmad-init` when domain markers are detected)
+- **Domain-specific tools**: Configured via `deps-manifest.yaml` groups (e.g., Cupertino for iOS, installed automatically by `init` when domain markers are detected)
 
 Per-project Linear mapping in `config.yaml`:
 ```yaml
