@@ -86,9 +86,11 @@ Read from `~/.claude/circle/projects/{project}/output/`:
 
 5. **MCP Integration** (if available):
    - **Linear**: Create cycle, assign bets as issues (interactive)
-   - **claude-mem**: Search for past cycle plans. Save cycle commitments.
+   - **claude-mem**: Search for past cycle plans.
 
-6. **Handoff**:
+6. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+7. **Handoff**:
    > **Facilitator — Complete.**
    > Cycle plan saved to: `~/.claude/circle/projects/{project}/output/facilitate/cycle-plan-{date}.md`
    > Bets committed: {count}

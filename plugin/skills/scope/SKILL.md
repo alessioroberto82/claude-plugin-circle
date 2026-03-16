@@ -95,9 +95,11 @@ Detect the project domain by analyzing files in the current directory:
 
 6. **MCP Integration** (if available):
    - **Linear**: Create or link requirements to Linear issues for traceability
-   - **claude-mem**: Search for relevant past requirements work. Save key decisions at completion.
+   - **claude-mem**: Search for relevant past requirements work.
 
-7. **Handoff**:
+7. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+8. **Handoff**:
    > **Scope Clarifier — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/scope/{filename}`
    > Next suggested role: `/circle:prioritize` for product prioritization, or `/circle:arch` for architecture design.

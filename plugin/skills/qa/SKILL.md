@@ -333,9 +333,11 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
 
 9. **MCP Integration** (if available):
    - **Linear**: Link test results to issues, comment on verification outcomes
-   - **claude-mem**: Search for past test patterns. Save test strategy decisions at completion.
+   - **claude-mem**: Search for past test patterns.
 
-10. **Handoff**:
+10. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+11. **Handoff**:
    > **Quality Guardian — Complete.**
    > Verdict: **{PASS/CONDITIONAL PASS/REJECT}**
    > Output saved to: `~/.claude/circle/projects/{project}/output/qa/`

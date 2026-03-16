@@ -120,7 +120,11 @@ Report: "Document saved to: {path}"
 ## MCP Integration (if available)
 
 - **Linear**: Reference project documents and link generated docs to issues
-- **claude-mem**: Search for past documentation patterns. Save doc generation metadata at completion.
+- **claude-mem**: Search for past documentation patterns.
+
+## Work Summary
+
+Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
 
 ## Placeholder Patterns
 

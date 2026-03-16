@@ -97,9 +97,11 @@ Read from `~/.claude/circle/projects/{project}/output/`:
 
 6. **MCP Integration** (if available):
    - **Linear**: Create issues from pitches, set priorities. Full access to issue management.
-   - **claude-mem**: Search for past product decisions and roadmap context. Save prioritization rationale at completion.
+   - **claude-mem**: Search for past product decisions and roadmap context.
 
-7. **Handoff**:
+7. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+8. **Handoff**:
    > **Prioritizer — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/prioritize/PRD-{date}.md`
    > Pitches: {count}, Must Have: {count}, Should Have: {count}

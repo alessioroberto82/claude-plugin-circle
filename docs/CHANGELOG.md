@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.0 — Work Tracking
+
+### Assessment-Aware Work Tracking
+
+All Circle skills now produce enriched Work Summary blocks at handoff, automatically captured by claude-mem's session hooks. Designed to feed `/assessment-daily` in luscii-matrix with rich observations for the Expert/Core & Master self-assessment framework.
+
+- **New skill: `/circle:track`** — Interactive 3-question capture for work outside Circle skills (debugging, mentoring, cross-team collaboration)
+- **New resource: `work-summary-template.md`** — Structured template with 6 fields aligned to assessment dimensions (Mastery, Autonomy, Impact, Ownership)
+- **12 skills enriched** — arch, impl, qa, scope, prioritize, security, ux, docs, code-review, cycle, facilitate, triage now output Work Summary blocks before handoff
+- Graceful degradation: template missing → skip silently; claude-mem unavailable → text still visible in session
+
 ## v1.0.0 — Circle
 
 ### BMAD → Circle

@@ -109,9 +109,11 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 8. **MCP Integration** (if available):
    - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
    - **Linear**: Reference project context and link architecture decisions to issues
-   - **claude-mem**: Search for past architectural decisions in similar projects. Save key ADRs at completion.
+   - **claude-mem**: Search for past architectural decisions in similar projects.
 
-9. **Handoff**:
+9. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+10. **Handoff**:
    > **Architecture Owner — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/arch/{filename}`
    > ADRs documented: {count}

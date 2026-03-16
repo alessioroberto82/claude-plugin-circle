@@ -55,6 +55,7 @@ Review:
 Utilities:
   /circle:validate-prd — PRD quality validation (8 checks)
   /circle:tdd          — TDD red-green-refactor enforcer
+  /circle:track        — Capture work for assessment tracking
   /circle:init         — Set up Circle for this project
   /circle:shard        — Split large docs for faster processing
 

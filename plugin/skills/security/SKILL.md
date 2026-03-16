@@ -106,16 +106,18 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 9. **MCP Integration** (if available):
    - **Linear**: Link security findings to issues, create P0/P1 issues for critical findings
-   - **claude-mem**: Search for past security patterns. Save key findings at completion.
+   - **claude-mem**: Search for past security patterns.
 
-10. **Security Gate Decision**:
+10. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+11. **Security Gate Decision**:
 
 Based on findings, determine the verdict:
 - If ANY **P0** finding → verdict is **SECURITY BLOCK**
 - If P1 but no P0 → verdict is **SECURITY PASS with warnings**
 - If only P2/P3 → verdict is **SECURITY PASS**
 
-11. **Handoff**:
+12. **Handoff**:
 
 **If SECURITY BLOCK:**
 > **Security Guardian — BLOCKED (P0 critical issues).**

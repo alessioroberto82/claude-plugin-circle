@@ -112,7 +112,9 @@ Save summary to `~/.claude/circle/projects/$PROJECT_NAME/output/code-review/pr-{
 
 **MCP Integration** (if available):
 - **Linear**: Comment review summary on linked issues
-- **claude-mem**: Save review patterns for future reference
+- **claude-mem**: Search for past review patterns.
+
+**Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
 
 > **Code Review — Complete.**
 > PR #{number} reviewed. {N} issues found (threshold: 80/100).

@@ -77,9 +77,11 @@ Read from `~/.claude/circle/projects/{project}/output/`:
 8. **MCP Integration** (if available):
    - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up platform design guidelines and UI component patterns.
    - **Linear**: Reference and link design decisions to issues
-   - **claude-mem**: Search for past UX decisions. Save key design choices at completion.
+   - **claude-mem**: Search for past UX decisions.
 
-9. **Handoff**:
+9. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+
+10. **Handoff**:
    > **Experience Designer — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/ux/{filename}`
    > Next suggested role: `/circle:arch` for architecture design.
