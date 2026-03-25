@@ -81,26 +81,57 @@ PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
 BASE=~/.claude/circle/projects/$PROJECT_NAME
 ```
 
-**Check existing workflow**:
-- Read `$BASE/output/session-state.json` if it exists
-- If an active workflow exists (`workflow.type != "none"`):
+**Defensive v1 migration**: Read `$BASE/output/session-state.json` if it exists. If the `version` field is absent or `1`, run the v1 → v2 migration algorithm (see `init/SKILL.md` step 4). This covers upgrades where the user did not re-run `/circle:init`.
+
+**Check existing sessions**:
+- Read `$BASE/output/session-state.json`
+- Filter `sessions` map for entries where `type == "greenfield"` and the session is not completed
+- If active greenfield sessions exist:
   ```
-  An active workflow was found:
-  Type: {workflow.type}
-  Current step: {workflow.current_step}
-  Completed: {workflow.completed_steps}
+  Active greenfield sessions found:
+    [1] {id} — Step: {current_step} — Started: {created}
+    [2] {id} — Step: {current_step} — Started: {created}
 
   Options:
-  1. Resume existing workflow (type 'resume')
-  2. Start fresh (type 'new') — WARNING: this resets progress
+  1. Resume a session (type 'resume {id}' or 'resume {number}')
+  2. Start a new session (type 'new')
   3. Cancel (type 'cancel')
   ```
+- If only one active greenfield session exists, simplify:
+  ```
+  An active greenfield session was found:
+  Session: {id} — Step: {current_step}
+
+  Options:
+  1. Resume (type 'resume')
+  2. Start a new session (type 'new')
+  3. Cancel (type 'cancel')
+  ```
+- If no active greenfield sessions: proceed directly to new session creation.
 
 **Initialize structure**:
 ```bash
-mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,prioritize,facilitate,docs,code-review,triage}
-mkdir -p $BASE/shards/{requirements,architecture,tasks}
+mkdir -p $BASE/output/sessions
+mkdir -p $BASE/shards/sessions
 mkdir -p $BASE/workspace
+```
+
+**Session ID prompt**:
+```
+Link a Linear issue? (paste ID like ENG-42, or press Enter to auto-generate)
+>
+```
+
+**Session ID validation** (security P1 mitigation):
+- If user provides an ID: validate against `/^[A-Z]{1,10}-\d{1,5}$/`. Also reject any ID containing `/`, `\`, or `..`. If invalid: "Invalid format. Expected a Linear ID like ENG-42, or press Enter to auto-generate."
+- If user provides an ID that already exists in `sessions`: "Session {id} already exists (type: {type}, step: {step}). Resume it with `/circle:greenfield resume`, or press Enter to auto-generate a new ID."
+- If user presses Enter: auto-generate `{project}-{NNN}`. Scan existing session keys matching `{project}-\d+`, find max N, increment by 1 (zero-padded to 3 digits). Start at `001` if none exist. The `{project}` portion must be the validated `project` field from `session-state.json` (not re-derived from `$PWD`), ensuring it only contains `[a-z0-9-]`.
+
+**Create session artifact directory**:
+```bash
+SESSION_ID="{the chosen session ID}"
+mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,security,ux,prioritize,facilitate,docs}
+mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,stories}
 ```
 
 **Interactive Configuration**:
@@ -108,6 +139,7 @@ mkdir -p $BASE/workspace
 Circle Greenfield Workflow
 ========================
 Project: {PROJECT_NAME}
+Session: {SESSION_ID}
 Domain: {detected domain}
 
 Mandatory phases: Security Review (always included)
@@ -120,57 +152,63 @@ Optional phases:
 
 **Generate step sequence** based on selections.
 
-**Initialize Session State** — write to `$BASE/output/session-state.json`:
+**Create session entry** — add to `sessions` map in `$BASE/output/session-state.json`:
 ```json
 {
+  "version": 2,
   "project": "{project-name}",
   "domain": "{detected-domain}",
-  "phase": "init",
-  "created": "{ISO-8601}",
   "updated": "{ISO-8601}",
-  "artifacts": [],
-  "workflow": {
-    "type": "greenfield",
-    "current_step": "scope",
-    "completed_steps": ["init"],
-    "optional_phases": {
-      "ux": true/false,
-      "facilitate": true/false,
-      "validate_prd": true/false
-    },
-    "model_routing": {
-      "scope": "sonnet",
-      "prioritize": "sonnet",
-      "validate-prd": "sonnet",
-      "ux": "sonnet",
-      "arch": "opus",
-      "security": "opus",
-      "facilitate": "haiku",
-      "impl": "opus",
-      "qa": "sonnet"
-    },
-    "effort_routing": {
-      "scope": "medium",
-      "prioritize": "medium",
-      "validate-prd": "low",
-      "ux": "medium",
-      "arch": "high",
-      "security": "high",
-      "facilitate": "low",
-      "impl": "high",
-      "qa": "medium"
-    },
-    "step_sequence": ["init", "scope", "prioritize", ...],
-    "checkpoints": [
-      {
-        "step": "init",
-        "timestamp": "{ISO-8601}",
-        "status": "completed"
-      }
-    ]
+  "sessions": {
+    "{SESSION_ID}": {
+      "type": "greenfield",
+      "created": "{ISO-8601}",
+      "updated": "{ISO-8601}",
+      "current_step": "scope",
+      "completed_steps": ["init"],
+      "optional_phases": {
+        "ux": true/false,
+        "facilitate": true/false,
+        "validate_prd": true/false
+      },
+      "model_routing": {
+        "scope": "sonnet",
+        "prioritize": "sonnet",
+        "validate-prd": "sonnet",
+        "ux": "sonnet",
+        "arch": "opus",
+        "security": "opus",
+        "facilitate": "haiku",
+        "impl": "opus",
+        "qa": "sonnet"
+      },
+      "effort_routing": {
+        "scope": "medium",
+        "prioritize": "medium",
+        "validate-prd": "low",
+        "ux": "medium",
+        "arch": "high",
+        "security": "high",
+        "facilitate": "low",
+        "impl": "high",
+        "qa": "medium"
+      },
+      "step_sequence": ["init", "scope", "prioritize", ...],
+      "artifacts": [],
+      "sharding": {},
+      "checkpoints": [
+        {
+          "step": "init",
+          "timestamp": "{ISO-8601}",
+          "status": "completed"
+        }
+      ]
+    }
   }
 }
 ```
+
+Also update the root `updated` field in `session-state.json`.
 
 ---
 
@@ -181,16 +219,17 @@ For each step in the sequence, follow this protocol:
 ### Step Display
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Step {N}/{total}: {Role Name} [{model}] [{effort}]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Step {N}/{total}: {Role Name} [{model}] [{effort}] | Session: {SESSION_ID}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Purpose: {What this role will do}
 Model: {opus|sonnet|haiku} | Effort: {low|medium|high|max}
 Input: {What artifacts from previous steps are available}
-Output: {What artifact this role will produce}
+Output: sessions/{SESSION_ID}/{role}/{filename}
 
 Please invoke the role:
 → /circle:{name}
+Tell the role to write output to: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/{role}/
 
 After completion, type one of:
   next  — proceed to next step
@@ -198,10 +237,12 @@ After completion, type one of:
   pause — save progress and exit
   back  — return to previous step
   exit  — exit workflow
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ### Role Sequence Detail
+
+All output paths below are relative to `sessions/{SESSION_ID}/`:
 
 | Step | Role | Model | Effort | Purpose | Input | Output |
 |---|---|---|---|---|---|---|
@@ -222,9 +263,9 @@ After completion, type one of:
 ### User Command Handling
 
 **`next`**:
-1. Verify the expected output file exists in `$BASE/output/{role}/`
+1. Verify the expected output file exists in `$BASE/output/sessions/{SESSION_ID}/{role}/`
 2. If file missing: "Output not found. Did you run `/circle:{name}`? Type 'next' again to skip verification, or run the role first."
-3. If file exists: update session-state.json checkpoint, advance to next step
+3. If file exists: update the session entry in `sessions[SESSION_ID]` (checkpoint, current_step, completed_steps, artifacts), advance to next step
 
 **`skip`**:
 - Only allowed for optional phases (ux, facilitate, validate-prd)
@@ -247,20 +288,46 @@ After completion, type one of:
 
 When `$ARGUMENTS` contains "resume":
 1. Read `$BASE/output/session-state.json`
-2. If no active workflow: "No active workflow found. Start with `/circle:greenfield`"
-3. If active: display current step and continue from there
-4. Show summary of completed steps and their artifacts
+2. Filter `sessions` for entries where `type == "greenfield"` (exclude completed/cleaned-up sessions)
+3. If 0 matches: "No active greenfield sessions. Start with `/circle:greenfield`"
+4. If 1 match: auto-select that session. **Defensive check**: verify `$BASE/output/sessions/{id}/` directory exists. If it does not, warn: "Session {id} artifact directory is missing. Remove orphaned entry? [y/n]"
+5. If >1 matches: present numbered menu:
+   ```
+   Active greenfield sessions:
+     [1] {id}  — Step: {current_step}  — Started: {created}
+     [2] {id}  — Step: {current_step}  — Started: {created}
+
+   Select session (number or ID):
+   ```
+6. After selection: set `SESSION_ID`, display current step, and continue from there
+7. Show summary of completed steps and their artifacts (paths under `sessions/{SESSION_ID}/`)
 
 ### Status Logic
 
 When `$ARGUMENTS` contains "status":
 1. Read `$BASE/output/session-state.json`
-2. Display progress:
+2. Filter `sessions` for entries where `type == "greenfield"`
+3. If `$ARGUMENTS` contains a session ID after "status" (e.g., `status ENG-42`): show detailed view for that session
+4. Otherwise, display summary table of all active greenfield sessions:
+
 ```
 Circle Greenfield — Status
 =========================
 Project: {name}
-Domain: {domain}
+Sessions: {count} active
+
+| ID       | Step     | Progress | Started    |
+|----------|----------|----------|------------|
+| ENG-42   | arch     | 4/8 50%  | 2026-03-25 |
+| proj-003 | impl     | 6/8 75%  | 2026-03-24 |
+
+Detail: /circle:greenfield status {id}
+```
+
+**Detailed view** (for a specific session ID):
+```
+Circle Greenfield — Session: {SESSION_ID}
+=========================================
 Started: {created}
 Last updated: {updated}
 
@@ -269,8 +336,8 @@ Progress: [{completed}/{total}]
 
 Completed:
   ✓ init
-  ✓ scope → requirements.md
-  ✓ prioritize → PRD.md
+  ✓ scope → sessions/{SESSION_ID}/scope/requirements.md
+  ✓ prioritize → sessions/{SESSION_ID}/prioritize/PRD.md
   → arch (current)
   ○ impl
   ○ qa
@@ -284,31 +351,31 @@ Completed:
 ### Gate 0: PRD Validation Block
 
 After the validate-prd step:
-1. If `validate_prd` is `false` in `session-state.json` optional_phases (step was skipped): skip this gate entirely and advance to the next step.
-2. Read `$BASE/output/qa/prd-validation-report.md`
+1. If `validate_prd` is `false` in `sessions[SESSION_ID].optional_phases` (step was skipped): skip this gate entirely and advance to the next step.
+2. Read `$BASE/output/sessions/{SESSION_ID}/qa/prd-validation-report.md`
 3. If verdict is "NEEDS REVISION":
    ```
    PRD VALIDATION GATE FAILED
    The PRD Validator found blocking issues.
 
-   Review: ~/.claude/circle/projects/{project}/output/qa/prd-validation-report.md
+   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/prd-validation-report.md
 
    Fix the issues with /circle:prioritize, then re-run /circle:validate-prd.
    ```
-4. Update `session-state.json` with `current_step: "prioritize"` and add a checkpoint entry, then loop back to the prioritize step
+4. Update `sessions[SESSION_ID]` with `current_step: "prioritize"` and add a checkpoint entry, then loop back to the prioritize step
 5. If PASS or PASS with notes: advance to next step (ux or arch)
 
 ### Gate 1: Security P0 Block
 
 After the security review step:
-1. Read `$BASE/output/security/security-audit.md`
+1. Read `$BASE/output/sessions/{SESSION_ID}/security/security-audit.md`
 2. If the document contains "P0" severity issues:
    ```
    SECURITY GATE FAILED
    P0 critical issues found in security audit.
    These MUST be resolved before implementation.
 
-   Review: ~/.claude/circle/projects/{project}/output/security/security-audit.md
+   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/security/security-audit.md
 
    Resolve the issues, then type 'next' to re-run security review.
    ```
@@ -317,13 +384,13 @@ After the security review step:
 ### Gate 2: QA Reject Block
 
 After the Quality Guardian's final verification:
-1. Read `$BASE/output/qa/test-report.md`
+1. Read `$BASE/output/sessions/{SESSION_ID}/qa/test-report.md`
 2. If verdict is "REJECT":
    ```
    QA GATE FAILED
    The Quality Guardian has rejected the implementation.
 
-   Review: ~/.claude/circle/projects/{project}/output/qa/test-report.md
+   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/test-report.md
 
    Fix the issues with /circle:impl, then re-run QA.
    ```
@@ -341,12 +408,11 @@ Before advancing from any step:
 
 When all steps are completed:
 
-1. **Update session state**: Set `workflow.type` to `"completed"`
-
-2. **Generate workflow summary**: Save to `$BASE/output/workflow-summary.md`
+1. **Generate workflow summary**: Save to `$BASE/output/workflow-summary-{SESSION_ID}.md` (outside the session directory — persists after cleanup)
    ```markdown
-   # Workflow Summary: {Project Name}
+   # Workflow Summary: {Project Name} — {SESSION_ID}
 
+   **Session**: {SESSION_ID}
    **Domain**: {domain}
    **Started**: {created}
    **Completed**: {now}
@@ -365,9 +431,6 @@ When all steps are completed:
    | Implementation | Implementer | ✓ | (code in repo) |
    | QA | Quality Guardian | ✓ | test-report.md |
 
-   ## Output Directory
-   ~/.claude/circle/projects/{project}/output/
-
    ## Next Steps
    - [ ] Commit and push changes
    - [ ] Create a pull request
@@ -376,15 +439,24 @@ When all steps are completed:
    - [ ] Update Linear cycle
    ```
 
+2. **Cleanup session artifacts**: After the summary is written successfully:
+   - **Validate the delete path** (security P2-3 mitigation): confirm the target path is under `$BASE/output/sessions/` and does not contain `..`
+   - Delete `$BASE/output/sessions/{SESSION_ID}/` recursively
+   - Delete `$BASE/shards/sessions/{SESSION_ID}/` recursively (if exists)
+   - Remove the session entry from `sessions` in `session-state.json`
+   - Update root `updated` timestamp
+   - **If the summary write fails**: abort cleanup, keep all artifacts, warn the user
+
 3. **Display completion**:
    ```
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    Circle Greenfield Workflow — COMPLETE
+   Session: {SESSION_ID}
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    All phases completed successfully.
-   Summary: ~/.claude/circle/projects/{project}/output/workflow-summary.md
+   Summary: ~/.claude/circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md
+   Session artifacts cleaned up.
 
-   All Circle files are in the home directory.
    Only code changes need to be committed to Git.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ```
@@ -418,14 +490,14 @@ When shards exist and the impl step is reached, the orchestrator can launch inde
 ### Activation Conditions
 
 Parallel impl activates only when ALL of these are true:
-1. `shards/tasks/` directory exists with ≥2 task files
+1. `shards/sessions/{SESSION_ID}/tasks/` directory exists with ≥2 task files
 2. `parallel.enabled` is not `false` in config.yaml (default: true)
 
 When either condition fails, fall back to sequential impl (current behavior, no warning).
 
 ### Dependency Graph
 
-1. Read all files in `$BASE/shards/tasks/`
+1. Read all files in `$BASE/shards/sessions/{SESSION_ID}/tasks/`
 2. Parse the `**Dependencies**:` field from each task shard
 3. Filter to **task-to-task dependencies only** (ADR/FR references are informational, not blocking)
 4. Build a DAG of task dependencies
@@ -480,24 +552,29 @@ parallel:
 
 ### Session State for Parallel Execution
 
-When parallel impl is active, add to session-state.json:
+When parallel impl is active, add `parallel` to the session entry in `sessions[SESSION_ID]`:
 ```json
 {
-  "parallel": {
-    "enabled": true,
-    "max_agents": 3,
-    "waves": [
-      {
-        "wave": 1,
-        "tasks": ["TASK-001", "TASK-002", "TASK-003"],
-        "status": "completed"
-      },
-      {
-        "wave": 2,
-        "tasks": ["TASK-004"],
-        "status": "pending"
+  "sessions": {
+    "{SESSION_ID}": {
+      "type": "greenfield",
+      "parallel": {
+        "enabled": true,
+        "max_agents": 3,
+        "waves": [
+          {
+            "wave": 1,
+            "tasks": ["TASK-001", "TASK-002", "TASK-003"],
+            "status": "completed"
+          },
+          {
+            "wave": 2,
+            "tasks": ["TASK-004"],
+            "status": "pending"
+          }
+        ]
       }
-    ]
+    }
   }
 }
 ```

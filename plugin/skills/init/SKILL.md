@@ -138,29 +138,46 @@ PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
 BASE=~/.claude/circle/projects/$PROJECT_NAME
 
 mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,prioritize,facilitate,docs,code-review,triage}
+mkdir -p $BASE/output/sessions
 mkdir -p $BASE/shards/{requirements,architecture,tasks}
+mkdir -p $BASE/shards/sessions
 mkdir -p $BASE/workspace
 ```
 
-### 4. Create session state
+### 4. Create or migrate session state
 
-Write to `~/.claude/circle/projects/$PROJECT_NAME/output/session-state.json`:
+Check if `~/.claude/circle/projects/$PROJECT_NAME/output/session-state.json` already exists.
+
+**If it does NOT exist** — create a fresh v2 file:
 ```json
 {
+  "version": 2,
   "project": "<project-name>",
   "domain": "<detected-domain>",
-  "phase": "analysis",
-  "created": "<ISO-8601 timestamp>",
   "updated": "<ISO-8601 timestamp>",
-  "artifacts": [],
-  "workflow": {
-    "type": "none",
-    "current_step": null,
-    "completed_steps": [],
-    "checkpoints": []
-  }
+  "sessions": {}
 }
 ```
+
+**If it exists** — check the `version` field:
+- If `version` is `2`: already migrated, skip.
+- If `version` is absent or `1`: run **v1 → v2 migration**:
+
+**Migration algorithm** (must be idempotent):
+1. Copy the file to `session-state.v1-backup.json` (safety net)
+2. Read the existing `workflow` object from root
+3. If `workflow.type` is `"none"` or the `workflow` object is empty:
+   - Write v2 with empty `sessions: {}`
+4. Else (active or completed workflow exists):
+   - Generate session ID: `{project}-001`
+   - Create a session entry by moving `workflow` fields into it
+   - Add `type` from `workflow.type`, `created` from root `created`, `updated` from root `updated`
+   - Move root `artifacts` array into the session entry
+5. Set `version: 2` at root
+6. Remove root fields: `phase`, `workflow`, `artifacts`, `created`
+7. Write back to `session-state.json`
+
+**If the file is not valid JSON**: warn the user and offer to back up and create a fresh v2 file.
 
 ### 5. Check for project config
 

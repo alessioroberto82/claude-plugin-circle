@@ -1,5 +1,35 @@
 # Changelog
 
+## v1.4.0 — Multi-Session Workflow Tracking
+
+### Session Registry (schema v2)
+
+`session-state.json` evolves from a single `workflow` object to a `sessions` map supporting multiple concurrent workflows. Each session is keyed by a Linear issue ID (e.g., `ENG-42`) or an auto-generated project counter (`{project}-001`).
+
+- **Schema v2** — `version: 2` field, `sessions` map replaces root `workflow`
+- **Artifact isolation** — each session writes to `output/sessions/{id}/{role}/`, preventing cross-session overwrites
+- **Session lifecycle** — completed sessions generate a summary, then auto-clean artifacts and registry entry
+- **Resume selection** — when multiple sessions are active, `resume` presents a numbered menu; single session auto-selects
+- **Multi-session status** — `status` shows a summary table of all active sessions of the requested type
+- **v1 migration** — legacy `session-state.json` is auto-migrated on `init` or orchestrator startup (backup created)
+- **Session-scoped sharding** — `shard` writes metadata and files to `shards/sessions/{id}/` within orchestrated sessions
+
+### Security Hardening
+
+- **Session ID validation** — Linear IDs validated against `/^[A-Z]{1,10}-\d{1,5}$/`; auto-generated IDs use validated `project` field
+- **Path-safety guards** — all session IDs rejected if containing `/`, `\`, or `..`
+- **Orphaned session detection** — `resume` verifies artifact directory exists before loading
+- **Cleanup safeguards** — recursive delete validates target path is under expected directory
+
+### Skills Changed
+
+| Skill | Change |
+|-------|--------|
+| `greenfield` | Major — session creation, scoped paths, resume/status selection, cleanup, defensive migration |
+| `cycle` | Major — session creation, scoped paths, resume/status selection, cleanup |
+| `init` | Medium — v2 schema creation, v1→v2 migration with backup |
+| `shard` | Medium — session-scoped sharding paths and metadata |
+
 ## v1.3.0 — Holacracy Terminology Alignment
 
 **BREAKING**: Agile/Scrum terminology replaced with Holacracy-aligned vocabulary across all skills. Users with existing `shards/stories/` directories must re-run `/circle:shard` to regenerate under `shards/tasks/`.

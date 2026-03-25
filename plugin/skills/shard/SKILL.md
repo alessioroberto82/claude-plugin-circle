@@ -21,15 +21,17 @@ When the Implementer works on TASK-001, it doesn't need to load the entire PRD. 
 
 ## Input
 
-Automatically detect documents to shard in `~/.claude/circle/projects/{project}/output/`:
+Automatically detect documents to shard in `~/.claude/circle/projects/{project}/output/`.
 
-| Source | Path |
-|---|---|
-| PRD | `prioritize/PRD-*.md` |
-| Architecture | `arch/architecture.md` |
-| Requirements | `scope/requirements.md` |
+**Session-aware discovery**: If invoked within an orchestrated session (session ID is known from conversation context), look for documents under `sessions/{SESSION_ID}/` first:
 
-If no documents found: "No documents to shard. Run `/circle:prioritize` or `/circle:scope` first."
+| Source | Session-scoped path | Legacy path (standalone) |
+|---|---|---|
+| PRD | `sessions/{SESSION_ID}/prioritize/PRD-*.md` | `prioritize/PRD-*.md` |
+| Architecture | `sessions/{SESSION_ID}/arch/architecture.md` | `arch/architecture.md` |
+| Requirements | `sessions/{SESSION_ID}/scope/requirements.md` | `scope/requirements.md` |
+
+If no documents found in either location: "No documents to shard. Run `/circle:prioritize` or `/circle:scope` first."
 
 ## Process
 
@@ -37,7 +39,18 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
    BASE=~/.claude/circle/projects/$PROJECT_NAME
+   ```
+
+   **If within an orchestrated session** (SESSION_ID is known):
+   ```bash
+   mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,tasks}
+   SHARD_BASE=$BASE/shards/sessions/$SESSION_ID
+   ```
+
+   **If standalone** (no session context):
+   ```bash
    mkdir -p $BASE/shards/{requirements,architecture,tasks}
+   SHARD_BASE=$BASE/shards
    ```
 
 2. **Analyze documents**: Identify independent sections
@@ -48,7 +61,7 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
 
 3. **Create a shard for each section**:
 
-   **Requirements shards** → `$BASE/shards/requirements/`
+   **Requirements shards** → `$SHARD_BASE/requirements/`
    ```markdown
    # FR-1.1: User Authentication
 
@@ -67,7 +80,7 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
    - [ADR-001] Authentication architecture decision
    ```
 
-   **Architecture shards** → `$BASE/shards/architecture/`
+   **Architecture shards** → `$SHARD_BASE/architecture/`
    ```markdown
    # ADR-001: Authentication Strategy
 
@@ -85,7 +98,7 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
    [impact on the system]
    ```
 
-   **Task shards** → `$BASE/shards/tasks/`
+   **Task shards** → `$SHARD_BASE/tasks/`
    ```markdown
    # TASK-001: Implement User Login
 
@@ -116,6 +129,24 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
    - `TASK-001-implement-user-login.md`
 
 5. **Update session state**:
+
+   **If within an orchestrated session** (SESSION_ID is known): write `sharding` to the session entry `sessions[SESSION_ID].sharding`:
+   ```json
+   {
+     "sessions": {
+       "{SESSION_ID}": {
+         "sharding": {
+           "enabled": true,
+           "shards_count": 15,
+           "last_shard_date": "{ISO-8601}",
+           "sources": ["prioritize/PRD.md", "arch/architecture.md"]
+         }
+       }
+     }
+   }
+   ```
+
+   **If standalone** (no session context): write `sharding` at root level of `session-state.json` (backward-compatible):
    ```json
    {
      "sharding": {
@@ -131,9 +162,9 @@ If no documents found: "No documents to shard. Run `/circle:prioritize` or `/cir
    ```
    Sharding Complete
    =================
-   Requirements: 8 shards → ~/.claude/circle/projects/{project}/shards/requirements/
-   Architecture: 4 shards → ~/.claude/circle/projects/{project}/shards/architecture/
-   Tasks:        6 shards → ~/.claude/circle/projects/{project}/shards/tasks/
+   Requirements: 8 shards → {$SHARD_BASE}/requirements/
+   Architecture: 4 shards → {$SHARD_BASE}/architecture/
+   Tasks:        6 shards → {$SHARD_BASE}/tasks/
 
    Usage:
    /circle:impl TASK-001    ← Implements only TASK-001
