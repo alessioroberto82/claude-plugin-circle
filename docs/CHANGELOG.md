@@ -14,7 +14,7 @@
 - PRD template: `## User Stories` → `## Work Items`, `### Epic` → `### Initiative`, `US-x.x` → `WI-x.x`
 
 ### Files changed
-- 11 skill files updated (shard, greenfield, validate-prd, impl, qa, tdd, init, cycle, scope, prioritize, docs)
+- 10 skill files updated (shard, greenfield, validate-prd, impl, qa, tdd, init, cycle, scope, prioritize)
 - `resources/guardrails.md` — upstream artifact mapping
 - `resources/templates/software/PRD.md` — PRD template
 - `resources/templates/config-example.yaml` — parallel config comments
