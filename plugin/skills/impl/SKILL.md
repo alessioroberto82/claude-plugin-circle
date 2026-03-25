@@ -50,12 +50,12 @@ Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
 
 ## Progressive Disclosure (Context Sharding)
 
-If directory `~/.claude/circle/projects/{project}/shards/stories/` exists:
-- Accept parameter: `$ARGUMENTS` (e.g.: STORY-001)
-- Load ONLY the file: `~/.claude/circle/projects/{project}/shards/stories/$ARGUMENTS.md`
-- Do NOT load: other stories, full PRD, future tasks
+If directory `~/.claude/circle/projects/{project}/shards/tasks/` exists:
+- Accept parameter: `$ARGUMENTS` (e.g.: TASK-001)
+- Load ONLY the file: `~/.claude/circle/projects/{project}/shards/tasks/$ARGUMENTS.md`
+- Do NOT load: other tasks, full PRD, future work items
 - **Benefit**: 90% token reduction, absolute focus on current task
-- **Parallel execution**: When implementing independent stories in parallel, the orchestrator may pass `isolation: "worktree"` to the Task tool for branch isolation.
+- **Parallel execution**: When implementing independent tasks in parallel, the orchestrator may pass `isolation: "worktree"` to the Task tool for branch isolation.
 
 ## Domain-Specific Behavior
 
@@ -88,8 +88,8 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
    Read the architecture (`arch/architecture.md`) and PRD (`prioritize/PRD.md`), then assess:
 
-   **a) Scope check**: Does the design contain components, services, or modules not directly required by Must Have user stories? If yes, list them and ask the user:
-   > "These components are in the architecture but not traced to MVP user stories: {list}. Proceed with full design, or simplify?"
+   **a) Scope check**: Does the design contain components, services, or modules not directly required by Must Have work items? If yes, list them and ask the user:
+   > "These components are in the architecture but not traced to MVP work items: {list}. Proceed with full design, or simplify?"
 
    **b) Technology check**: Does the design introduce infrastructure (containers, orchestration, message queues, caching layers, managed services) not strictly necessary for an MVP? If yes, propose the simplest alternative:
    > "The architecture specifies {technology}. For MVP, {simpler alternative} would suffice. Proceed with original, or simplify?"
@@ -110,7 +110,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
      - If software domain but no test framework detected: prompt the user:
        > "TDD is enabled but no test runner was detected. Disable TDD for this session, or set up tests first? [disable/setup]"
      - If TDD applies: implement each unit of work via `/circle:tdd` sub-workflow.
-       For each feature, story, or bugfix: invoke the TDD cycle (red → green → refactor).
+       For each feature, work item, or bugfix: invoke the TDD cycle (red → green → refactor).
        Do NOT write implementation code before writing tests.
        After all TDD cycles complete, skip to step 7 (self-review).
 

@@ -70,9 +70,9 @@ Read from `~/.claude/circle/projects/{project}/output/`:
    |---|---|---|
    | {Goal} | {How to measure} | {Target value} |
 
-   ## User Stories
-   ### Epic 1: {Name}
-   - As a {user}, I want to {action}, so that {benefit}
+   ## Work Items
+   ### Initiative 1: {Name}
+   - Enable {actor} to {action} for {outcome}
      - Acceptance Criteria:
        - [ ] {Criterion}
 

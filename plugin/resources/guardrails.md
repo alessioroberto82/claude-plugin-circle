@@ -13,18 +13,18 @@ Before handoff, verify your output covers upstream requirements. This closes the
 
 | Your Role | Read This | Check For |
 |---|---|---|
-| arch | `scope/requirements.md` or `prioritize/PRD.md` | Each FR-*/user story addressed in architecture |
+| arch | `scope/requirements.md` or `prioritize/PRD.md` | Each FR-*/work item addressed in architecture |
 | impl | `arch/architecture.md` | Each component/module implemented |
 | qa | `scope/requirements.md` or `prioritize/PRD.md` | Each acceptance criterion has a test |
-| prioritize | `scope/requirements.md` | Each FR-* has a user story |
-| ux | `prioritize/PRD.md` | Each user story has UX coverage |
+| prioritize | `scope/requirements.md` | Each FR-* has a work item |
+| ux | `prioritize/PRD.md` | Each work item has UX coverage |
 | security | `arch/architecture.md` | Each component has threat analysis |
 
 Read the upstream artifact from `~/.claude/circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
 
 ### Protocol
 
-1. Extract the list of checkable items from the upstream artifact (FR-*, user stories, components, acceptance criteria — depending on your role's "Check For" column above).
+1. Extract the list of checkable items from the upstream artifact (FR-*, work items, components, acceptance criteria — depending on your role's "Check For" column above).
 2. For each item, assess coverage in your output:
    - ✅ **Covered** — explicitly addressed
    - ⚠️ **Partial** — mentioned but incomplete

@@ -34,7 +34,7 @@ What's next:
   <Or "Run /circle:greenfield for the full workflow">
 
 Your circle:
-  /circle:scope       — Scope Clarifier (requirements, user stories)
+  /circle:scope       — Scope Clarifier (requirements, work items)
   /circle:arch        — Architecture Owner (design, trade-offs)
   /circle:impl        — Implementer (implementation, code review)
   /circle:qa          — Quality Guardian (testing, quality)

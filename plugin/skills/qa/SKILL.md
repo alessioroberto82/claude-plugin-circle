@@ -278,7 +278,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
       ```markdown
       ## TDD Compliance
 
-      | Story/Unit | Red | Green | Refactor | Verdict |
+      | Task/Unit | Red | Green | Refactor | Verdict |
       |---|---|---|---|---|
       | {description} | ✓ abc1234 | ✓ def5678 | ✓ ghi9012 | PASS |
       | {description} | ✓ jkl3456 | ✗ missing | — | FAIL |
@@ -292,16 +292,16 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
    Read the PRD (`prioritize/PRD.md`) and architecture (`arch/architecture.md`), then verify against the implemented code:
 
    **A) Scope Drift Detection:**
-   - Map all Must Have user stories from the PRD
+   - Map all Must Have work items from the PRD
    - Scan implemented code for routes, endpoints, services, modules, and configurations
-   - For each implemented component, trace it back to a PRD user story
+   - For each implemented component, trace it back to a PRD work item
    - Produce a traceability table in the test report:
      ```markdown
      ## Scope Drift Analysis
 
-     | Implemented Component | PRD User Story | Status |
+     | Implemented Component | PRD Work Item | Status |
      |---|---|---|
-     | /api/users endpoint | US-1: User registration | Traced |
+     | /api/users endpoint | WI-1: User registration | Traced |
      | /api/analytics endpoint | — | UNTRACED |
      ```
    - Components marked UNTRACED = scope drift → P1

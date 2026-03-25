@@ -107,7 +107,7 @@ Step 1/4: Shaping Review | Session: {SESSION_ID}
 ```
 
 1. Read PRD and pitches, extract features as shaped ideas
-2. If shards exist in `~/.claude/circle/projects/{project}/shards/stories/`, list them
+2. If shards exist in `~/.claude/circle/projects/{project}/shards/tasks/`, list them
 3. Display ideas with shaped status:
 
 ```

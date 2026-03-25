@@ -51,10 +51,10 @@ Stop here. Do NOT proceed without a working test runner.
 ## Input
 
 Accept parameter: `<unit-of-work>` — a description of what to implement. Can be:
-- A user story: "As a user, I want to..."
+- A work item: "Enable users to..."
 - A feature: "Add password validation to the login form"
 - A bugfix: "Fix null pointer when user has no profile"
-- A story shard: `STORY-001` (loaded from `~/.claude/circle/projects/{project}/shards/stories/`)
+- A task shard: `TASK-001` (loaded from `~/.claude/circle/projects/{project}/shards/tasks/`)
 
 If no parameter: ask the user what to implement.
 

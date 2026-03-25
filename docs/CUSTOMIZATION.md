@@ -321,14 +321,14 @@ Model and effort routing let you optimize cost without sacrificing quality where
 
 ## 8. Parallel Implementation
 
-When stories are sharded (via `/circle:shard`), greenfield can implement independent stories in parallel using git worktrees. This reduces wall-clock time for multi-story features.
+When work items are sharded (via `/circle:shard`), greenfield can implement independent tasks in parallel using git worktrees. This reduces wall-clock time for multi-task features.
 
 ### How It Works
 
-1. Greenfield detects `shards/stories/` with ≥2 story files
-2. Parses `Dependencies` from each story shard
-3. Builds a dependency graph (story-to-story deps only)
-4. Groups independent stories into parallel waves (max 3 concurrent)
+1. Greenfield detects `shards/tasks/` with ≥2 task files
+2. Parses `Dependencies` from each task shard
+3. Builds a dependency graph (task-to-task deps only)
+4. Groups independent tasks into parallel waves (max 3 concurrent)
 5. Launches impl agents in isolated worktrees
 6. Merges completed worktrees into the feature branch via `git merge --no-ff`
 7. Pauses on merge conflicts for manual resolution
@@ -344,7 +344,7 @@ parallel:
 ### When It Activates
 
 Parallel impl runs only when:
-- `shards/stories/` exists with ≥2 story files
+- `shards/tasks/` exists with ≥2 task files
 - `parallel.enabled` is not `false` in config.yaml
 
 Otherwise, greenfield falls back to sequential implementation silently.

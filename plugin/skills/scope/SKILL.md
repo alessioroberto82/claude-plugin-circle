@@ -1,6 +1,6 @@
 ---
 name: scope
-description: Scope Clarifier — Gathers requirements, clarifies scope, breaks down user stories. Use to start a new feature or clarify ambiguous requirements.
+description: Scope Clarifier — Gathers requirements, clarifies scope, breaks down work items. Use to start a new feature or clarify ambiguous requirements.
 allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork

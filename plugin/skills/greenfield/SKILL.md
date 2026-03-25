@@ -469,7 +469,7 @@ After the Prioritizer's PRD phase, if the PRD exceeds ~3000 tokens:
 
 ```
 The PRD is quite large ({token_estimate} tokens).
-Context sharding can split it into atomic stories for focused implementation.
+Context sharding can split it into atomic tasks for focused implementation.
 
 Run sharding? [y/n]
 → /circle:shard
@@ -477,60 +477,60 @@ Run sharding? [y/n]
 
 If sharding is enabled and parallel execution is disabled, the Implementer step will prompt:
 ```
-Shards available. Which story should the Implementer work on?
-→ /circle:impl STORY-001
+Shards available. Which task should the Implementer work on?
+→ /circle:impl TASK-001
 ```
 
 ---
 
 ## Parallel Implementation
 
-When shards exist and the impl step is reached, the orchestrator can launch independent stories in parallel using git worktrees.
+When shards exist and the impl step is reached, the orchestrator can launch independent tasks in parallel using git worktrees.
 
 ### Activation Conditions
 
 Parallel impl activates only when ALL of these are true:
-1. `shards/sessions/{SESSION_ID}/stories/` directory exists with ≥2 story files
+1. `shards/sessions/{SESSION_ID}/tasks/` directory exists with ≥2 task files
 2. `parallel.enabled` is not `false` in config.yaml (default: true)
 
 When either condition fails, fall back to sequential impl (current behavior, no warning).
 
 ### Dependency Graph
 
-1. Read all files in `$BASE/shards/sessions/{SESSION_ID}/stories/`
-2. Parse the `**Dependencies**:` field from each story shard
-3. Filter to **story-to-story dependencies only** (ADR/FR references are informational, not blocking)
-4. Build a DAG of story dependencies
-5. Group stories into execution waves:
-   - **Wave 1**: stories with zero unresolved story dependencies
-   - **Wave 2**: stories whose deps are all in wave 1
+1. Read all files in `$BASE/shards/sessions/{SESSION_ID}/tasks/`
+2. Parse the `**Dependencies**:` field from each task shard
+3. Filter to **task-to-task dependencies only** (ADR/FR references are informational, not blocking)
+4. Build a DAG of task dependencies
+5. Group tasks into execution waves:
+   - **Wave 1**: tasks with zero unresolved task dependencies
+   - **Wave 2**: tasks whose deps are all in wave 1
    - ...and so on
-6. Stories without a Dependencies field are treated as independent (wave 1)
+6. Tasks without a Dependencies field are treated as independent (wave 1)
 
 ### Execution Protocol
 
 1. Display the wave plan to the user:
    ```
    Parallel implementation plan:
-   Wave 1 (parallel, max {max_agents}): STORY-001, STORY-002, STORY-003
-   Wave 2 (after wave 1): STORY-004
+   Wave 1 (parallel, max {max_agents}): TASK-001, TASK-002, TASK-003
+   Wave 2 (after wave 1): TASK-004
    Proceed? [y/n]
    ```
 
 2. For each wave:
    a. Launch `min(wave_size, parallel.max_agents)` Task agents in a single message:
       - Each with `isolation: "worktree"`
-      - Each with prompt: `/circle:impl STORY-xxx`
+      - Each with prompt: `/circle:impl TASK-xxx`
       - Each with `model` from model_routing and effort from effort_routing
    b. Wait for all agents in the wave to complete
    c. For each completed agent, merge into the feature branch:
       ```
-      git merge <worktree-branch> --no-ff -m "merge: STORY-xxx implementation"
+      git merge <worktree-branch> --no-ff -m "merge: TASK-xxx implementation"
       ```
    d. If merge succeeds: log in session-state checkpoints, clean up worktree
    e. If merge conflicts: **pause workflow**, display conflict details:
       ```
-      MERGE CONFLICT — STORY-xxx
+      MERGE CONFLICT — TASK-xxx
       Conflicting files:
         - {file1}
         - {file2}
@@ -564,12 +564,12 @@ When parallel impl is active, add `parallel` to the session entry in `sessions[S
         "waves": [
           {
             "wave": 1,
-            "stories": ["STORY-001", "STORY-002", "STORY-003"],
+            "tasks": ["TASK-001", "TASK-002", "TASK-003"],
             "status": "completed"
           },
           {
             "wave": 2,
-            "stories": ["STORY-004"],
+            "tasks": ["TASK-004"],
             "status": "pending"
           }
         ]

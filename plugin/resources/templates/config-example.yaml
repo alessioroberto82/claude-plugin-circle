@@ -93,10 +93,10 @@ agents:
       Follow platform design guidelines.
       Support accessibility features.
 
-# Parallel implementation — worktree-based parallel execution of sharded stories
-# When stories are sharded (via /circle:shard), greenfield can implement
-# independent stories in parallel using git worktrees.
-# Requires: shards/stories/ with ≥2 story files.
+# Parallel implementation — worktree-based parallel execution of sharded tasks
+# When work items are sharded (via /circle:shard), greenfield can implement
+# independent tasks in parallel using git worktrees.
+# Requires: shards/tasks/ with ≥2 task files.
 parallel:
   enabled: true           # Enable parallel impl (default: true)
   max_agents: 3           # Max concurrent worktree agents (default: 3)

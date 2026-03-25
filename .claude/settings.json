@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/alessioroberto/.claude/bmad/projects/omron-foresight-ios/**)",
+      "Read(//Users/alessioroberto/Documents/Omron-Foresight-iOS/**)",
+      "Bash(rm -rf plugins/bmad)",
+      "Bash(cp -r /Users/alessioroberto/Projects/claude-plugin-bmad/plugin/ plugins/bmad/)",
+      "WebFetch(domain:basecamp.com)",
+      "Read(//Users/alessioroberto/.claude/plugins/cache/bmad/bmad/0.10.0/**)",
+      "Read(//Users/alessioroberto/.claude/plugins/cache/claude-plugins-official/superpowers/4.3.1/skills/subagent-driven-development/**)",
+      "Bash(grep '\"\"version\"\"' /Users/alessioroberto/Projects/claude-plugin-bmad/plugin/.claude-plugin/plugin.json)",
+      "Bash(sort -t: -k2 -rn)"
+    ],
+    "additionalDirectories": [
+      "/Users/alessioroberto/.claude/bmad/projects/claude-plugin-bmad/output/prioritize",
+      "/Users/alessioroberto/.claude/bmad/projects/claude-plugin-bmad/output/qa",
+      "/Users/alessioroberto/.claude/bmad/projects/claude-plugin-bmad/output/arch",
+      "/Users/alessioroberto/Documents/Omron-Foresight-iOS/Docs/bmad"
+    ]
+  }
+}

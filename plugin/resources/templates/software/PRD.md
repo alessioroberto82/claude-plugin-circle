@@ -10,23 +10,23 @@
 | {Goal 1} | {How to measure} | {Target value} |
 | {Goal 2} | {How to measure} | {Target value} |
 
-## User Stories
+## Work Items
 
-### Epic 1: {Name}
+### Initiative 1: {Name}
 
-**US-1.1**: As a {user type}, I want to {action}, so that {benefit}.
+**WI-1.1**: Enable {actor} to {action} for {outcome}.
 - Acceptance Criteria:
   - [ ] {Criterion 1}
   - [ ] {Criterion 2}
 
-**US-1.2**: As a {user type}, I want to {action}, so that {benefit}.
+**WI-1.2**: Enable {actor} to {action} for {outcome}.
 - Acceptance Criteria:
   - [ ] {Criterion 1}
   - [ ] {Criterion 2}
 
-### Epic 2: {Name}
+### Initiative 2: {Name}
 
-**US-2.1**: As a {user type}, I want to {action}, so that {benefit}.
+**WI-2.1**: Enable {actor} to {action} for {outcome}.
 - Acceptance Criteria:
   - [ ] {Criterion 1}
 

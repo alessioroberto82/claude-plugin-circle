@@ -9,7 +9,7 @@ You talk to them using simple commands in Claude Code. No programming knowledge 
 Circle is designed for everyone involved in building a product:
 
 - **Product people** — define what to build, prioritize features, create roadmaps
-- **Analysts** — gather requirements, write user stories, clarify scope
+- **Analysts** — gather requirements, define work items, clarify scope
 - **Designers** — create UI/UX designs, map user journeys, build wireframes
 - **Coordinators** — plan work cycles, coordinate the team, track progress
 - **Developers** — implement features, review code, run tests

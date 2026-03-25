@@ -60,20 +60,20 @@ If PRD is missing after applying the discovery rules above: "PRD not found. Run 
 3. **Run 8 validation checks** in order:
 
    **Check 1 — Completeness**
-   Verify all required PRD sections are present. Required sections (from template): Vision, Goals & Success Metrics, User Stories (with at least one Epic), Prioritization, Release Plan, Dependencies & Risks.
+   Verify all required PRD sections are present. Required sections (from template): Vision, Goals & Success Metrics, Work Items (with at least one Initiative), Prioritization, Release Plan, Dependencies & Risks.
    - PASS: All required sections present with content
    - FAIL: One or more required sections missing or empty
 
    **Check 2 — Requirements Coverage**
-   If `requirements.md` exists, extract all functional requirements (FR-*) and verify each has at least one corresponding user story in the PRD.
-   - PASS: Every FR-* is addressed by a user story
-   - PARTIAL: Some requirements lack user stories (list which)
+   If `requirements.md` exists, extract all functional requirements (FR-*) and verify each has at least one corresponding work item in the PRD.
+   - PASS: Every FR-* is addressed by a work item
+   - PARTIAL: Some requirements lack work items (list which)
    - SKIP: No requirements.md available
 
    **Check 3 — Traceability**
-   Every user story must have acceptance criteria. Each acceptance criterion must be testable — it should contain a verifiable condition, not a vague statement.
-   - PASS: All stories have testable acceptance criteria
-   - FAIL: Stories missing acceptance criteria, or criteria are not testable
+   Every work item must have acceptance criteria. Each acceptance criterion must be testable — it should contain a verifiable condition, not a vague statement.
+   - PASS: All work items have testable acceptance criteria
+   - FAIL: Work items missing acceptance criteria, or criteria are not testable
 
    **Check 4 — Measurability**
    Goals & Success Metrics table must have concrete metrics with target values. "Improve performance" is not measurable; ">0 in first month" is.
@@ -91,7 +91,7 @@ If PRD is missing after applying the discovery rules above: "PRD not found. Run 
    - WARN: Implementation details detected (list locations)
 
    **Check 7 — Domain Compliance**
-   PRD domain (inferred from content) matches the detected project domain. User stories reference appropriate user types.
+   PRD domain (inferred from content) matches the detected project domain. Work items reference appropriate user types.
    - PASS: Domain alignment is consistent
    - WARN: Mismatch detected
 
