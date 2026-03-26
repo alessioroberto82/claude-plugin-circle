@@ -27,11 +27,11 @@ Automatically detect documents to shard in `~/.claude/circle/projects/{project}/
 
 | Source | Session-scoped path | Legacy path (standalone) |
 |---|---|---|
-| PRD | `sessions/{SESSION_ID}/prioritize/PRD-*.md` | `prioritize/PRD-*.md` |
+| PRD | `sessions/{SESSION_ID}/refine/PRD-*.md` | `refine/PRD-*.md` |
 | Architecture | `sessions/{SESSION_ID}/arch/architecture.md` | `arch/architecture.md` |
 | Requirements | `sessions/{SESSION_ID}/scope/requirements.md` | `scope/requirements.md` |
 
-If no documents found in either location: "No documents to shard. Run `/circle:prioritize` or `/circle:scope` first."
+If no documents found in either location: "No documents to shard. Run `/circle:refine` or `/circle:scope` first."
 
 ## Process
 
@@ -139,7 +139,7 @@ If no documents found in either location: "No documents to shard. Run `/circle:p
            "enabled": true,
            "shards_count": 15,
            "last_shard_date": "{ISO-8601}",
-           "sources": ["prioritize/PRD.md", "arch/architecture.md"]
+           "sources": ["refine/PRD.md", "arch/architecture.md"]
          }
        }
      }
@@ -153,7 +153,7 @@ If no documents found in either location: "No documents to shard. Run `/circle:p
        "enabled": true,
        "shards_count": 15,
        "last_shard_date": "{ISO-8601}",
-       "sources": ["prioritize/PRD.md", "arch/architecture.md"]
+       "sources": ["refine/PRD.md", "arch/architecture.md"]
      }
    }
    ```

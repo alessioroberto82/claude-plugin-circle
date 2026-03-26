@@ -40,7 +40,7 @@ Detect the project domain by analyzing files in the current directory:
 
 Read design from `~/.claude/circle/projects/{project}/output/`:
 - Check for: `arch/architecture.md`
-- Also useful: `scope/requirements.md`, `prioritize/PRD.md`
+- Also useful: `scope/requirements.md`, `refine/PRD.md`
 - If architecture missing: "Design missing. Run `/circle:arch` first."
 
 Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
@@ -86,7 +86,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 3. **Simplicity Assessment**: Before writing any code, evaluate the design for overcomplication:
 
-   Read the architecture (`arch/architecture.md`) and PRD (`prioritize/PRD.md`), then assess:
+   Read the architecture (`arch/architecture.md`) and PRD (`refine/PRD.md`), then assess:
 
    **a) Scope check**: Does the design contain components, services, or modules not directly required by Must Have work items? If yes, list them and ask the user:
    > "These components are in the architecture but not traced to MVP work items: {list}. Proceed with full design, or simplify?"

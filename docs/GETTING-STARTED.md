@@ -22,7 +22,7 @@ You don't need to be technical to use Circle. If you can type a sentence and pre
 | Role | What it does |
 |------|-------------|
 | **Scope Clarifier** | Helps you define what you're building and why |
-| **Prioritizer** | Prioritizes features and creates a product plan |
+| **Refiner** | Refines requirements into a product plan, prioritizes features |
 | **Experience Designer** | Designs the user experience and interface |
 | **Architecture Owner** | Plans how the software will be structured |
 | **Implementer** | Writes and reviews the actual code |
@@ -52,14 +52,14 @@ That's it. Each role works the same way: type the command, have a conversation, 
 
 ### If you define the product
 
-Start with the Scope Clarifier to gather requirements, then invoke the Prioritizer to create a product requirements document (PRD) and prioritize features:
+Start with the Scope Clarifier to gather requirements, then invoke the Refiner to create a product requirements document (PRD) and prioritize features:
 
 ```
 /circle:scope
 ```
 then
 ```
-/circle:prioritize
+/circle:refine
 ```
 
 ### If you're a Designer
@@ -98,7 +98,7 @@ The greenfield command runs the entire process from start to finish, with you ma
 /circle:greenfield
 ```
 
-This walks through: Scope Clarifier (requirements) → Prioritizer (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security Guardian (security audit) → Facilitator (cycle planning) → Implementer (simplicity assessment + implementation with TDD) → Quality Guardian (testing + TDD compliance + coherence & scope drift check). You can skip optional steps.
+This walks through: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security Guardian (security audit) → Facilitator (cycle planning) → Implementer (simplicity assessment + implementation with TDD) → Quality Guardian (testing + TDD compliance + coherence & scope drift check). You can skip optional steps.
 
 ## Available commands
 
@@ -107,7 +107,7 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | Command | What it does |
 |---------|-------------|
 | `/circle:scope` | Gather requirements and clarify scope |
-| `/circle:prioritize` | Create a product plan and prioritize features |
+| `/circle:refine` | Create a product plan and prioritize features |
 | `/circle:ux` | Design user experience and interface |
 | `/circle:arch` | Plan software architecture |
 | `/circle:impl` | Implement code |
@@ -136,7 +136,7 @@ Each role saves their work in their own subfolder (e.g., `scope/`, `arch/`, `imp
 ## Tips
 
 - **You can invoke any role at any time.** There's no strict order — use whoever makes sense for what you need right now.
-- **Roles access context within a session.** If the Scope Clarifier creates requirements, the Prioritizer can read them when you invoke it to create a product plan.
+- **Roles access context within a session.** If the Scope Clarifier creates requirements, the Refiner can read them when you invoke it to create a product plan.
 - **Make Circle know your project.** Create a Knowledge Pack — a set of Markdown files in `docs/bmad/` that describe your project's domain, architecture, build system, and integrations. Every role automatically loads the relevant files. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **You can customize how roles behave** per project. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **All dependencies are optional.** Circle works out of the box. Extra integrations (like Linear for issue tracking) add functionality but aren't required.

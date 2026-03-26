@@ -40,13 +40,13 @@ Detect the project domain by analyzing files in the current directory:
 
 Read requirements from `~/.claude/circle/projects/{project}/output/`:
 - Check for: `scope/requirements.md`
-- Also check: `prioritize/PRD.md` (if Prioritizer has refined requirements)
+- Also check: `refine/PRD.md` (if Refiner has refined requirements)
 - If none found: "Requirements missing. Run `/circle:scope` first to gather requirements."
 
 Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
 - If `extra_instructions` for arch exists, incorporate them
 - If `context_files` defined, read those files for additional architectural context
-- **Upstream for self-verification**: `scope/requirements.md` or `prioritize/PRD.md` (loaded before handoff if guardrails enabled)
+- **Upstream for self-verification**: `scope/requirements.md` or `refine/PRD.md` (loaded before handoff if guardrails enabled)
 
 ## Domain-Specific Behavior
 
@@ -105,7 +105,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 6. **Generate architecture document**: Write to `~/.claude/circle/projects/$PROJECT_NAME/output/arch/{filename}`
 
-7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `prioritize/PRD.md`.
+7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `refine/PRD.md`.
 
 8. **MCP Integration** (if available):
    - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.

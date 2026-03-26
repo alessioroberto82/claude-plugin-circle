@@ -19,7 +19,7 @@ groups:
         check_command: ""
         install_command: ""
         install_note: "Enable in Claude Code settings → MCP Servers → Linear"
-        used_by: "scope, arch, impl, qa, ux, prioritize, facilitate, docs, code-review, cycle"
+        used_by: "scope, arch, impl, qa, ux, refine, facilitate, docs, code-review, cycle"
 
       - id: claude-mem
         type: plugin

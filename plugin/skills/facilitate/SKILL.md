@@ -39,11 +39,11 @@ Detect the project domain by analyzing files in the current directory:
 ## Input Prerequisites
 
 Read from `~/.claude/circle/projects/{project}/output/`:
-- PRD: `prioritize/PRD-*.md`
+- PRD: `refine/PRD-*.md`
 - Architecture: `arch/architecture.md`
 - Optional: `qa/test-plan-*.md`
 - Previous cycle: `facilitate/cycle-plan-*.md`
-- If PRD missing: "PRD or pitch needed for cycle planning. Run `/circle:prioritize` first."
+- If PRD missing: "PRD or pitch needed for cycle planning. Run `/circle:refine` first."
 
 ## Process
 

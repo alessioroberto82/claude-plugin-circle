@@ -39,7 +39,7 @@ Detect the project domain by analyzing files in the current directory:
 ## Input Prerequisites
 
 Read from `~/.claude/circle/projects/{project}/output/`:
-- Requirements: `scope/requirements.md` or `prioritize/PRD.md`
+- Requirements: `scope/requirements.md` or `refine/PRD.md`
 - If requirements missing: "Requirements needed for UX design. Run `/circle:scope` first."
 
 ## Domain-Specific Behavior

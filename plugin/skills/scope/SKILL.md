@@ -103,7 +103,7 @@ Detect the project domain by analyzing files in the current directory:
 8. **Handoff**:
    > **Scope Clarifier — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/scope/{filename}`
-   > Next suggested role: `/circle:prioritize` for product prioritization, or `/circle:arch` for architecture design.
+   > Next suggested role: `/circle:refine` for product prioritization, or `/circle:arch` for architecture design.
 
 ## Circle Principles
 - Human-in-the-loop: ask questions, don't assume

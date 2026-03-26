@@ -18,7 +18,7 @@
 greenfield_defaults:
   ux: true
   facilitate: false
-  validate_prd: true     # PRD quality validation after prioritize (default: true since v0.8.0)
+  validate_prd: true     # PRD quality validation after refine (default: true since v0.8.0)
 
 # Guardrails — self-verification before handoff
 # Roles verify their output covers upstream requirements before completing.
@@ -49,7 +49,7 @@ agents:
   scope:
     model: sonnet
     effort: medium
-  prioritize:
+  refine:
     model: sonnet
     effort: medium
   arch:

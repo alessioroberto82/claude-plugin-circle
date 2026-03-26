@@ -1,5 +1,50 @@
 # Changelog
 
+## v1.5.0 — Rename Prioritizer to Refiner
+
+### Breaking Change
+
+The `prioritize` skill has been renamed to `refine` to avoid naming conflict with the Score plugin's `/score:prioritize` skill. The role name changes from **Prioritizer** to **Refiner**.
+
+- **Command**: `/circle:prioritize` → `/circle:refine`
+- **Skill directory**: `plugin/skills/prioritize/` → `plugin/skills/refine/`
+- **Output directory**: `~/.claude/circle/projects/{project}/output/refine/` (was `prioritize/`)
+- **Session paths**: `sessions/{id}/refine/` (was `sessions/{id}/prioritize/`)
+- **Config key**: `agents.refine` (was `agents.prioritize`)
+
+### Migration
+
+Existing output files in `prioritize/` directories are not auto-migrated. If you have active sessions referencing `prioritize/` paths, manually rename the directories or start a new session.
+
+### Skills Changed
+
+| Skill | Change |
+|-------|--------|
+| `refine` | Renamed from `prioritize` — frontmatter, output paths, config key |
+| `greenfield` | Updated workflow references, session paths, model/effort routing keys |
+| `cycle` | Updated PRD paths and session directory creation |
+| `scope` | Updated handoff suggestion |
+| `validate-prd` | Updated description, input paths, error messages |
+| `arch` | Updated upstream PRD path |
+| `security` | Updated PRD reference |
+| `ux` | Updated PRD reference |
+| `impl` | Updated PRD reference |
+| `qa` | Updated PRD and guardrails references |
+| `shard` | Updated PRD discovery paths |
+| `facilitate` | Updated PRD path and error message |
+| `init` | Updated output directory creation |
+
+### Config & Resources Changed
+
+| File | Change |
+|------|--------|
+| `guardrails.md` | Updated role name and PRD paths |
+| `deps-manifest.yaml` | Updated `used_by` for Linear |
+| `config-example.yaml` | Updated agent key and comment |
+| `circle.md` | Updated dashboard command and artifact listing |
+
+---
+
 ## v1.4.0 — Multi-Session Workflow Tracking
 
 ### Session Registry (schema v2)

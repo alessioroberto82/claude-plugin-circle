@@ -19,7 +19,7 @@ Circle works for everyone on the team: product people, designers, analysts, deve
 | `/circle:impl` | Implementer | Writes code, reviews implementations |
 | `/circle:qa` | Quality Guardian | Plans testing strategy, validates quality |
 | `/circle:ux` | Experience Designer | Designs user interfaces and user journeys |
-| `/circle:prioritize` | Prioritizer | Prioritizes features, creates product plans (PRDs) |
+| `/circle:refine` | Refiner | Refines requirements into PRDs, prioritizes features |
 | `/circle:facilitate` | Facilitator | Plans cycles, coordinates the team |
 | `/circle:security` | Security Guardian | Audits security, models threats, checks compliance |
 | `/circle:docs` | Documentation Steward | Generates docs from templates |
@@ -40,7 +40,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 
 | Command | What it does |
 |---|---|
-| `/circle:greenfield` | Runs the full workflow: Scope Clarifier (requirements) → Prioritizer (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security review → Facilitator (cycle plan) → Implementer (code) → Quality Guardian (tests). You can skip optional steps. |
+| `/circle:greenfield` | Runs the full workflow: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security review → Facilitator (cycle plan) → Implementer (code) → Quality Guardian (tests). You can skip optional steps. |
 | `/circle:cycle` | Interactive cycle planning ceremony — 4-step Shape Up process from shaping review to cycle commitment |
 
 > **Shape Up**: Circle uses [Shape Up](https://basecamp.com/shapeup) for work planning — appetite-based sizing (☕ cappuccino, 🥪 sandwich, 🍲 hutspot) instead of story points, and 4-week cycles instead of sprints.
@@ -142,7 +142,7 @@ Not every role needs every file. The config maps knowledge by concern:
 
 | Role | Loads |
 |---|---|
-| Scope Clarifier, Prioritizer | project + domain |
+| Scope Clarifier, Refiner | project + domain |
 | Architecture Owner | project + domain + architecture + integrations |
 | Implementer | project + domain + architecture + build + integrations |
 | Quality Guardian | project + domain + architecture + build |
@@ -177,7 +177,7 @@ Circle never adds files to your project repository. All outputs are stored in a 
 │   ├── qa/           # Test plans, reports
 │   ├── security/     # Security audits
 │   ├── ux/           # UX designs
-│   ├── prioritize/   # PRDs
+│   ├── refine/       # PRDs
 │   ├── facilitate/   # Cycle plans
 │   └── docs/         # Generated docs
 ├── shards/           # Context shards
@@ -196,7 +196,7 @@ Each work role runs in its own isolated context — it starts fresh every time w
 
 Built-in safety checks prevent the workflow from advancing when something isn't right:
 
-- **PRD Validation Gate**: If PRD validation fails, the workflow loops back to the Prioritizer for fixes before architecture begins
+- **PRD Validation Gate**: If PRD validation fails, the workflow loops back to the Refiner for fixes before architecture begins
 - **Security Block**: The greenfield orchestrator won't move to implementation if critical security issues are found
 - **QA Reject Gate**: If the Quality Guardian rejects the implementation, the workflow sends it back to the Implementer for fixes
 - **TDD Compliance**: The Quality Guardian verifies commit history follows the `test(red):` → `feat(green):` → `refactor:` pattern. Hard enforcement blocks merge; soft enforcement warns only
@@ -258,7 +258,7 @@ Drop a `.md` in `plugin/resources/templates/docs/` or `software/`.
 
 ### New Feature
 ```
-Scope Clarifier → Prioritizer → [PRD Validator] → [Experience Designer] → Architecture Owner → [Security] → [Facilitator] → Implementer (with TDD) → Quality Guardian
+Scope Clarifier → Refiner → [PRD Validator] → [Experience Designer] → Architecture Owner → [Security] → [Facilitator] → Implementer (with TDD) → Quality Guardian
 ```
 Steps in brackets are optional.
 

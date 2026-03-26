@@ -40,7 +40,7 @@ Detect the project domain by analyzing files in the current directory:
 
 Read from `~/.claude/circle/projects/{project}/output/`:
 - Architecture: `arch/architecture.md`
-- Also useful: `scope/requirements.md`, `prioritize/PRD.md`
+- Also useful: `scope/requirements.md`, `refine/PRD.md`
 - If architecture missing: "Architecture missing. Run `/circle:arch` first."
 
 Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`

@@ -31,11 +31,11 @@ shaping_review → appetite_sizing → cycle_commitment → quality_notes
 ## Prerequisites
 
 Read from `~/.claude/circle/projects/{project}/output/`:
-- PRD: `sessions/*/prioritize/PRD-*.md` (session-scoped, preferred). Fallback: `prioritize/PRD-*.md` (legacy).
+- PRD: `sessions/*/refine/PRD-*.md` (session-scoped, preferred). Fallback: `refine/PRD-*.md` (legacy).
 - Requirements: `sessions/*/scope/requirements*.md` (session-scoped, preferred). Fallback: `scope/requirements*.md` (legacy).
 - Previous cycle: `facilitate/cycle-plan-*.md`
 
-If no PRD found: "No PRD or pitch found. Run `/circle:prioritize` to create one, or describe your ideas directly."
+If no PRD found: "No PRD or pitch found. Run `/circle:refine` to create one, or describe your ideas directly."
 
 ## State Management
 
@@ -59,7 +59,7 @@ Link a Linear issue? (paste ID like ENG-42, or press Enter to auto-generate)
 **Create session artifact directory**:
 ```bash
 SESSION_ID="{the chosen session ID}"
-mkdir -p $BASE/output/sessions/$SESSION_ID/{facilitate,scope,prioritize}
+mkdir -p $BASE/output/sessions/$SESSION_ID/{facilitate,scope,refine}
 ```
 
 **Check existing cycle sessions** (on startup):

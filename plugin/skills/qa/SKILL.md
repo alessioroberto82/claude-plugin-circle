@@ -39,11 +39,11 @@ Detect the project domain by analyzing files in the current directory:
 ## Input Prerequisites
 
 Read from `~/.claude/circle/projects/{project}/output/`:
-- Requirements: `scope/requirements.md` or `prioritize/PRD.md`
+- Requirements: `scope/requirements.md` or `refine/PRD.md`
 - Architecture: `arch/architecture.md`
 - Implementation notes: `impl/implementation-notes-*.md`
 - If requirements missing: "Requirements needed for test planning. Run `/circle:scope` first."
-- **Upstream for self-verification**: `scope/requirements.md` or `prioritize/PRD.md` (loaded before handoff if guardrails enabled)
+- **Upstream for self-verification**: `scope/requirements.md` or `refine/PRD.md` (loaded before handoff if guardrails enabled)
 
 ## Domain-Specific Behavior
 
@@ -289,7 +289,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
 
 6. **Coherence & Scope Drift Check**:
 
-   Read the PRD (`prioritize/PRD.md`) and architecture (`arch/architecture.md`), then verify against the implemented code:
+   Read the PRD (`refine/PRD.md`) and architecture (`arch/architecture.md`), then verify against the implemented code:
 
    **A) Scope Drift Detection:**
    - Map all Must Have work items from the PRD
@@ -328,7 +328,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
    - Missing declared integration point → P1
    - Circular dependency → P0
 
-7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `prioritize/PRD.md`.
+7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `refine/PRD.md`.
 
 8. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/qa/test-report-{date}.md`
 

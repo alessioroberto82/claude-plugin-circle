@@ -1,6 +1,6 @@
 ---
 name: validate-prd
-description: "PRD Validator — Validates PRD quality against 8 structured checks adapted from Circle-METHOD. Use after prioritize, before arch."
+description: "PRD Validator — Validates PRD quality against 8 structured checks adapted from Circle-METHOD. Use after refine, before arch."
 allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
@@ -39,13 +39,13 @@ Detect the project domain by analyzing files in the current directory:
 ## Input Prerequisites
 
 Read from `~/.claude/circle/projects/{project}/output/`:
-- **Required**: resolve the PRD from `prioritize/` as follows:
+- **Required**: resolve the PRD from `refine/` as follows:
   - If `$ARGUMENTS` is **not** provided: select the most recent `PRD-*.md` file (by modification time). If none exist, fall back to `PRD.md` if present.
-  - If `$ARGUMENTS` **is** provided: use only its basename component as the PRD filename (strip any path separators and `..` segments). Do not allow path traversal — only filenames under `prioritize/` are allowed.
+  - If `$ARGUMENTS` **is** provided: use only its basename component as the PRD filename (strip any path separators and `..` segments). Do not allow path traversal — only filenames under `refine/` are allowed.
 - **Optional**: `scope/requirements.md` — enables requirements coverage check
 - **Reference**: `${CLAUDE_PLUGIN_ROOT}/resources/templates/software/PRD.md` — template for completeness check
 
-If PRD is missing after applying the discovery rules above: "PRD not found. Run `/circle:prioritize` first to create a PRD."
+If PRD is missing after applying the discovery rules above: "PRD not found. Run `/circle:refine` first to create a PRD."
 
 ## Process
 
@@ -143,7 +143,7 @@ If PRD is missing after applying the discovery rules above: "PRD not found. Run 
    **If NEEDS REVISION:**
    > **PRD Validator — NEEDS REVISION.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/qa/prd-validation-report.md`
-   > {count} blocker(s) found. Fix and re-run `/circle:validate-prd`, or revise with `/circle:prioritize`.
+   > {count} blocker(s) found. Fix and re-run `/circle:validate-prd`, or revise with `/circle:refine`.
 
    **If PASS with notes:**
    > **PRD Validator — PASS with notes.**

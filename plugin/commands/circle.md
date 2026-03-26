@@ -39,7 +39,7 @@ Your circle:
   /circle:impl        — Implementer (implementation, code review)
   /circle:qa          — Quality Guardian (testing, quality)
   /circle:ux          — Experience Designer (UI/UX design)
-  /circle:prioritize  — Prioritizer (prioritization, roadmap)
+  /circle:refine      — Refiner (prioritization, roadmap)
   /circle:facilitate  — Facilitator (cycle planning)
   /circle:security    — Security Guardian (audits, threat modeling)
   /circle:docs        — Documentation Steward
@@ -73,7 +73,7 @@ Generated artifacts:
   qa/          <list of files or empty>
   security/    <list of files or empty>
   ux/          <list of files or empty>
-  prioritize/  <list of files or empty>
+  refine/      <list of files or empty>
   facilitate/  <list of files or empty>
   code-review/ <list of files or empty>
   triage/      <list of files or empty>

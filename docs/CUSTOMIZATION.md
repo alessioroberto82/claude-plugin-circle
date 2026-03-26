@@ -265,7 +265,7 @@ Circle assigns a default Claude model and effort level to each fork-context role
 | Role | Default Model | Default Effort | Rationale |
 |------|--------------|----------------|-----------|
 | Scope Clarifier | sonnet | medium | Structured requirements gathering |
-| Prioritizer | sonnet | medium | Feature prioritization |
+| Refiner | sonnet | medium | Feature prioritization |
 | Experience Designer | sonnet | medium | UX design patterns |
 | Architecture Owner | opus | high | Deep trade-off reasoning |
 | Security Guardian | opus | high | Adversarial threat modeling |

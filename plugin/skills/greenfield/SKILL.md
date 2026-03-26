@@ -1,6 +1,6 @@
 ---
 name: greenfield
-description: Orchestrates full greenfield workflow (init → Scope Clarifier → Prioritizer → PRD Validator → Experience Designer → Architecture Owner → Security → Facilitator → Implementer → Quality Guardian). Interactive with human checkpoints at each phase. Optional phases (PRD Validator, Experience Designer, Facilitator). Resumable from any checkpoint.
+description: Orchestrates full greenfield workflow (init → Scope Clarifier → Refiner → PRD Validator → Experience Designer → Architecture Owner → Security → Facilitator → Implementer → Quality Guardian). Interactive with human checkpoints at each phase. Optional phases (PRD Validator, Experience Designer, Facilitator). Resumable from any checkpoint.
 allowed-tools: Read, Write, Grep, Glob, Bash
 metadata:
   context: same
@@ -20,19 +20,19 @@ You are the conductor — you don't play the instruments, you ensure the orchest
 
 **Base Workflow** (7 mandatory steps):
 ```
-init → scope → prioritize → arch → security → impl → qa
+init → scope → refine → arch → security → impl → qa
 ```
 
 **Optional Phases** (3 optional steps):
 ```
-+ validate-prd (after prioritize, before arch)
-+ ux (after prioritize, before arch)
++ validate-prd (after refine, before arch)
++ ux (after refine, before arch)
 + facilitate (before impl)
 ```
 
 **Full Workflow** (10 steps with all options):
 ```
-init → scope → prioritize → validate-prd → ux → arch → security → facilitate → impl → qa
+init → scope → refine → validate-prd → ux → arch → security → facilitate → impl → qa
 ```
 
 ## Commands
@@ -54,7 +54,7 @@ Each role runs with a recommended Claude model and effort level. The orchestrato
 | Role | Default Model | Default Effort | Rationale |
 |------|--------------|----------------|-----------|
 | Scope Clarifier | sonnet | medium | Structured requirements gathering |
-| Prioritizer | sonnet | medium | Feature prioritization |
+| Refiner | sonnet | medium | Feature prioritization |
 | Experience Designer | sonnet | medium | UX design patterns |
 | Architecture Owner | opus | high | Deep trade-off reasoning |
 | Security Guardian | opus | high | Adversarial threat modeling |
@@ -130,7 +130,7 @@ Link a Linear issue? (paste ID like ENG-42, or press Enter to auto-generate)
 **Create session artifact directory**:
 ```bash
 SESSION_ID="{the chosen session ID}"
-mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,security,ux,prioritize,facilitate,docs}
+mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,security,ux,refine,facilitate,docs}
 mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,stories}
 ```
 
@@ -173,7 +173,7 @@ Optional phases:
       },
       "model_routing": {
         "scope": "sonnet",
-        "prioritize": "sonnet",
+        "refine": "sonnet",
         "validate-prd": "sonnet",
         "ux": "sonnet",
         "arch": "opus",
@@ -184,7 +184,7 @@ Optional phases:
       },
       "effort_routing": {
         "scope": "medium",
-        "prioritize": "medium",
+        "refine": "medium",
         "validate-prd": "low",
         "ux": "medium",
         "arch": "high",
@@ -193,7 +193,7 @@ Optional phases:
         "impl": "high",
         "qa": "medium"
       },
-      "step_sequence": ["init", "scope", "prioritize", ...],
+      "step_sequence": ["init", "scope", "refine", ...],
       "artifacts": [],
       "sharding": {},
       "checkpoints": [
@@ -247,7 +247,7 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 | Step | Role | Model | Effort | Purpose | Input | Output |
 |---|---|---|---|---|---|---|
 | 1 | **Scope Clarifier** | sonnet | medium | Gather requirements | User description | `scope/requirements.md` |
-| 2 | **Prioritizer** | sonnet | medium | Prioritize & create PRD | Requirements | `prioritize/PRD-{date}.md` |
+| 2 | **Refiner** | sonnet | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
 | 3* | **PRD Validator** | sonnet | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
 | 4* | **Experience Designer** | sonnet | medium | Design UX | PRD | `ux/ux-design.md` |
 | 5 | **Architecture Owner** | opus | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
@@ -337,7 +337,7 @@ Progress: [{completed}/{total}]
 Completed:
   ✓ init
   ✓ scope → sessions/{SESSION_ID}/scope/requirements.md
-  ✓ prioritize → sessions/{SESSION_ID}/prioritize/PRD.md
+  ✓ refine → sessions/{SESSION_ID}/refine/PRD.md
   → arch (current)
   ○ impl
   ○ qa
@@ -360,9 +360,9 @@ After the validate-prd step:
 
    Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/prd-validation-report.md
 
-   Fix the issues with /circle:prioritize, then re-run /circle:validate-prd.
+   Fix the issues with /circle:refine, then re-run /circle:validate-prd.
    ```
-4. Update `sessions[SESSION_ID]` with `current_step: "prioritize"` and add a checkpoint entry, then loop back to the prioritize step
+4. Update `sessions[SESSION_ID]` with `current_step: "refine"` and add a checkpoint entry, then loop back to the refine step
 5. If PASS or PASS with notes: advance to next step (ux or arch)
 
 ### Gate 1: Security P0 Block
@@ -422,7 +422,7 @@ When all steps are completed:
    | Phase | Role | Status | Artifact |
    |---|---|---|---|
    | Requirements | Scope Clarifier | ✓ | requirements.md |
-   | PRD | Prioritizer | ✓ | PRD.md |
+   | PRD | Refiner | ✓ | PRD.md |
    | PRD Validation | PRD Validator | ✓/skipped | prd-validation-report.md |
    | UX Design | Experience Designer | ✓/skipped | ux-design.md |
    | Architecture | Architecture Owner | ✓ | architecture.md |
@@ -465,7 +465,7 @@ When all steps are completed:
 
 ## Context Sharding Integration
 
-After the Prioritizer's PRD phase, if the PRD exceeds ~3000 tokens:
+After the Refiner's PRD phase, if the PRD exceeds ~3000 tokens:
 
 ```
 The PRD is quite large ({token_estimate} tokens).

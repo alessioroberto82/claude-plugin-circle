@@ -4,7 +4,7 @@ Holacracy-based development workflow plugin for Claude Code with distributed rol
 
 ## Overview
 
-Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. It ships 18 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Prioritizer, Facilitator, Security Guardian, Documentation Steward) and 9 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, work tracking).
+Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. It ships 18 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 9 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, work tracking).
 
 Each role has a clear purpose, domain, and accountability following holacracy principles — authority is distributed and roles act within their domain without asking permission. Circle works for product people, designers, analysts, developers, and documentation writers. No programming knowledge is required to get started.
 
@@ -44,7 +44,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │       ├── greenfield/    — Full workflow orchestrator
 │       ├── impl/          — Implementer
 │       ├── init/          — Project initialization
-│       ├── prioritize/    — Prioritizer
+│       ├── refine/        — Refiner
 │       ├── qa/            — Quality Guardian
 │       ├── scope/         — Scope Clarifier
 │       ├── security/      — Security Guardian
