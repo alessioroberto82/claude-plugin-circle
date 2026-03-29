@@ -230,4 +230,6 @@ Utilities:
   /circle:init         - Project initialization (already done)
 
 Start with: /circle:scope to gather requirements, or /circle:greenfield for the full workflow.
+
+Tip: Run /circle:skills-discovery to find and install additional skills for your domain.
 ```
