@@ -144,7 +144,7 @@ This is a settings file that tells Circle roles how to behave differently for a 
 Create `~/.claude/circle/projects/<project-name>/config.yaml`:
 
 ```yaml
-# What kind of project this is (software or general)
+# What kind of project this is (software, business, personal, or general)
 domain: software
 
 # Which optional steps to include in the full workflow
@@ -348,6 +348,79 @@ Parallel impl runs only when:
 - `parallel.enabled` is not `false` in config.yaml
 
 Otherwise, greenfield falls back to sequential implementation silently.
+
+---
+
+## 9. Multi-Domain Support
+
+Circle automatically detects the project domain and adapts role behavior, questions, and output templates.
+
+### Supported Domains
+
+| Domain | Detected by | Template directory |
+|--------|------------|-------------------|
+| **software** | `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, `pom.xml`, `*.xcodeproj`, `Makefile`, etc. | `templates/software/` |
+| **business** | `business-plan.md`, `market-analysis.md`, `strategy.md` | `templates/business/` |
+| **personal** | `goals.md`, `journal.md`, `habits/` folder | `templates/personal/` |
+| **general** | Default if no indicators found | — |
+
+### Domain-Specific Role Behavior
+
+These roles adapt their process based on detected domain:
+
+| Role | Business behavior | Personal behavior |
+|------|------------------|------------------|
+| **Scope** | Market analysis questions, business brief | Goals/aspirations questions, personal brief |
+| **Refine** | Business requirements document | Action plan |
+| **Security** | Compliance report | Privacy audit |
+| **Facilitate** | Quarterly planning | Weekly planning |
+| **Arch** | Operational architecture | Systems design |
+| **QA** | Validation plan | Progress plan |
+
+### Override Domain
+
+Set domain explicitly in config.yaml:
+
+```yaml
+domain: business  # software, business, personal, or general
+```
+
+---
+
+## 10. Governance Protocol
+
+Circle supports dynamic role creation through a structured governance protocol based on holacracy's tension-driven governance.
+
+### How It Works
+
+1. **Tension detection** — During work, agent roles detect tasks that fall outside any existing role's scope
+2. **Proposal** — The role formulates a tension and proposes a temporary role to the user
+3. **Approval** — The user approves or rejects the proposal
+4. **Creation** — If approved, a temporary role is created in the conversation context
+5. **Promotion** — Temporary roles used 2+ times can be promoted to permanent skills
+
+### Governance Resources
+
+| Resource | Purpose |
+|----------|---------|
+| `resources/governance-protocol.md` | Tension format, proposal flow, temporary role format, promotion rules |
+| `resources/templates/software/role-template.md` | Template for generating new Circle-standard role skills |
+
+### Configuration
+
+The governance protocol is always active in agent roles (via Tension Sensing) and orchestrators (via Temporary Roles). No configuration needed.
+
+---
+
+## 11. Skills Discovery
+
+Discover and install external skills from the marketplace with a mandatory security gate.
+
+```
+/circle:skills-discovery
+```
+
+The security gate classifies each skill as PASS, WARN, or BLOCK based on patterns defined in `resources/skill-security-criteria.md`. BLOCK verdicts reject installation; WARN requires explicit user confirmation.
 
 ---
 

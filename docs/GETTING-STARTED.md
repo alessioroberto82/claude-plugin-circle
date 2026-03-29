@@ -1,6 +1,6 @@
 # Getting Started with Circle
 
-Circle is a circle of AI roles that help you build software — from initial idea through to working code. Each role has a clear purpose and accountability, following holacracy principles.
+Circle is a circle of AI roles that help you build software, plan your business, or organize your personal projects — from initial idea through to working results. Each role has a clear purpose and accountability, following holacracy principles.
 
 You talk to them using simple commands in Claude Code. No programming knowledge required.
 
@@ -122,6 +122,8 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:validate-prd` | Validate PRD quality before architecture design |
 | `/circle:tdd` | Enforce test-driven development (red-green-refactor cycle) |
 | `/circle:shard` | Split large documents into smaller pieces (saves time and cost) |
+| `/circle:track` | Capture work done outside Circle for assessment tracking |
+| `/circle:skills-discovery` | Discover and install external skills with security gate |
 | `/circle:init` | Set up Circle for your current project (run once) |
 | `/circle:dashboard` | See project status and what's been done |
 
@@ -137,7 +139,7 @@ Each role saves their work in their own subfolder (e.g., `scope/`, `arch/`, `imp
 
 - **You can invoke any role at any time.** There's no strict order — use whoever makes sense for what you need right now.
 - **Roles access context within a session.** If the Scope Clarifier creates requirements, the Refiner can read them when you invoke it to create a product plan.
-- **Make Circle know your project.** Create a Knowledge Pack — a set of Markdown files in `docs/bmad/` that describe your project's domain, architecture, build system, and integrations. Every role automatically loads the relevant files. See the [Customization Guide](CUSTOMIZATION.md) for details.
+- **Make Circle know your project.** Create a Knowledge Pack — a set of Markdown files in `docs/circle/` that describe your project's domain, architecture, build system, and integrations. Every role automatically loads the relevant files. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **You can customize how roles behave** per project. See the [Customization Guide](CUSTOMIZATION.md) for details.
 - **All dependencies are optional.** Circle works out of the box. Extra integrations (like Linear for issue tracking) add functionality but aren't required.
 

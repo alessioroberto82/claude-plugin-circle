@@ -1,6 +1,6 @@
 # Circle Plugin
 
-Pure Markdown plugin for Claude Code. 18 skills (9 holacracy roles + 9 utilities). No build, no tests, no CI.
+Pure Markdown plugin for Claude Code. 19 skills (9 holacracy roles + 10 utilities). No build, no tests, no CI.
 
 ## Dev
 
@@ -17,8 +17,9 @@ plugin/commands/circle.md              # /circle dashboard
 plugin/resources/soul.md               # Shared principles — every role loads this
 plugin/resources/deps-manifest.yaml    # Dependency registry (source of truth)
 plugin/resources/scripts/              # install-deps.sh, update-deps.sh
-plugin/resources/templates/{docs,software}/ # Output templates
-plugin/skills/*/SKILL.md               # 17 skills (see ls)
+plugin/resources/templates/{docs,software,business,personal}/ # Output templates
+plugin/resources/governance-protocol.md # Dynamic role creation protocol
+plugin/skills/*/SKILL.md               # 19 skills (see ls)
 docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING-STARTED.md
 ```
 

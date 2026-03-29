@@ -1,5 +1,67 @@
 # Changelog
 
+## v1.7.0 — Governance, Multi-Domain & Skills Discovery
+
+### Dynamic Governance Protocol
+
+Circle roles can now detect **tensions** — gaps where no existing role covers a needed capability — and propose temporary roles through a structured governance protocol.
+
+- **Governance protocol** (`resources/governance-protocol.md`) — Tension Format, Proposal Flow, Temporary Role Format, Promotion Rules
+- **Role template** (`resources/templates/software/role-template.md`) — Circle-standard template for generating new roles
+- **Tension Sensing** — 10 fork-context agent skills detect and surface tensions during work
+- **Temporary Roles** — orchestrators (greenfield, cycle) can incorporate session-created roles
+- **Role Promotion** — temporary roles used 2+ times can be promoted to permanent skills
+
+### Multi-Domain Support
+
+Circle now works beyond software projects. Roles automatically detect the project domain and adapt their behavior, questions, and output templates.
+
+- **3 new domains**: business, personal (in addition to existing software and general)
+- **Domain detection** extended in all agent skills — detects `business-plan.md`, `strategy.md`, `goals.md`, `journal.md`, etc.
+- **10 new templates**: 5 business (`business-requirements.md`, `compliance-report.md`, `customer-experience.md`, `quarterly-plan.md`, `validation-plan.md`) + 5 personal (`goals.md`, `life-design.md`, `privacy-audit.md`, `progress-plan.md`, `weekly-plan.md`)
+- **Domain-specific behavior** in 6 key roles: scope, refine, security, facilitate, arch, qa
+- **Soul updated** with domain adaptation principles
+
+### Skills Discovery
+
+New skill for discovering, reviewing, and installing external skills from the marketplace with a mandatory security gate.
+
+- **New skill: `/circle:skills-discovery`** — discover → review source → PASS/WARN/BLOCK → install/reject
+- **Security criteria** (`resources/skill-security-criteria.md`) — standardized security assessment patterns
+- **Init integration** — `/circle:init` now suggests skills discovery after setup
+
+### Skills Changed
+
+| Skill | Change |
+|-------|--------|
+| `arch` | Domain detection + domain-specific behavior (business/personal) + tension sensing |
+| `code-review` | Tension sensing |
+| `cycle` | Temporary roles support |
+| `docs` | Tension sensing |
+| `facilitate` | Domain detection + domain-specific behavior + tension sensing |
+| `greenfield` | Temporary roles support + role promotion tracking in session state |
+| `impl` | Domain detection + tension sensing |
+| `init` | Domain detection (business/personal) + skills-discovery suggestion |
+| `qa` | Domain detection + domain-specific behavior + tension sensing |
+| `refine` | Domain detection + domain-specific behavior + tension sensing |
+| `scope` | Domain detection + domain-specific behavior + tension sensing |
+| `security` | Domain detection + domain-specific behavior + tension sensing |
+| `ux` | Domain detection + tension sensing |
+| `skills-discovery` | **New** — external skill discovery with security gate |
+
+### Resources Changed
+
+| File | Change |
+|------|--------|
+| `governance-protocol.md` | **New** — dynamic role creation protocol |
+| `skill-security-criteria.md` | **New** — security assessment for external skills |
+| `soul.md` | Domain adaptations section added |
+| `templates/software/role-template.md` | **New** — Circle-standard role template |
+| `templates/business/*` | **New** — 5 business domain templates |
+| `templates/personal/*` | **New** — 5 personal domain templates |
+
+---
+
 ## v1.6.0 — Code Review Rework
 
 ### Deep Context & Evidence-Based Findings
