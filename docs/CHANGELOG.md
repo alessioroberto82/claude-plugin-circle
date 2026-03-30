@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.1 — Remove track skill
+
+- **Removed** `track` skill — functionality superseded by claude-mem plugin
+
 ## v1.6.0 — Code Review Rework
 
 ### Deep Context & Evidence-Based Findings
