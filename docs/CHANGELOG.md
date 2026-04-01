@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.2 — Code Review Foundational File Threshold
+
+- **Foundational file threshold** — findings on `soul.md`, root `CLAUDE.md`, and `deps-manifest.yaml` use a lower confidence threshold (75 vs 90) to prevent high-impact issues from being silently filtered
+- **Near-miss visibility** — saved review summaries now include a "Near Misses" section for findings that scored close to but below the threshold (local only, never posted to GitHub)
+
 ## v1.6.1 — Remove track skill
 
 - **Removed** `track` skill — functionality superseded by claude-mem plugin
