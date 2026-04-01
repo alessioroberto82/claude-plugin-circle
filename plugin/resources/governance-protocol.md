@@ -36,7 +36,6 @@ Before proposing a new role, verify the gap is real. These roles already exist:
 - **security**: Threat modeling, compliance, audits
 - **shard**: Document sharding for context management
 - **tdd**: TDD red-green-refactor enforcement
-- **track**: Work tracking outside Circle skills
 - **triage**: PR review comment handling
 - **ux**: UI/UX design, wireframes, journeys
 - **validate-prd**: PRD quality validation
