@@ -16,11 +16,13 @@ Circle works for everyone on the team: product people, designers, analysts, deve
 |---|---|---|
 | `/circle:scope` | Scope Clarifier | Gathers requirements, writes user stories, clarifies what you're building |
 | `/circle:arch` | Architecture Owner | Plans how software is structured, documents design decisions (ADRs) |
+| `/circle:brainstorm` | Brainstorming Facilitator | Facilitates divergent ideation sessions using 60+ creative techniques |
 | `/circle:impl` | Implementer | Writes code, reviews implementations |
 | `/circle:qa` | Quality Guardian | Plans testing strategy, validates quality |
 | `/circle:ux` | Experience Designer | Designs user interfaces and user journeys |
 | `/circle:refine` | Refiner | Refines requirements into PRDs, prioritizes features |
 | `/circle:facilitate` | Facilitator | Plans cycles, coordinates the team |
+| `/circle:ideate` | Creative Problem Solver | Applies structured creative frameworks to solve hard problems |
 | `/circle:security` | Security Guardian | Audits security, models threats, checks compliance |
 | `/circle:docs` | Documentation Steward | Generates docs from templates |
 
@@ -53,6 +55,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 | `/circle:validate-prd` | Validates PRD quality against 8 structured checks. Use after creating a PRD, before architecture design |
 | `/circle:tdd` | Enforces strict red-green-refactor TDD cycle. Write a failing test, make it pass, refactor. Used standalone or as sub-workflow of the Implementer |
 | `/circle:shard` | Splits large documents into smaller pieces (called "shards") so roles can work with just the part they need — reduces token usage by ~90% |
+| `/circle:skills-discovery` | Discovers, reviews, and installs external skills from the marketplace with a mandatory security gate |
 | `/circle:dashboard` | Shows project status: what phase you're in, what's been done, and what roles are available |
 
 > **Token** = the unit of text that AI models process. Fewer tokens means faster responses and lower cost.

@@ -207,6 +207,8 @@ Dependencies:
 Available roles:
   /circle:scope       - Scope Clarifier (requirements, work items)
   /circle:arch        - Architecture Owner (design, ADRs, trade-offs)
+  /circle:brainstorm  - Brainstorming Facilitator (divergent ideation, 60+ techniques)
+  /circle:ideate      - Creative Problem Solver (structured frameworks, deep solutions)
   /circle:impl        - Implementer (implementation, code review)
   /circle:qa          - Quality Guardian (test strategy, QA)
   /circle:ux          - Experience Designer (UI/UX design)

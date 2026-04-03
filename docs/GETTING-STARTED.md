@@ -107,6 +107,8 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | Command | What it does |
 |---------|-------------|
 | `/circle:scope` | Gather requirements and clarify scope |
+| `/circle:brainstorm` | Facilitate divergent ideation using 60+ creative techniques |
+| `/circle:ideate` | Solve hard problems with structured creative frameworks |
 | `/circle:refine` | Create a product plan and prioritize features |
 | `/circle:ux` | Design user experience and interface |
 | `/circle:arch` | Plan software architecture |

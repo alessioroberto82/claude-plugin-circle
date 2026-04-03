@@ -36,6 +36,8 @@ What's next:
 Your circle:
   /circle:scope       — Scope Clarifier (requirements, work items)
   /circle:arch        — Architecture Owner (design, trade-offs)
+  /circle:brainstorm  — Brainstorming Facilitator (divergent ideation, 60+ techniques)
+  /circle:ideate      — Creative Problem Solver (structured frameworks, deep solutions)
   /circle:impl        — Implementer (implementation, code review)
   /circle:qa          — Quality Guardian (testing, quality)
   /circle:ux          — Experience Designer (UI/UX design)

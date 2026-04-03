@@ -1,5 +1,54 @@
 # Changelog
 
+## v1.8.0 — Brainstorming & Creative Problem Solving
+
+### Brainstorming Facilitator
+
+New role for facilitating divergent ideation sessions, ported from BMAD-METHOD's brainstorming workflow.
+
+- **New skill: `/circle:brainstorm`** — facilitator-led ideation with 60+ creative techniques across 8 categories (collaborative, creative, deep/analytical, structured, theatrical, wild, introspective, biomimetic/cultural)
+- **4 technique selection modes**: browse library, AI-recommended, random selection, progressive flow
+- **Anti-bias protocol** — forces orthogonal domain shifts every 10 ideas to prevent semantic clustering
+- **Quantity target** — aims for 100+ ideas before organization phase
+- **Idea organization** — clustering, feasibility/impact evaluation, top candidate selection
+- **Session continuity** — detects and resumes existing brainstorming sessions
+- **context: same** — interactive facilitation in the user's session
+
+### Creative Problem Solver
+
+New role for structured creative problem-solving using convergent frameworks, inspired by BMAD-METHOD's Creative Intelligence Suite.
+
+- **New skill: `/circle:ideate`** — 6 structured creative frameworks for solving hard problems
+- **Frameworks**: Design Thinking (5 phases), First Principles, Problem Reframing, Analogical Reasoning, Constraint Innovation, Systems Thinking
+- **Cross-framework synthesis** — convergent themes, breakthrough insights, feasibility assessment
+- **Complementary to brainstorm** — brainstorm generates volume (divergent), ideate solves specific problems (convergent)
+- **context: same** — co-creative problem-solving in the user's session
+- **model: opus** — deep reasoning for multi-framework analysis
+
+### Complementary Roles
+
+| | Brainstorm | Ideate |
+|---|---|---|
+| Goal | 100+ ideas (quantity) | 1 hard problem (quality) |
+| Mode | Divergent | Convergent |
+| Model | sonnet | opus |
+| When | "We need ideas" | "We're stuck" |
+
+### Skills Changed
+
+| Skill | Change |
+|-------|--------|
+| `brainstorm` | **New** — divergent ideation facilitator with 60+ techniques |
+| `ideate` | **New** — convergent creative problem-solving with 6 frameworks |
+
+### Resources Changed
+
+| File | Change |
+|------|--------|
+| `governance-protocol.md` | Added `brainstorm` and `ideate` to existing roles reference |
+
+---
+
 ## v1.7.0 — Governance, Multi-Domain & Skills Discovery
 
 ### Dynamic Governance Protocol
