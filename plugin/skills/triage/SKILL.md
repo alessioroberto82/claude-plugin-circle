@@ -5,6 +5,7 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash(gh api:*), Bash(gh pr view:*)
 metadata:
   context: same
   agent: general-purpose
+  model: opus
 ---
 
 # Triage
@@ -72,6 +73,7 @@ Accept parameter: `$ARGUMENTS` — one of:
      repository(owner: $owner, name: $repo) {
        pullRequest(number: $prNumber) {
          reviewThreads(first: 100) {
+           pageInfo { hasNextPage }
            nodes {
              id
              isResolved
@@ -89,6 +91,9 @@ Accept parameter: `$ARGUMENTS` — one of:
    ```
 
    **Always use heredoc** for GraphQL queries to avoid Unicode curly quote corruption.
+
+   **Pagination check**: If `reviewThreads.pageInfo.hasNextPage` is `true`, warn:
+   > "⚠ This PR has more than 100 review threads. Only the first 100 were fetched. Re-run with specific thread URLs if needed."
 
 4. **Parse the response**: Filter to threads where `isResolved` is `false`. For each unresolved thread extract:
    - `thread_id` (format `PRRT_kwDO...`) — store for later reply/resolve
@@ -187,10 +192,12 @@ When `/circle:triage` is run again, previously unclear threads with new replies 
 
 ### Step 4: Implement Fixes
 
+**Load project instructions**: Before implementing, read `~/.claude/circle/projects/<project>/config.yaml`. If `extra_instructions.triage` exists, treat each entry as a mandatory rule for all fixes in this step. These rules take precedence over default behavior (e.g., which design tokens to use, which skills to invoke first).
+
 For each accepted comment:
 
 1. **Read the file** (full context around the change site)
-2. **Implement the fix** — minimal, targeted changes addressing the reviewer's concern
+2. **Implement the fix** — minimal, targeted changes addressing the reviewer's concern. Apply all `extra_instructions.triage` rules during implementation.
 3. **Verify correctness** using domain-appropriate commands:
 
 | Domain | Build Check | Test Command |
@@ -261,9 +268,11 @@ Extract actionable learnings from the review:
    - **project** — codebase-specific conventions, architecture decisions
    - **user** — general coding practices applicable across projects
 
-3. **Save learnings** to `~/.claude/circle/projects/<project>/output/triage/learnings-<date>.md`
+3. **Derive project name**: Read `~/.claude/circle/projects/*/config.yaml` files to find the one whose `project.repo` matches the current repository's `OWNER/REPO` (from `gh repo view --json nameWithOwner`). Use that directory's name as `<project>`. Fallback: `basename "$PWD" | tr '[:upper:]' '[:lower:]'`.
 
-4. If a project-level CLAUDE.md or learnings file exists, check for duplicates before adding. Never blindly append.
+4. **Save learnings** to `~/.claude/circle/projects/<project>/output/triage/learnings-<date>.md`. Create the directory if it doesn't exist.
+
+5. If a project-level CLAUDE.md or learnings file exists, check for duplicates before adding. Never blindly append.
 
 ### Step 7: Summary
 

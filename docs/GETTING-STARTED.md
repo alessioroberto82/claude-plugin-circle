@@ -122,7 +122,6 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:validate-prd` | Validate PRD quality before architecture design |
 | `/circle:tdd` | Enforce test-driven development (red-green-refactor cycle) |
 | `/circle:shard` | Split large documents into smaller pieces (saves time and cost) |
-| `/circle:track` | Capture work done outside Circle for assessment tracking |
 | `/circle:skills-discovery` | Discover and install external skills with security gate |
 | `/circle:init` | Set up Circle for your current project (run once) |
 | `/circle:dashboard` | See project status and what's been done |

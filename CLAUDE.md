@@ -1,6 +1,6 @@
 # Circle Plugin
 
-Pure Markdown plugin for Claude Code. 19 skills (9 holacracy roles + 10 utilities). No build, no tests, no CI.
+Pure Markdown plugin for Claude Code. 18 skills (9 holacracy roles + 9 utilities). No build, no tests, no CI.
 
 ## Dev
 

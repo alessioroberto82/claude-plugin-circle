@@ -241,7 +241,15 @@ Rules:
 
 Collect all issues from the 2 agents. Apply three gates sequentially:
 
-**Gate 1 — Confidence Threshold**: Discard all findings with `confidence < 90`.
+**Gate 1 — Confidence Threshold**:
+
+Foundational files (high blast radius — loaded by all roles or govern project standards):
+- `plugin/resources/soul.md`
+- `CLAUDE.md` (root)
+- `plugin/resources/deps-manifest.yaml`
+
+For findings on foundational files: discard if `confidence < 75`.
+For all other findings: discard if `confidence < 90`.
 
 **Gate 2 — Citation Required**: Discard any finding where `source` is empty, null, or generic (e.g., "best practice", "common convention", "general guidance").
 
@@ -267,7 +275,7 @@ Found {N} issues:
 2. ...
 
 ---
-Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b} | Threshold: 90/100
+Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b} | Threshold: 90/100 (75 for foundational files)
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 {truncation_warning if applicable}
 
@@ -284,7 +292,7 @@ Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
 No issues found. Checked for bugs, security, CLAUDE.md compliance, and language best practices.
 
 ---
-Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b} | Threshold: 90/100
+Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b} | Threshold: 90/100 (75 for foundational files)
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 
 Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
@@ -316,6 +324,20 @@ mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/code-review
 
 Save summary to `~/.claude/circle/projects/$PROJECT_NAME/output/code-review/pr-{number}-{date}.md`.
 
+The saved summary must include a **Near Misses** section for findings that were filtered but scored close to the threshold. This section is **never posted** to GitHub — it exists only in the local summary.
+
+```markdown
+## Near Misses (not posted)
+
+Findings that scored between the applicable threshold and 89:
+
+| # | File | Confidence | Description | Source | Filtered because |
+|---|------|------------|-------------|--------|-----------------|
+| 1 | path/to/file | 82 | description | source | Below 90 threshold |
+```
+
+Include findings where `confidence >= 75` but below the applicable threshold (90 for normal files, 75 for foundational). If no near-misses exist, omit the section.
+
 **MCP Integration** (if available):
 - **Linear**: Comment review summary on linked issues
 - **claude-mem**: Search for past review patterns.
@@ -323,7 +345,7 @@ Save summary to `~/.claude/circle/projects/$PROJECT_NAME/output/code-review/pr-{
 **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
 
 > **Code Review — Complete.**
-> PR #{number} reviewed. {N} issues found (threshold: 90/100).
+> PR #{number} reviewed. {N} issues found (threshold: 90/100, 75 for foundational files).
 > Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 > Agents: A={model_a}/{effort_a}, B={model_b}/{effort_b}
 
@@ -343,7 +365,6 @@ Do NOT flag:
 - Trust the team: assume competence, don't nitpick
 - CLAUDE.md is law: project standards are the primary review baseline
 - Evidence chain: no citation, no finding
-
 
 ## Tension Sensing
 
