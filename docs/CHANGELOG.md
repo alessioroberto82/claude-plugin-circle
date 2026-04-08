@@ -1,5 +1,53 @@
 # Changelog
 
+## v1.8.0 — iOS Code Review
+
+### New Skill: `/circle:ios-review`
+
+Platform-specific code review for iOS/Swift projects using Apple documentation (Cupertino MCP), SwiftUI patterns, Swift Concurrency best practices, and Swift Testing standards.
+
+- **Standalone invocable** — `/circle:ios-review 42` for independent iOS review
+- **Auto-activated by code-review** — detected via `Package.swift` or `*.xcodeproj`, launches as Agent C alongside Agent A (standards) and Agent B (security)
+- **Cupertino MCP integration** — queries Apple documentation for deprecated APIs, platform availability, and incorrect usage patterns (max 10 queries per review)
+- **4 review domains** — API validation, SwiftUI patterns, Swift Concurrency, Swift Testing
+- **Graceful degradation** — works with any subset of iOS tools available (Cupertino MCP, SwiftUI Expert, Swift Concurrency, Swift Testing Expert, Swift LSP)
+- **Confidence boosting** — findings verified against Cupertino MCP docs get +10 confidence
+
+### Code-Review Enhancement
+
+- **Agent C dispatch** — code-review now dispatches 3 parallel agents for iOS projects (Agent A + B + C)
+- **New category: `ios-practice`** — iOS-specific findings flow through the same 3-gate filtering pipeline
+- **Footer updated** — includes Agent C model/effort when iOS is detected
+- **Config**: `code_review.agent_c.model`, `code_review.agent_c.effort`, `code_review.agent_c.enabled`
+
+### Deps-Manifest
+
+- All 5 iOS group dependencies now list `ios-review` in `used_by`
+
+### Skills Changed
+
+| Skill | Change |
+|-------|--------|
+| `ios-review` | New — iOS platform review with MCP integration |
+| `code-review` | Medium — Agent C dispatch, ios-practice category, updated footer/save |
+
+### Config
+
+```yaml
+# Agent C (iOS review) — only active for iOS projects
+code_review:
+  agent_c:
+    model: sonnet    # default
+    effort: medium   # default
+    enabled: true    # set false to disable
+
+# Standalone invocation
+agents:
+  ios-review:
+    model: sonnet
+    effort: medium
+```
+
 ## v1.7.0 — Governance, Skills Discovery & Multi-Domain
 
 ### Governance Protocol (from PR #25, #28)

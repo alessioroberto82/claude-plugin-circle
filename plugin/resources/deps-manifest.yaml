@@ -43,7 +43,7 @@ groups:
         check_command: "command -v cupertino"
         install_command: "brew tap mihaelamj/tap && brew install cupertino"
         update_command: "brew upgrade cupertino"
-        used_by: "arch, impl, ux"
+        used_by: "arch, impl, ux, ios-review"
 
       - id: swiftui-expert
         type: plugin
@@ -53,7 +53,7 @@ groups:
         check_command: "grep -q swiftui-expert ~/.claude/plugins/installed_plugins.json 2>/dev/null"
         install_command: "claude plugin marketplace add swiftui-expert-skill && claude plugin install swiftui-expert@swiftui-expert-skill"
         update_command: "claude plugin marketplace update swiftui-expert-skill && claude plugin update swiftui-expert@swiftui-expert-skill"
-        used_by: "arch, impl, ux"
+        used_by: "arch, impl, ux, ios-review"
         suggest_in:
           arch: "SwiftUI state management and view architecture decisions"
           impl: "implementing SwiftUI views and components"
@@ -67,7 +67,7 @@ groups:
         check_command: "grep -q swift-lsp ~/.claude/plugins/installed_plugins.json 2>/dev/null"
         install_command: "claude plugin marketplace add claude-plugins-official && claude plugin install swift-lsp@claude-plugins-official"
         update_command: "claude plugin marketplace update claude-plugins-official && claude plugin update swift-lsp@claude-plugins-official"
-        used_by: "impl"
+        used_by: "impl, ios-review"
 
       - id: swift-concurrency
         type: plugin
@@ -77,7 +77,7 @@ groups:
         check_command: "grep -q swift-concurrency ~/.claude/plugins/installed_plugins.json 2>/dev/null"
         install_command: "claude plugin marketplace add swift-concurrency-agent-skill && claude plugin install swift-concurrency@swift-concurrency-agent-skill"
         update_command: "claude plugin marketplace update swift-concurrency-agent-skill && claude plugin update swift-concurrency@swift-concurrency-agent-skill"
-        used_by: "arch, impl"
+        used_by: "arch, impl, ios-review"
         suggest_in:
           arch: "concurrency model, actor isolation, and async/await architecture"
           impl: "implementing async/await, actors, or Task-based code"
@@ -90,7 +90,7 @@ groups:
         check_command: "grep -q swift-testing-expert ~/.claude/plugins/installed_plugins.json 2>/dev/null"
         install_command: "claude plugin marketplace add swift-testing-agent-skill && claude plugin install swift-testing-expert@swift-testing-agent-skill"
         update_command: "claude plugin marketplace update swift-testing-agent-skill && claude plugin update swift-testing-expert@swift-testing-agent-skill"
-        used_by: "qa, impl"
+        used_by: "qa, impl, ios-review"
         suggest_in:
           qa: "test quality review and Swift Testing patterns"
           impl: "writing tests with Swift Testing framework"
