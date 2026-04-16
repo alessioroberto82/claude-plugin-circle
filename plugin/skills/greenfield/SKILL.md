@@ -45,7 +45,9 @@ init → scope → refine → validate-prd → ux → arch → security → faci
 
 Detect the project domain by analyzing files in the current directory:
 - **software**: if common project markers exist (e.g., `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, `pom.xml`, `*.xcodeproj`, `Makefile`, `CMakeLists.txt`, `Gemfile`, `build.gradle`)
-- **general**: default if no software indicator found
+- **business**: if `business-plan.md`, `market-analysis.md`, or `strategy.md` exists
+- **personal**: if `goals.md`, `journal.md`, or `habits/` folder exists
+- **general**: default if no domain indicator found
 
 ## Model & Effort Routing
 
@@ -131,7 +133,7 @@ Link a Linear issue? (paste ID like ENG-42, or press Enter to auto-generate)
 ```bash
 SESSION_ID="{the chosen session ID}"
 mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,security,ux,refine,facilitate,docs}
-mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,stories}
+mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,tasks}
 ```
 
 **Interactive Configuration**:

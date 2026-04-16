@@ -103,7 +103,7 @@ Read from `~/.claude/circle/projects/{project}/output/`:
    - [ ] QA verification passed
    ```
 
-4. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/facilitate/cycle-plan-{date}.md`
+4. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/facilitate/{filename}-{date}.md` where `{filename}` is `cycle-plan` (software), `quarterly-plan` (business), or `weekly-plan` (personal)
 
 5. **MCP Integration** (if available):
    - **Linear**: Create cycle, assign bets as issues (interactive)
@@ -113,7 +113,7 @@ Read from `~/.claude/circle/projects/{project}/output/`:
 
 7. **Handoff**:
    > **Facilitator — Complete.**
-   > Cycle plan saved to: `~/.claude/circle/projects/{project}/output/facilitate/cycle-plan-{date}.md`
+   > Plan saved to: `~/.claude/circle/projects/{project}/output/facilitate/{filename}-{date}.md`
    > Bets committed: {count}
    > Next: Team begins implementation with `/circle:impl`.
 

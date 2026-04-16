@@ -162,9 +162,9 @@ If no documents found in either location: "No documents to shard. Run `/circle:r
    ```
    Sharding Complete
    =================
-   Requirements: 8 shards → {$SHARD_BASE}/requirements/
-   Architecture: 4 shards → {$SHARD_BASE}/architecture/
-   Tasks:        6 shards → {$SHARD_BASE}/tasks/
+   Requirements: 8 shards → ${SHARD_BASE}/requirements/
+   Architecture: 4 shards → ${SHARD_BASE}/architecture/
+   Tasks:        6 shards → ${SHARD_BASE}/tasks/
 
    Usage:
    /circle:impl TASK-001    ← Implements only TASK-001

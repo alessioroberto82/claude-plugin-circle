@@ -9,9 +9,9 @@
   "plugins": [
     {
       "name": "circle",
-      "version": "1.8.0",
+      "version": "1.9.0",
       "source": "./plugin",
-      "description": "19 skills (9 holacracy roles + 10 utilities) with structured workflows, quality gates, self-verification guardrails, anti-overcomplication checks, TDD enforcement, security audits, and full customization"
+      "description": "20 skills (9 holacracy roles + 11 utilities) with structured workflows, quality gates, self-verification guardrails, anti-overcomplication checks, TDD enforcement, security audits, and full customization"
     }
   ]
 }

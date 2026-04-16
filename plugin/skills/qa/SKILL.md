@@ -252,7 +252,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
    {Minimum coverage targets}
    ```
 
-4. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/qa/test-plan-{date}.md`
+4. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/qa/{plan-filename}-{date}.md` where `{plan-filename}` is `test-plan` (software), `validation-plan` (business), or `progress-plan` (personal)
 
 ### Verification Mode (after implementation)
 
@@ -356,7 +356,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
 
 7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `refine/PRD.md`.
 
-8. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/qa/test-report-{date}.md`
+8. **Save** to `~/.claude/circle/projects/$PROJECT_NAME/output/qa/{report-filename}-{date}.md` where `{report-filename}` is `test-report` (software), `validation-report` (business), or `progress-report` (personal)
 
 9. **MCP Integration** (if available):
    - **Linear**: Link test results to issues, comment on verification outcomes
