@@ -25,8 +25,9 @@ For each dependency, run the appropriate check:
 
 Auto-detect relevant groups:
 - `core` — always relevant
-- `ios` — relevant if domain is software AND (`Package.swift` or `*.xcodeproj` exists)
 - `extras` — always shown, marked as optional
+
+Platform-specific deps (iOS, Android, Rust, …) are owned by their companion plugins (e.g., `circle-ios`). Install the companion plugin to get its own dependency prompts — the core `init` skill only handles core + extras.
 
 Check for project-level overrides in `~/.claude/circle/projects/$PROJECT_NAME/config.yaml` under the `dependencies:` key. If a dep is marked `skip`, exclude it. If marked `include`, add it.
 
@@ -38,11 +39,6 @@ Circle Dependencies
   Core (recommended for all teams):
     [ok]      claude-mem      Cross-session semantic memory
     [manual]  Linear          Enable in Claude Code settings
-
-  iOS / Swift development:
-    [--]      Cupertino       Apple documentation MCP server
-    [ok]      SwiftUI Expert  SwiftUI design patterns
-    [--]      Swift LSP       Swift language server
 
   Additional tools:
     [--]      Notion          Notion workspace integration
@@ -101,14 +97,9 @@ Toggle dependencies (enter numbers, comma-separated):
     [1] claude-mem      — Cross-session memory              [INSTALL]
     [2] Linear          — Issue tracking                    [MANUAL]
 
-  iOS / Swift:
-    [3] Cupertino       — Apple docs MCP                    [INSTALL]
-    [4] SwiftUI Expert  — SwiftUI patterns                  [INSTALL]
-    [5] Swift LSP       — Swift language server             [SKIP]
-
   Extras:
-    [6] Notion          — Notion integration                [SKIP]
-    [7] bmad-mcp        — BMAD MCP server                   [SKIP]
+    [3] Notion          — Notion integration                [SKIP]
+    [4] bmad-mcp        — BMAD MCP server                   [SKIP]
 
 Enter numbers to toggle, or 'done':
 ```

@@ -50,7 +50,6 @@ Workflows:
 
 Review:
   /circle:code-review — PR code review
-  /circle:ios-review  — iOS platform review (auto-activated by code-review)
   /circle:triage      — Handle review feedback
 
 Utilities:

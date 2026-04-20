@@ -31,69 +31,9 @@ groups:
         update_command: "claude plugin marketplace update thedotmack && claude plugin update claude-mem@thedotmack"
         used_by: "all roles"
 
-  ios:
-    label: "iOS / Swift development"
-    condition: "test -f Package.swift || ls *.xcodeproj 1>/dev/null 2>&1"
-    deps:
-      - id: cupertino
-        type: mcp-brew
-        name: Cupertino
-        description: "Apple documentation MCP server (frameworks, HIG, APIs)"
-        requires: brew
-        check_command: "command -v cupertino"
-        install_command: "brew tap mihaelamj/tap && brew install cupertino"
-        update_command: "brew upgrade cupertino"
-        used_by: "arch, impl, ux, ios-review"
-
-      - id: swiftui-expert
-        type: plugin
-        name: SwiftUI Expert
-        marketplace: swiftui-expert-skill
-        description: "SwiftUI design patterns and best practices"
-        check_command: "grep -q swiftui-expert ~/.claude/plugins/installed_plugins.json 2>/dev/null"
-        install_command: "claude plugin marketplace add swiftui-expert-skill && claude plugin install swiftui-expert@swiftui-expert-skill"
-        update_command: "claude plugin marketplace update swiftui-expert-skill && claude plugin update swiftui-expert@swiftui-expert-skill"
-        used_by: "arch, impl, ux, ios-review"
-        suggest_in:
-          arch: "SwiftUI state management and view architecture decisions"
-          impl: "implementing SwiftUI views and components"
-          ux: "UI patterns and platform design guidelines"
-
-      - id: swift-lsp
-        type: plugin
-        name: Swift LSP
-        marketplace: claude-plugins-official
-        description: "Swift language server integration"
-        check_command: "grep -q swift-lsp ~/.claude/plugins/installed_plugins.json 2>/dev/null"
-        install_command: "claude plugin marketplace add claude-plugins-official && claude plugin install swift-lsp@claude-plugins-official"
-        update_command: "claude plugin marketplace update claude-plugins-official && claude plugin update swift-lsp@claude-plugins-official"
-        used_by: "impl, ios-review"
-
-      - id: swift-concurrency
-        type: plugin
-        name: Swift Concurrency
-        marketplace: swift-concurrency-agent-skill
-        description: "async/await, actors, Sendable, Swift 6 concurrency"
-        check_command: "grep -q swift-concurrency ~/.claude/plugins/installed_plugins.json 2>/dev/null"
-        install_command: "claude plugin marketplace add swift-concurrency-agent-skill && claude plugin install swift-concurrency@swift-concurrency-agent-skill"
-        update_command: "claude plugin marketplace update swift-concurrency-agent-skill && claude plugin update swift-concurrency@swift-concurrency-agent-skill"
-        used_by: "arch, impl, ios-review"
-        suggest_in:
-          arch: "concurrency model, actor isolation, and async/await architecture"
-          impl: "implementing async/await, actors, or Task-based code"
-
-      - id: swift-testing-expert
-        type: plugin
-        name: Swift Testing Expert
-        marketplace: swift-testing-agent-skill
-        description: "Swift Testing framework, #expect/#require, XCTest migration"
-        check_command: "grep -q swift-testing-expert ~/.claude/plugins/installed_plugins.json 2>/dev/null"
-        install_command: "claude plugin marketplace add swift-testing-agent-skill && claude plugin install swift-testing-expert@swift-testing-agent-skill"
-        update_command: "claude plugin marketplace update swift-testing-agent-skill && claude plugin update swift-testing-expert@swift-testing-agent-skill"
-        used_by: "qa, impl, ios-review"
-        suggest_in:
-          qa: "test quality review and Swift Testing patterns"
-          impl: "writing tests with Swift Testing framework"
+  # iOS / Swift development deps have moved to the companion plugin `circle-ios`
+  # as of v2.0.0. See https://github.com/alessioroberto82/claude-plugin-circle
+  # — plugin-ios/resources/deps-manifest.yaml
 
   extras:
     label: "Additional tools"

@@ -33,18 +33,16 @@ PLUGINS_JSON="$HOME/.claude/plugins/installed_plugins.json"
 DEPS=(
   "linear|core|mcp-cloud|Linear|Issue tracking and project management|||all agents||Enable in Claude Code settings > MCP Servers > Linear"
   "claude-mem|core|plugin|claude-mem|Cross-session semantic memory|grep -q claude-mem $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add thedotmack && claude plugin install claude-mem@thedotmack|all agents||"
-  "cupertino|ios|mcp-brew|Cupertino|Apple documentation MCP server|command -v cupertino|brew tap mihaelamj/tap && brew install cupertino|arch impl ux ios-review|brew|"
-  "swiftui-expert|ios|plugin|SwiftUI Expert|SwiftUI design patterns and best practices|grep -q swiftui-expert $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swiftui-expert-skill && claude plugin install swiftui-expert@swiftui-expert-skill|arch impl ux ios-review||"
-  "swift-lsp|ios|plugin|Swift LSP|Swift language server integration|grep -q swift-lsp $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add claude-plugins-official && claude plugin install swift-lsp@claude-plugins-official|impl ios-review||"
-  "swift-concurrency|ios|plugin|Swift Concurrency|async/await actors Sendable Swift 6|grep -q swift-concurrency $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swift-concurrency-agent-skill && claude plugin install swift-concurrency@swift-concurrency-agent-skill|arch impl ios-review||"
-  "swift-testing-expert|ios|plugin|Swift Testing Expert|Swift Testing framework #expect #require|grep -q swift-testing-expert $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swift-testing-agent-skill && claude plugin install swift-testing-expert@swift-testing-agent-skill|qa impl ios-review||"
   "notion|extras|plugin|Notion|Notion workspace integration|grep -q Notion $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add claude-plugins-official && claude plugin install Notion@claude-plugins-official|docs||"
   "bmad-mcp|extras|npm|bmad-mcp|Circle MCP server for workflow orchestration|npm list -g bmad-mcp 2>/dev/null \| grep -q bmad-mcp|npm install -g bmad-mcp|greenfield||"
 )
 
+# iOS / Swift development deps have moved to the companion plugin `circle-ios`
+# as of v2.0.0. Install the companion plugin to get those prompts from its own
+# deps-manifest.yaml.
+
 GROUP_LABELS=(
   "core|Core (recommended for all teams)"
-  "ios|iOS / Swift development"
   "extras|Additional tools"
 )
 
