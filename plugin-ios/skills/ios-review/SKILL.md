@@ -36,10 +36,10 @@ If no argument is provided, ask the user which PR to review.
 
 This skill operates in two modes:
 
-1. **Standalone** (`/circle:ios-review 42`): Runs its own preflight, produces findings, optionally posts to GitHub.
-2. **Agent C** (via `code-review`): Receives preflight context inline from code-review. Does NOT run preflight. Produces findings that feed into code-review's filtering pipeline.
+1. **Standalone** (`/circle-ios:ios-review 42`): Runs its own preflight, produces findings, optionally posts to GitHub.
+2. **Platform-review dispatch** (via `/circle:code-review`): Receives preflight context inline from core code-review, dispatched via the Skill tool when the PR diff matches this skill's `platform_markers`. Does NOT run preflight. Produces findings that feed into code-review's filtering pipeline.
 
-When invoked as Agent C, all preflight data is provided in the prompt. Skip directly to the Review phase.
+When dispatched by core code-review, all preflight data is provided in the prompt. Skip directly to the Review phase.
 
 ## Process
 
@@ -209,8 +209,8 @@ If no findings: post "No iOS-specific issues found."
 > Tools active: {summary}
 > Domains checked: {list of domains that ran}
 
-**Agent C mode**:
-Return findings list to the caller (code-review). Do not post to GitHub — code-review handles posting.
+**Platform-review dispatch mode**:
+Return findings list to the caller (core code-review). Do not post to GitHub — code-review handles posting.
 
 ## Rules
 
@@ -234,13 +234,13 @@ agents:
     effort: medium   # default
 ```
 
-When invoked as Agent C within code-review:
+When dispatched by core code-review (platform-review mode — configured in core's `code_review` block, not here):
 ```yaml
 code_review:
-  agent_c:
-    model: sonnet    # default
-    effort: medium   # default
-    enabled: true    # set false to disable iOS review
+  platform_review:
+    model: sonnet    # default when the dispatched skill's frontmatter is silent
+    effort: medium   # default when the dispatched skill's frontmatter is silent
+    enabled: true    # set false to disable all platform-review dispatch
 ```
 
 ## Circle Principles

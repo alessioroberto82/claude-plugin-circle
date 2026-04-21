@@ -70,7 +70,7 @@ If directory `~/.claude/circle/projects/{project}/shards/tasks/` exists:
 
 **Domain Skill Suggestions**:
 
-Check `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type (e.g., `ios` group when `Package.swift` or `*.xcodeproj` exists). For each dependency in a matching group that has a `suggest_in` entry for this role (`impl`), suggest:
+Check `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type. (Core currently has no domain-specific groups; companion plugins — e.g., `circle-ios` — carry their own `deps-manifest.yaml` with platform groups.) For each dependency in a matching group that has a `suggest_in` entry for this role (`impl`), suggest:
 
 > "Consider invoking `/<dep-id>` for <suggest_in text>"
 
