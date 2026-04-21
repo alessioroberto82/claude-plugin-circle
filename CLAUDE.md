@@ -30,7 +30,7 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Zero footprint**: All outputs → `~/.claude/circle/projects/<project>/`. Never write to the repo.
 
-**Domain-agnostic core**: Never name-drop domain-specific tools (Cupertino, SwiftUI Expert) in SKILL.md body. Domain deps live only in `deps-manifest.yaml` with `suggest_in` entries. Exception: `## MCP Integration` sections may name cross-domain tools (Linear, claude-mem).
+**Domain-agnostic core**: Core skills (in `plugin/`) MUST NOT name-drop domain-specific tools, platforms, or frameworks in their body. Domain-specific skills live in companion plugins (e.g., `plugin-ios/`) that register via `metadata.platform_review` frontmatter and declare their own deps in the companion's own `deps-manifest.yaml`. Core dispatches to platform skills via the discovery contract in `docs/extensibility.md`. Core deps live only in `plugin/resources/deps-manifest.yaml` with `suggest_in` entries. Exception: `## MCP Integration` sections may name cross-domain tools (Linear, claude-mem) available in all domains.
 
 **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — they do NOT parse `deps-manifest.yaml`. Any dep change must update both scripts AND the manifest.
 

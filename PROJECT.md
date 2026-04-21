@@ -4,7 +4,9 @@ Holacracy-based development workflow plugin for Claude Code with distributed rol
 
 ## Overview
 
-Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. It ships 18 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 9 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, work tracking).
+Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin `circle` ships 18 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 9 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, skills discovery).
+
+The core is domain-agnostic: platform-specific review capabilities are packaged as companion plugins that register via a frontmatter extensibility contract. The companion plugin `circle-ios` ships alongside core in this repository and supplies iOS/Swift review via the same monorepo marketplace listing. See [`docs/extensibility.md`](docs/extensibility.md) for the contract.
 
 Each role has a clear purpose, domain, and accountability following holacracy principles — authority is distributed and roles act within their domain without asking permission. Circle works for product people, designers, analysts, developers, and documentation writers. No programming knowledge is required to get started.
 
@@ -24,20 +26,20 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 ## Structure
 
 ```
-├── .claude-plugin/        — Marketplace listing (marketplace.json)
-├── plugin/                — Plugin source
+├── .claude-plugin/        — Marketplace listing for both plugins (marketplace.json)
+├── plugin/                — Core plugin source (namespace: circle)
 │   ├── .claude-plugin/    — Plugin manifest (plugin.json)
 │   ├── commands/          — /circle dashboard command
 │   ├── resources/         — Shared resources
 │   │   ├── soul.md        — Team principles (loaded by every role)
 │   │   ├── guardrails.md  — Guardrail definitions
-│   │   ├── deps-manifest.yaml — Dependency registry (source of truth)
+│   │   ├── deps-manifest.yaml — Core dependency registry (source of truth)
 │   │   ├── work-summary-template.md — Assessment-aware work summary
 │   │   ├── scripts/       — install-deps.sh, update-deps.sh
-│   │   └── templates/     — Output templates (docs/, software/, config-example.yaml)
+│   │   └── templates/     — Output templates (docs/, software/, business/, personal/)
 │   └── skills/            — 18 skills (one SKILL.md per directory)
 │       ├── arch/          — Architecture Owner
-│       ├── code-review/   — Multi-agent PR review
+│       ├── code-review/   — Multi-agent PR review with platform-review dispatch
 │       ├── cycle/         — Cycle planning ceremony
 │       ├── docs/          — Documentation Steward
 │       ├── facilitate/    — Facilitator
@@ -49,15 +51,23 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │       ├── scope/         — Scope Clarifier
 │       ├── security/      — Security Guardian
 │       ├── shard/         — Context sharding
+│       ├── skills-discovery/ — Third-party skill install with security gate
 │       ├── tdd/           — TDD Guardian
-│       ├── track/         — Work tracking
 │       ├── triage/        — PR comment triage
 │       ├── ux/            — Experience Designer
 │       └── validate-prd/  — PRD Validator
+├── plugin-ios/            — Companion plugin source (namespace: circle-ios)
+│   ├── .claude-plugin/    — Companion manifest (plugin.json)
+│   ├── resources/         — Companion-specific resources
+│   │   └── deps-manifest.yaml — iOS/Swift dependency registry
+│   └── skills/
+│       └── ios-review/    — iOS platform review (registers via metadata.platform_review)
 ├── docs/                  — Documentation
 │   ├── CHANGELOG.md       — Release history
 │   ├── CUSTOMIZATION.md   — Configuration guide
 │   ├── GETTING-STARTED.md — Onboarding guide
+│   ├── extensibility.md   — Platform-review extensibility contract
+│   ├── adr/               — Architecture Decision Records
 │   └── plans/             — Design documents
 └── CLAUDE.md              — Project coding standards
 ```
@@ -69,7 +79,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 - **Zero footprint**: All outputs written to `~/.claude/circle/projects/<project>/`, never to the repo
 - **Domain-agnostic core**: Skills never name-drop domain-specific tools in SKILL.md body; domain deps live only in `deps-manifest.yaml`
 - **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — any dep change must update both scripts AND the manifest
-- **Version bump**: Three places must match — `plugin.json`, `marketplace.json`, and `Luscii/claude-marketplace`
+- **Version bump**: For core, three places must match — `plugin/.claude-plugin/plugin.json`, the `circle` entry in `.claude-plugin/marketplace.json`, and `Luscii/claude-marketplace`. The companion adds a fourth — `plugin-ios/.claude-plugin/plugin.json` — and must stay in sync with its `marketplace.json` entry
 - **Workflow order**: arch → security → impl → qa → commit → push → PR → code-review
 - **Model routing**: Fork-context skills specify default model in frontmatter `metadata.model`; overridable per-project in `config.yaml`
 - **Effort routing**: Fork-context skills declare `metadata.effort` (low/medium/high/max); overridable per-project

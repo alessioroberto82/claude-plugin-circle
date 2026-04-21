@@ -68,6 +68,9 @@ claude --plugin-dir /path/to/claude-plugin-circle/plugin
 # Or install permanently via the marketplace
 claude plugin marketplace add /path/to/claude-plugin-circle
 claude plugin install circle@circle
+
+# iOS PRs? Add the companion plugin from the same marketplace
+claude plugin install circle-ios@circle
 ```
 
 Then in any project:
@@ -89,15 +92,7 @@ All dependencies are **optional** — roles work without them and adapt when too
 | Notion | Plugin | Extras | The Documentation Steward can publish docs to Notion |
 | bmad-mcp | npm | Extras | Additional workflow tools for Greenfield orchestrator |
 
-**Domain-Specific (iOS):**
-
-| Dependency | Type | What it adds |
-|---|---|---|
-| Cupertino | Brew MCP | Apple documentation and Human Interface Guidelines |
-| SwiftUI Expert | Plugin | SwiftUI best practices and patterns |
-| Swift LSP | Plugin | Code intelligence for Swift files |
-
-Domain-specific dependencies are auto-detected by `init` based on project marker files (e.g., `Package.swift` for iOS). See `deps-manifest.yaml` for conditions.
+**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios` — its `deps-manifest.yaml` declares Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, and Swift Testing Expert. Running `/circle:init` inside an iOS project (detected via `Package.swift` or `*.xcodeproj`) picks them up from the companion. Any plugin can register as a platform-review target via the frontmatter contract documented in [`docs/extensibility.md`](docs/extensibility.md).
 
 > **MCP** = Model Context Protocol — a way for Claude to connect to external services. Think of it as a plugin for the plugin.
 
@@ -224,7 +219,7 @@ Roles connect to external services through MCP (Model Context Protocol) when ava
 |---|---|---|
 | Linear | All roles | Issue tracking, cycle management |
 | claude-mem | All roles | Memory that persists across Claude Code sessions |
-| Domain-specific tools | Roles with domain detection | Platform documentation and framework APIs (e.g., Cupertino for iOS) |
+| Platform-specific tools | Companion plugins (e.g., `circle-ios`) | Platform documentation and framework APIs — registered via the [extensibility contract](docs/extensibility.md) |
 
 ## Customization
 

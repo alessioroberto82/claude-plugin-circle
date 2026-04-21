@@ -1,5 +1,74 @@
 # Changelog
 
+## v2.0.0 — Domain-Agnostic Core & Companion Plugins
+
+Core is restored to a platform-neutral design. `ios-review` and the iOS dependency group move to a new companion plugin `circle-ios`. Core discovers platform-review skills at runtime via a generic frontmatter contract — any plugin can register as a platform target by declaring `metadata.platform_review: true` with `metadata.platform_markers`. See [`docs/adr/0001-platform-review-extensibility.md`](adr/0001-platform-review-extensibility.md) and [`docs/extensibility.md`](extensibility.md).
+
+### BREAKING
+
+- **Skill moved**: `/circle:ios-review` is now `/circle-ios:ios-review`. The skill lives in the new companion plugin `circle-ios`, shipped from the same marketplace listing. Install with:
+
+  ```
+  claude plugin marketplace add alessioroberto82/claude-plugin-circle
+  claude plugin install circle-ios
+  ```
+
+  Auto-dispatch from `/circle:code-review` still triggers on the same iOS markers (`Package.swift`, `*.xcodeproj`, `*.swift`) when both plugins are installed — no behavioural change for existing users who install the companion.
+
+- **Config rename**: `code_review.agent_c.*` → `code_review.platform_review.*`. If you had `code_review.agent_c.enabled: false` in v1.x, you **must** set `code_review.platform_review.enabled: false` in v2.0 — the rename does not migrate the value. Core prints a one-line warning in `/circle:code-review` output when it detects the legacy `agent_c` key, so explicit disables do not get silently re-enabled.
+
+- **Skill count**: core goes from 19 skills to 18 (9 holacracy roles + 9 utilities). Combined offering across `circle` + `circle-ios` is unchanged; `ios-review` was redistributed, not removed.
+
+### New: Platform-Review Extensibility Contract
+
+Core `code-review` publishes a dispatch contract. Any Claude Code plugin may register as a platform-review target:
+
+```yaml
+metadata:
+  platform_review: true
+  platform_markers:
+    - "**/Package.swift"
+    - "**/*.xcodeproj/**"
+```
+
+When `/circle:code-review` runs, core scans the available-skills list, matches `platform_markers` against the PR diff, and dispatches the first matching skill via the Skill tool in parallel with the standards and security agents. If no skill matches, core runs with standards + security only (zero regression on non-platform projects). Full contract: [`docs/extensibility.md`](extensibility.md).
+
+### Companion Plugin: `circle-ios` 1.0.0
+
+- **Auto-dispatch from `/circle:code-review`** — preserved from v1.8.0 behaviour via the new contract
+- **Standalone via `/circle-ios:ios-review <PR>`**
+- **Dependencies moved from core** — Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, Swift Testing Expert now live in `plugin-ios/resources/deps-manifest.yaml`
+
+### Core Changes
+
+- **`code-review` SKILL.md** — Agent C block removed; Step 5c rewritten as generic discovery; `allowed-tools` drops 7 Cupertino MCP entries and adds `Skill` tool; report templates parametrise over the dispatched skill name
+- **`plugin/resources/deps-manifest.yaml`** — `ios` group removed (moved to companion)
+- **`plugin/resources/scripts/install-deps.sh`** — `ios` group iteration and Cupertino hints removed; now mirrors the manifest's two remaining groups
+- **`CLAUDE.md`** — domain-agnostic principle clarified to acknowledge companion plugins and the extensibility contract (ADR-004)
+
+### Security (from `security-audit.md` for GH-34)
+
+- **F-4 (P1)** — legacy `agent_c` config key triggers runtime warning so explicit disables are not silently re-enabled
+- **F-1 (P2)** — trust-model paragraph in `docs/extensibility.md` documents that platform-review plugins receive the full PR diff
+- **F-2 (P2)** — impl uses a safe glob matcher for `platform_markers` (no shell expansion)
+- **F-3 (P2)** — core always runs standards + security regardless of dispatch; findings are labelled by source
+- **F-6 (P3)** — frontmatter parsing wrapped in try/catch so one malformed skill cannot break discovery
+
+### Migration
+
+1. Install the companion plugin if you review iOS PRs:
+
+   ```
+   claude plugin install circle-ios
+   ```
+
+2. Rename any `code_review.agent_c.*` keys in your `config.yaml` to `code_review.platform_review.*`.
+3. Replace direct `/circle:ios-review` invocations with `/circle-ios:ios-review`. Auto-dispatch from `/circle:code-review` is unchanged.
+
+### ADRs
+
+- **ADR-0001** — Platform-review extensibility via companion plugins ([`docs/adr/0001-platform-review-extensibility.md`](adr/0001-platform-review-extensibility.md))
+
 ## v1.8.0 — iOS Code Review
 
 ### New Skill: `/circle:ios-review`
