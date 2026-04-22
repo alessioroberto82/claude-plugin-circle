@@ -124,7 +124,7 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:shard` | Split large documents into smaller pieces (saves time and cost) |
 | `/circle:skills-discovery` | Discover and install third-party skills with security validation |
 | `/circle:init` | Set up Circle for your current project (run once) |
-| `/circle:dashboard` | See project status and what's been done |
+| `/circle` | See project status and what's been done (pass `detailed` for version and dependency info) |
 
 ## Where does everything go?
 
@@ -146,5 +146,5 @@ Each role saves their work in their own subfolder (e.g., `scope/`, `arch/`, `imp
 
 - Run `/circle:init` to set up Circle for your project
 - Start with `/circle:scope` to define what you're building
-- Check status anytime with `/circle:dashboard`
+- Check status anytime with `/circle`
 - Read the [Customization Guide](CUSTOMIZATION.md) when you want to tailor the workflow

@@ -149,7 +149,8 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
    **Check 5 — Documentation Sync**
    Verify docs reflect current state:
    - `docs/GETTING-STARTED.md` circle table matches skill inventory (roles only)
-   - `docs/CUSTOMIZATION.md` domain values are only `software` or `general`
+   - `docs/CUSTOMIZATION.md` domain values are the canonical set: `software`, `business`, `personal`, `general`
+   - The dashboard command (`plugin/commands/circle.md`) uses the same 4-domain detection block as the role skills
    - `README.md` output directory tree matches `init` mkdir list
    Flag: stale doc = P1
 

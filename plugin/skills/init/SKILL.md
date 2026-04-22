@@ -215,10 +215,11 @@ Orchestrators:
   /circle:cycle      - Cycle planning ceremony (Shape Up)
 
 Utilities:
-  /circle:validate-prd - Validate PRD quality (8 checks)
-  /circle:tdd          - TDD red-green-refactor cycle
-  /circle:shard        - Split large documents into shards
-  /circle:init         - Project initialization (already done)
+  /circle:validate-prd     - Validate PRD quality (8 checks)
+  /circle:tdd              - TDD red-green-refactor cycle
+  /circle:shard            - Split large documents into shards
+  /circle:skills-discovery - Discover and install external skills (security-gated)
+  /circle:init             - Project initialization (already done)
 
 Start with: /circle:scope to gather requirements, or /circle:greenfield for the full workflow.
 ```
