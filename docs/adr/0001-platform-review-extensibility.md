@@ -72,7 +72,7 @@ ships in the same release as companion v1.0.0.
 One command:
 
 ```
-claude plugin install circle-ios@claude-plugin-circle
+claude plugin install circle-ios@circle
 ```
 
 Plus rename `code_review.agent_c.*` config keys to `code_review.platform_review.*`.

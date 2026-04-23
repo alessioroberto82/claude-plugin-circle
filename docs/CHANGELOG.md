@@ -10,7 +10,7 @@ Core is restored to a platform-neutral design. `ios-review` and the iOS dependen
 
   ```
   claude plugin marketplace add alessioroberto82/claude-plugin-circle
-  claude plugin install circle-ios
+  claude plugin install circle-ios@circle
   ```
 
   Auto-dispatch from `/circle:code-review` still triggers on the same iOS markers (`Package.swift`, `*.xcodeproj`, `*.swift`) when both plugins are installed — no behavioural change for existing users who install the companion.
@@ -59,7 +59,7 @@ When `/circle:code-review` runs, core scans the available-skills list, matches `
 1. Install the companion plugin if you review iOS PRs:
 
    ```
-   claude plugin install circle-ios
+   claude plugin install circle-ios@circle
    ```
 
 2. Rename any `code_review.agent_c.*` keys in your `config.yaml` to `code_review.platform_review.*`.

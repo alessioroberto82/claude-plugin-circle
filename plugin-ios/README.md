@@ -6,7 +6,7 @@ Platform-review companion for [claude-plugin-circle](https://github.com/alessior
 
 ```bash
 claude plugin marketplace add alessioroberto82/claude-plugin-circle
-claude plugin install circle-ios
+claude plugin install circle-ios@circle
 ```
 
 Run `/circle:init` in your iOS project — it detects Package.swift / *.xcodeproj and suggests installing the optional dependencies below.
