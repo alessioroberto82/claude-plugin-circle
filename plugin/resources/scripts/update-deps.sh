@@ -7,7 +7,7 @@
 # Components managed:
 #   - Claude plugins (marketplace + installed)
 #   - npm global packages (bmad-mcp)
-#   - cupertino binary (via homebrew tap mihaelamj/tap)
+#   (iOS/Swift deps — including Cupertino — moved to companion plugin circle-ios in v2.0.0)
 #   - circle plugin (git pull if remote exists)
 
 set -euo pipefail
@@ -18,20 +18,13 @@ echo ""
 # 1. Plugin marketplace — update indexes
 echo "→ Updating marketplace indexes..."
 claude plugin marketplace update claude-plugins-official 2>/dev/null || echo "  ⚠ claude-plugins-official: update failed (may not be registered)"
-claude plugin marketplace update swiftui-expert-skill 2>/dev/null || echo "  ⚠ swiftui-expert-skill: update failed"
 claude plugin marketplace update thedotmack 2>/dev/null || echo "  ⚠ thedotmack: update failed"
-claude plugin marketplace update swift-concurrency-agent-skill 2>/dev/null || echo "  ⚠ Swift-Concurrency: update failed"
-claude plugin marketplace update swift-testing-agent-skill 2>/dev/null || echo "  ⚠ Swift-Testing: update failed"
 echo ""
 
 # 2. Plugins — update installed ones
 echo "→ Updating plugins..."
-claude plugin update swift-lsp@claude-plugins-official 2>/dev/null || echo "  ⚠ swift-lsp: update failed"
-claude plugin update swiftui-expert@swiftui-expert-skill 2>/dev/null || echo "  ⚠ swiftui-expert: update failed"
 claude plugin update claude-mem@thedotmack 2>/dev/null || echo "  ⚠ claude-mem: update failed"
 claude plugin update Notion@claude-plugins-official 2>/dev/null || echo "  ⚠ Notion: update failed"
-claude plugin update swift-concurrency@swift-concurrency-agent-skill 2>/dev/null || echo "  ⚠ swift-concurrency: update failed"
-claude plugin update swift-testing-expert@swift-testing-agent-skill 2>/dev/null || echo "  ⚠ swift-testing-expert: update failed"
 # code-review, feature-dev, github auto-update (Anthropic official)
 echo ""
 
@@ -40,24 +33,11 @@ echo "→ Updating npm global packages..."
 npm install -g bmad-mcp 2>/dev/null && echo "  bmad-mcp: updated" || echo "  ⚠ bmad-mcp: update failed (try with sudo)"
 echo ""
 
-# 4. cupertino — update via homebrew tap (https://github.com/mihaelamj/cupertino)
-echo "→ Cupertino (Apple docs MCP server):"
-if command -v brew &> /dev/null; then
-    # Ensure tap is registered
-    brew tap mihaelamj/tap 2>/dev/null || true
-    echo "  Upgrading via homebrew..."
-    brew upgrade cupertino 2>/dev/null && echo "  cupertino: upgraded" || echo "  cupertino: already up-to-date (or not installed via brew)"
-fi
-if command -v cupertino &> /dev/null; then
-    VERSION=$(cupertino --version 2>/dev/null || echo "unknown")
-    echo "  Version:  $VERSION"
-    echo "  Location: $(which cupertino)"
-else
-    echo "  ⚠ Not installed — run: brew tap mihaelamj/tap && brew install cupertino"
-fi
-echo ""
+# iOS / Swift development deps moved to the `circle-ios` companion plugin
+# as of v2.0.0. Update those via: claude plugin update circle-ios@circle
+# (companion plugin carries its own updater instructions in its deps-manifest.yaml).
 
-# 5. circle plugin (if it has a remote)
+# 4. circle plugin (if it has a remote)
 CIRCLE_DIR="${CIRCLE_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"}"
 if [ -d "$CIRCLE_DIR/.git" ]; then
     REMOTE=$(cd "$CIRCLE_DIR" && git remote -v 2>/dev/null | head -1)

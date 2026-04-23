@@ -30,11 +30,11 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Zero footprint**: All outputs → `~/.claude/circle/projects/<project>/`. Never write to the repo.
 
-**Domain-agnostic core**: Never name-drop domain-specific tools (Cupertino, SwiftUI Expert) in SKILL.md body. Domain deps live only in `deps-manifest.yaml` with `suggest_in` entries. Exception: `## MCP Integration` sections may name cross-domain tools (Linear, claude-mem).
+**Domain-agnostic core**: Core skills (in `plugin/`) MUST NOT name-drop domain-specific tools, dependencies, or skills in their body. Domain-specific skills live in companion plugins (e.g., `plugin-ios/`) that register via `metadata.platform_review` frontmatter and declare their own deps in the companion's own `deps-manifest.yaml`. Core dispatches to platform skills via the discovery contract in `docs/extensibility.md`. Core deps live only in `plugin/resources/deps-manifest.yaml` with `suggest_in` entries. Exceptions: (a) `## MCP Integration` sections may name cross-domain tools (Linear, claude-mem) available in all domains; (b) multi-language marker-file lists inside **Domain Detection** blocks may enumerate platform markers like `*.xcodeproj`, `Cargo.toml`, `Package.swift`, `package.json` — as long as the list spans multiple languages and is used only for detection, not for naming a companion skill/tool.
 
 **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — they do NOT parse `deps-manifest.yaml`. Any dep change must update both scripts AND the manifest.
 
-**Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match.
+**Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match for core (`plugin/.claude-plugin/plugin.json`, `circle` entry in `marketplace.json`, Luscii); four when the companion is touched (`plugin-ios/.claude-plugin/plugin.json` mirrors its `marketplace.json` entry).
 
 **Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → code-review. Never suggest `/circle:code-review` before a PR exists.
 
@@ -48,4 +48,3 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 - **Marketplace frontmatter**: Only `name`, `description`, `allowed-tools`, `compatibility`, `license`, `metadata` allowed as top-level fields. `context`/`agent` go inside `metadata:`
 - **marketplace.json vs plugin.json**: Different files, different locations (root `.claude-plugin/` vs `plugin/.claude-plugin/`), different purposes
-- **Do not neutralize**: `deps-manifest.yaml`, `init`, `triage` contain domain-specific content by design

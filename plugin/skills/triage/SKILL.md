@@ -5,7 +5,6 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Bash(gh api:*), Bash(gh pr view:*)
 metadata:
   context: same
   agent: general-purpose
-  model: opus
 ---
 
 # Triage

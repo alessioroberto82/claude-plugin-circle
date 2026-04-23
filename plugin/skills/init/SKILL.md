@@ -25,8 +25,9 @@ For each dependency, run the appropriate check:
 
 Auto-detect relevant groups:
 - `core` — always relevant
-- `ios` — relevant if domain is software AND (`Package.swift` or `*.xcodeproj` exists)
 - `extras` — always shown, marked as optional
+
+Platform-specific deps (iOS, Android, Rust, …) are owned by their companion plugins (e.g., `circle-ios`). Install the companion plugin to get its own dependency prompts — the core `init` skill only handles core + extras.
 
 Check for project-level overrides in `~/.claude/circle/projects/$PROJECT_NAME/config.yaml` under the `dependencies:` key. If a dep is marked `skip`, exclude it. If marked `include`, add it.
 
@@ -39,16 +40,11 @@ Circle Dependencies
     [ok]      claude-mem      Cross-session semantic memory
     [manual]  Linear          Enable in Claude Code settings
 
-  iOS / Swift development:
-    [--]      Cupertino       Apple documentation MCP server
-    [ok]      SwiftUI Expert  SwiftUI design patterns
-    [--]      Swift LSP       Swift language server
-
   Additional tools:
     [--]      Notion          Notion workspace integration
     [--]      bmad-mcp        BMAD MCP server
 
-  2 installed, 4 missing, 1 manual
+  1 installed, 2 missing, 1 manual
 ```
 
 If dependencies are missing, offer the user these choices:
@@ -101,14 +97,9 @@ Toggle dependencies (enter numbers, comma-separated):
     [1] claude-mem      — Cross-session memory              [INSTALL]
     [2] Linear          — Issue tracking                    [MANUAL]
 
-  iOS / Swift:
-    [3] Cupertino       — Apple docs MCP                    [INSTALL]
-    [4] SwiftUI Expert  — SwiftUI patterns                  [INSTALL]
-    [5] Swift LSP       — Swift language server             [SKIP]
-
   Extras:
-    [6] Notion          — Notion integration                [SKIP]
-    [7] bmad-mcp        — BMAD MCP server                   [SKIP]
+    [3] Notion          — Notion integration                [SKIP]
+    [4] bmad-mcp        — BMAD MCP server                   [SKIP]
 
 Enter numbers to toggle, or 'done':
 ```
@@ -224,10 +215,11 @@ Orchestrators:
   /circle:cycle      - Cycle planning ceremony (Shape Up)
 
 Utilities:
-  /circle:validate-prd - Validate PRD quality (8 checks)
-  /circle:tdd          - TDD red-green-refactor cycle
-  /circle:shard        - Split large documents into shards
-  /circle:init         - Project initialization (already done)
+  /circle:validate-prd     - Validate PRD quality (8 checks)
+  /circle:tdd              - TDD red-green-refactor cycle
+  /circle:shard            - Split large documents into shards
+  /circle:skills-discovery - Discover and install external skills (security-gated)
+  /circle:init             - Project initialization (already done)
 
 Start with: /circle:scope to gather requirements, or /circle:greenfield for the full workflow.
 ```

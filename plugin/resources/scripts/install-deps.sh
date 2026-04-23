@@ -5,9 +5,9 @@
 # Usage:
 #   bash install-deps.sh                    # Interactive mode
 #   bash install-deps.sh --check-only       # Just show status
-#   bash install-deps.sh --group=core,ios   # Install specific groups
+#   bash install-deps.sh --group=core,extras # Install specific groups
 #   bash install-deps.sh --all              # Install everything
-#   bash install-deps.sh --dep=cupertino    # Install single dependency
+#   bash install-deps.sh --dep=linear       # Install single dependency
 #
 # All dependencies are optional. Agents degrade gracefully when missing.
 # See deps-manifest.yaml for the full dependency registry.
@@ -33,18 +33,16 @@ PLUGINS_JSON="$HOME/.claude/plugins/installed_plugins.json"
 DEPS=(
   "linear|core|mcp-cloud|Linear|Issue tracking and project management|||all agents||Enable in Claude Code settings > MCP Servers > Linear"
   "claude-mem|core|plugin|claude-mem|Cross-session semantic memory|grep -q claude-mem $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add thedotmack && claude plugin install claude-mem@thedotmack|all agents||"
-  "cupertino|ios|mcp-brew|Cupertino|Apple documentation MCP server|command -v cupertino|brew tap mihaelamj/tap && brew install cupertino|arch impl ux ios-review|brew|"
-  "swiftui-expert|ios|plugin|SwiftUI Expert|SwiftUI design patterns and best practices|grep -q swiftui-expert $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swiftui-expert-skill && claude plugin install swiftui-expert@swiftui-expert-skill|arch impl ux ios-review||"
-  "swift-lsp|ios|plugin|Swift LSP|Swift language server integration|grep -q swift-lsp $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add claude-plugins-official && claude plugin install swift-lsp@claude-plugins-official|impl ios-review||"
-  "swift-concurrency|ios|plugin|Swift Concurrency|async/await actors Sendable Swift 6|grep -q swift-concurrency $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swift-concurrency-agent-skill && claude plugin install swift-concurrency@swift-concurrency-agent-skill|arch impl ios-review||"
-  "swift-testing-expert|ios|plugin|Swift Testing Expert|Swift Testing framework #expect #require|grep -q swift-testing-expert $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add swift-testing-agent-skill && claude plugin install swift-testing-expert@swift-testing-agent-skill|qa impl ios-review||"
   "notion|extras|plugin|Notion|Notion workspace integration|grep -q Notion $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add claude-plugins-official && claude plugin install Notion@claude-plugins-official|docs||"
   "bmad-mcp|extras|npm|bmad-mcp|Circle MCP server for workflow orchestration|npm list -g bmad-mcp 2>/dev/null \| grep -q bmad-mcp|npm install -g bmad-mcp|greenfield||"
 )
 
+# iOS / Swift development deps have moved to the companion plugin `circle-ios`
+# as of v2.0.0. Install the companion plugin to get those prompts from its own
+# deps-manifest.yaml.
+
 GROUP_LABELS=(
   "core|Core (recommended for all teams)"
-  "ios|iOS / Swift development"
   "extras|Additional tools"
 )
 
@@ -56,7 +54,7 @@ SINGLE_DEP=""
 for arg in "$@"; do
   case $arg in
     --check-only)   MODE="check-only" ;;
-    --all)          MODE="auto"; GROUPS="core,ios,extras" ;;
+    --all)          MODE="auto"; GROUPS="core,extras" ;;
     --group=*)      MODE="auto"; GROUPS="${arg#--group=}" ;;
     --dep=*)        MODE="auto"; SINGLE_DEP="${arg#--dep=}" ;;
     -h|--help)
@@ -65,9 +63,9 @@ for arg in "$@"; do
       echo "Usage:"
       echo "  bash install-deps.sh                    # Interactive mode"
       echo "  bash install-deps.sh --check-only       # Just show status"
-      echo "  bash install-deps.sh --group=core,ios   # Install specific groups"
+      echo "  bash install-deps.sh --group=core,extras # Install specific groups"
       echo "  bash install-deps.sh --all              # Install everything"
-      echo "  bash install-deps.sh --dep=cupertino    # Install single dependency"
+      echo "  bash install-deps.sh --dep=linear       # Install single dependency"
       exit 0
       ;;
     *)
@@ -90,8 +88,6 @@ print_prerequisites() {
   else                  echo -e "  ${RED}--${NC}  claude CLI (required for plugin installs)"; fi
   if $HAS_NPM; then    echo -e "  ${GREEN}ok${NC}  npm"
   else                  echo -e "  ${YELLOW}--${NC}  npm (needed for bmad-mcp)"; fi
-  if $HAS_BREW; then   echo -e "  ${GREEN}ok${NC}  Homebrew"
-  else                  echo -e "  ${YELLOW}--${NC}  Homebrew (needed for Cupertino — https://brew.sh)"; fi
   echo ""
 }
 
@@ -203,14 +199,6 @@ print_full_status() {
 
   print_status_group "core"
 
-  # Auto-detect iOS group relevance
-  if test -f Package.swift 2>/dev/null || ls *.xcodeproj 1>/dev/null 2>&1; then
-    print_status_group "ios"
-  else
-    echo -e "  ${DIM}iOS / Swift: not detected (no Package.swift or .xcodeproj)${NC}"
-    echo ""
-  fi
-
   print_status_group "extras"
 
   echo -e "  ${GREEN}$TOTAL_INSTALLED installed${NC}, ${RED}$TOTAL_MISSING missing${NC}, ${YELLOW}$TOTAL_MANUAL manual${NC}"
@@ -303,14 +291,7 @@ interactive_guided() {
   echo "============"
   echo ""
 
-  for group in core ios extras; do
-    # Skip iOS if not detected
-    if [ "$group" = "ios" ]; then
-      if ! test -f Package.swift 2>/dev/null && ! ls *.xcodeproj 1>/dev/null 2>&1; then
-        continue
-      fi
-    fi
-
+  for group in core extras; do
     local label
     label=$(group_label "$group")
     echo -e "${BOLD}$label${NC}"
@@ -385,12 +366,7 @@ interactive_mode() {
   echo ""
   case "$choice" in
     1)
-      for group in core ios extras; do
-        if [ "$group" = "ios" ]; then
-          if ! test -f Package.swift 2>/dev/null && ! ls *.xcodeproj 1>/dev/null 2>&1; then
-            continue
-          fi
-        fi
+      for group in core extras; do
         install_group "$group"
       done
       ;;

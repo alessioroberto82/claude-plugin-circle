@@ -8,7 +8,9 @@ Show the status of the Circle framework for the current project.
 
 2. **Detect domain** by analyzing files in the current directory:
    - **software**: if common project markers exist (e.g., `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, `pom.xml`, `*.xcodeproj`, `Makefile`, `CMakeLists.txt`, `Gemfile`, `build.gradle`)
-   - **general**: default if no software indicator found
+   - **business**: if `business-plan.md`, `market-analysis.md`, or `strategy.md` exists
+   - **personal**: if `goals.md`, `journal.md`, or `habits/` folder exists
+   - **general**: default if no domain indicator found
 
 3. **Check workflow status**: Read `~/.claude/circle/projects/<project-name>/output/session-state.json` if it exists.
    - If it exists: show current phase, active workflow, completed steps
@@ -50,7 +52,6 @@ Workflows:
 
 Review:
   /circle:code-review — PR code review
-  /circle:ios-review  — iOS platform review (auto-activated by code-review)
   /circle:triage      — Handle review feedback
 
 Utilities:

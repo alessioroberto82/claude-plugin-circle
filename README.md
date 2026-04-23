@@ -54,7 +54,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 | `/circle:tdd` | Enforces strict red-green-refactor TDD cycle. Write a failing test, make it pass, refactor. Used standalone or as sub-workflow of the Implementer |
 | `/circle:shard` | Splits large documents into smaller pieces (called "shards") so roles can work with just the part they need — reduces token usage by ~90% |
 | `/circle:skills-discovery` | Discovers and installs third-party skills with security-gated validation |
-| `/circle:dashboard` | Shows project status: what phase you're in, what's been done, and what roles are available |
+| `/circle` | Shows project status: what phase you're in, what's been done, and what roles are available. Pass `detailed` for version info and dependency status. |
 
 > **Token** = the unit of text that AI models process. Fewer tokens means faster responses and lower cost.
 > **Context sharding** = breaking a large document into focused pieces so each role loads only what it needs.
@@ -68,6 +68,9 @@ claude --plugin-dir /path/to/claude-plugin-circle/plugin
 # Or install permanently via the marketplace
 claude plugin marketplace add /path/to/claude-plugin-circle
 claude plugin install circle@circle
+
+# iOS PRs? Add the companion plugin from the same marketplace
+claude plugin install circle-ios@circle
 ```
 
 Then in any project:
@@ -89,15 +92,7 @@ All dependencies are **optional** — roles work without them and adapt when too
 | Notion | Plugin | Extras | The Documentation Steward can publish docs to Notion |
 | bmad-mcp | npm | Extras | Additional workflow tools for Greenfield orchestrator |
 
-**Domain-Specific (iOS):**
-
-| Dependency | Type | What it adds |
-|---|---|---|
-| Cupertino | Brew MCP | Apple documentation and Human Interface Guidelines |
-| SwiftUI Expert | Plugin | SwiftUI best practices and patterns |
-| Swift LSP | Plugin | Code intelligence for Swift files |
-
-Domain-specific dependencies are auto-detected by `init` based on project marker files (e.g., `Package.swift` for iOS). See `deps-manifest.yaml` for conditions.
+**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios` — its own `deps-manifest.yaml` declares Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, and Swift Testing Expert, and its README has the setup steps. Core `/circle:init` and `install-deps.sh` read only `plugin/resources/deps-manifest.yaml` — they do **not** scan companion manifests, so they do not auto-detect iOS projects or prompt for companion deps. Any plugin can register as a platform-review target via the frontmatter contract documented in [`docs/extensibility.md`](docs/extensibility.md).
 
 > **MCP** = Model Context Protocol — a way for Claude to connect to external services. Think of it as a plugin for the plugin.
 
@@ -224,7 +219,7 @@ Roles connect to external services through MCP (Model Context Protocol) when ava
 |---|---|---|
 | Linear | All roles | Issue tracking, cycle management |
 | claude-mem | All roles | Memory that persists across Claude Code sessions |
-| Domain-specific tools | Roles with domain detection | Platform documentation and framework APIs (e.g., Cupertino for iOS) |
+| Platform-specific tools | Companion plugins (e.g., `circle-ios`) | Platform documentation and framework APIs — registered via the [extensibility contract](docs/extensibility.md) |
 
 ## Customization
 
