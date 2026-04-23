@@ -34,7 +34,7 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — they do NOT parse `deps-manifest.yaml`. Any dep change must update both scripts AND the manifest.
 
-**Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match.
+**Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match for core (`plugin/.claude-plugin/plugin.json`, `circle` entry in `marketplace.json`, Luscii); four when the companion is touched (`plugin-ios/.claude-plugin/plugin.json` mirrors its `marketplace.json` entry).
 
 **Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → code-review. Never suggest `/circle:code-review` before a PR exists.
 
@@ -48,4 +48,3 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 - **Marketplace frontmatter**: Only `name`, `description`, `allowed-tools`, `compatibility`, `license`, `metadata` allowed as top-level fields. `context`/`agent` go inside `metadata:`
 - **marketplace.json vs plugin.json**: Different files, different locations (root `.claude-plugin/` vs `plugin/.claude-plugin/`), different purposes
-- **Do not neutralize**: `deps-manifest.yaml`, `init`, `triage` contain domain-specific content by design
