@@ -1,5 +1,14 @@
 # Changelog
 
+## circle-ios v1.1.0 — Local Project Skills + Alternate Apple Docs MCPs
+
+Companion plugin improvement (core `circle` unchanged).
+
+- **Local project skills take priority**: `ios-review` now scans `.claude/skills/*/SKILL.md` in the target repo during preflight. When a topic is covered by both a local skill and an external source (Apple docs MCP, plugin skill), the local skill wins. Confidence boost: +15 for findings backed by a local skill (above +10 MCP, +5 plugin skill).
+- **Apple docs MCP alternates**: Domain 1 (API Validation) now accepts Cupertino, `apple-docs-mcp`, or Sosumi interchangeably. The 10-query cap is shared across all MCPs. Declared in `plugin-ios/resources/deps-manifest.yaml`.
+- **SwiftUI reference bundle**: added `swiftui` (alias bundle exposing `/swiftui`, `/swiftui-perf`, `/swiftui-state`, `/swiftui-modern`) as a separate dep from `swiftui-expert`.
+- **Security**: local skill discovery validates paths (no `..`, must resolve inside `.claude/skills/`), and local skill bodies are not quoted in findings (P2-2 extended).
+
 ## v2.0.0 — Domain-Agnostic Core & Companion Plugins
 
 Core is restored to a platform-neutral design. `ios-review` and the iOS dependency group move to a new companion plugin `circle-ios`. Core discovers platform-review skills at runtime via a generic frontmatter contract — any plugin can register as a platform target by declaring `metadata.platform_review: true` with `metadata.platform_markers`. See [`docs/adr/0001-platform-review-extensibility.md`](adr/0001-platform-review-extensibility.md) and [`docs/extensibility.md`](extensibility.md).
