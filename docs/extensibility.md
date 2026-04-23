@@ -30,19 +30,32 @@ on non-platform projects.
 
 ## Return contract
 
-The dispatched skill must return findings as a JSON array:
+The dispatched skill must return findings as a JSON array using the same shape
+core's own Agents A and B produce, so they flow through the same confidence
+filter without translation:
 
 ```json
 [
   {
     "category": "<string>",
     "file": "<path>",
-    "line": <int>,
-    "severity": "high|medium|low",
-    "source": "<citation — Apple doc, framework, spec, etc.>"
+    "lines": "<start>-<end>",
+    "description": "<what's wrong>",
+    "source": "<citation — Apple doc, framework, spec, etc.>",
+    "confidence": <0-100>
   }
 ]
 ```
+
+Field notes:
+
+- `lines` is a range string (e.g., `"148-156"`), not an int — covers single-line
+  findings too (`"150-150"`).
+- `confidence` is the 0-100 scale used across Circle code review. Core applies
+  the same confidence threshold to dispatched findings as to its own agents
+  (90 normally, 75 for foundational files).
+- `description` is the short human-readable finding text — core quotes it
+  verbatim in the posted review comment.
 
 Core merges these findings into the unified review report, labelled with the
 dispatched skill's name so reviewers can see who contributed what.

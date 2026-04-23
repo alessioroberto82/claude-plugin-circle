@@ -266,7 +266,7 @@ Invoke the discovered platform skill via the Skill tool with the following argum
 - `diff_text` — full PR diff
 - `root_claude_md` — repo-root CLAUDE.md content
 
-The contract the dispatched skill follows is documented in `docs/extensibility.md` — it must return a JSON array of findings with `{category, file, line, severity, source}`. The dispatched skill runs with its own `allowed-tools` (declared in its own frontmatter); this skill does not extend its tool surface.
+The contract the dispatched skill follows is documented in `docs/extensibility.md` — it must return a JSON array of findings with `{category, file, lines, description, source, confidence}` (the same shape Agents A and B produce, so they flow through the same confidence filter). The dispatched skill runs with its own `allowed-tools` (declared in its own frontmatter); this skill does not extend its tool surface.
 
 ### 3. Filter
 
@@ -336,7 +336,7 @@ Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
 | standard | CLAUDE.md: "<rule text>" | CLAUDE.md: "Never write to the repo" |
 | standard (.claude/) | .claude/{filename}: "<section>" | .claude/conventions.md: "API naming" |
 | standard (nested) | {dir}/CLAUDE.md: "<rule text>" | src/api/CLAUDE.md: "REST verbs only" |
-| language-practice | Skill {dep-id}: "<pattern>" | Skill swift-concurrency: "actor isolation" |
+| language-practice | Skill {dep-id}: "<pattern>" | (from dispatched language skill, format set by that skill) |
 | bug | Bug: <evidence> | Bug: `count` incremented but never reset (line 42 vs 78) |
 | security | {CWE/OWASP ref}: <description> | CWE-79: Unsanitized user input in template |
 | platform-practice | {Skill/Tool}: <pattern> | (from dispatched platform-review skill, format set by that skill) |
