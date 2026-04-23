@@ -44,7 +44,7 @@ Circle Dependencies
     [--]      Notion          Notion workspace integration
     [--]      bmad-mcp        BMAD MCP server
 
-  2 installed, 4 missing, 1 manual
+  1 installed, 2 missing, 1 manual
 ```
 
 If dependencies are missing, offer the user these choices:

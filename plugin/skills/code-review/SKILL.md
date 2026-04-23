@@ -141,13 +141,19 @@ If `platform_review_target != null`, dispatch the target skill **in the same mes
 A and B **always run regardless** of dispatch success or failure — a dispatched skill cannot suppress or replace them. If the Skill tool dispatch errors, log `⚠️ Platform dispatch failed: <error>. Running A + B only.` and continue.
 
 **Model & Effort Routing**:
-Read `~/.claude/circle/projects/{project}/config.yaml` (if it exists). Resolve model and effort for each agent:
+Read `~/.claude/circle/projects/{project}/config.yaml` (if it exists). Resolve model and effort for each agent independently, in this precedence:
 
+Agent A (standards, bugs, language best practices):
 1. `code_review.agent_a.model` / `code_review.agent_a.effort` (new nested keys)
-2. `code_review.agent_a_model` (old flat key, backward compat fallback)
-3. Skill default: Agent A = sonnet/medium, Agent B = haiku/medium
+2. `code_review.agent_a_model` (old flat key, backward-compat fallback)
+3. Skill default: `sonnet` / `medium`
 
-Pass `model` and `effort` parameters to each Task tool invocation.
+Agent B (security):
+1. `code_review.agent_b.model` / `code_review.agent_b.effort` (new nested keys)
+2. `code_review.agent_b_model` (old flat key, backward-compat fallback)
+3. Skill default: `haiku` / `medium`
+
+Pass `model` and `effort` parameters to each Task tool invocation. (Platform-review model/effort resolves separately in step 5c.6 above.)
 
 **Confidence scale** (each agent scores its own findings):
 - **0-25**: Uncertain, might be false positive or pre-existing
