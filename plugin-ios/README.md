@@ -9,7 +9,7 @@ claude plugin marketplace add alessioroberto82/claude-plugin-circle
 claude plugin install circle-ios@circle
 ```
 
-Run `/circle:init` in your iOS project — it detects Package.swift / *.xcodeproj and suggests installing the optional dependencies below.
+Core `/circle:init` does **not** scan this companion's `deps-manifest.yaml`, so it will not prompt for the dependencies below automatically. Install them directly with the commands listed for each dep, or adapt `plugin/resources/scripts/install-deps.sh` from core against `plugin-ios/resources/deps-manifest.yaml`.
 
 ## Dependencies
 

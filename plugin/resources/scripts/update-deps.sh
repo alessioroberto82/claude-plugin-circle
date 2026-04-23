@@ -34,7 +34,7 @@ npm install -g bmad-mcp 2>/dev/null && echo "  bmad-mcp: updated" || echo "  ⚠
 echo ""
 
 # iOS / Swift development deps moved to the `circle-ios` companion plugin
-# as of v2.0.0. Update those via: claude plugin update circle-ios@claude-plugin-circle
+# as of v2.0.0. Update those via: claude plugin update circle-ios@circle
 # (companion plugin carries its own updater instructions in its deps-manifest.yaml).
 
 # 4. circle plugin (if it has a remote)

@@ -92,7 +92,7 @@ All dependencies are **optional** — roles work without them and adapt when too
 | Notion | Plugin | Extras | The Documentation Steward can publish docs to Notion |
 | bmad-mcp | npm | Extras | Additional workflow tools for Greenfield orchestrator |
 
-**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios` — its `deps-manifest.yaml` declares Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, and Swift Testing Expert. Running `/circle:init` inside an iOS project (detected via `Package.swift` or `*.xcodeproj`) picks them up from the companion. Any plugin can register as a platform-review target via the frontmatter contract documented in [`docs/extensibility.md`](docs/extensibility.md).
+**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios` — its own `deps-manifest.yaml` declares Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, and Swift Testing Expert, and its README has the setup steps. Core `/circle:init` and `install-deps.sh` read only `plugin/resources/deps-manifest.yaml` — they do **not** scan companion manifests, so they do not auto-detect iOS projects or prompt for companion deps. Any plugin can register as a platform-review target via the frontmatter contract documented in [`docs/extensibility.md`](docs/extensibility.md).
 
 > **MCP** = Model Context Protocol — a way for Claude to connect to external services. Think of it as a plugin for the plugin.
 
