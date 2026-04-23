@@ -10,6 +10,26 @@ Circle works for everyone on the team: product people, designers, analysts, deve
 
 **New to Circle?** Start with the [Getting Started Guide](docs/GETTING-STARTED.md) — it walks you through your first conversation with no technical setup.
 
+## Contents
+
+- [Soul](#soul) — the principles every role loads
+- [The Circle](#the-circle) — the 9 holacracy roles
+- [Review](#review) — PR review and triage commands
+- [Orchestrators](#orchestrators) — multi-step workflows
+- [Utilities](#utilities) — init, validate, shard, etc.
+- [Setup](#setup) — install Circle
+- [iOS Companion](#ios-companion) — how to use `circle-ios` for Swift/iOS PRs
+- [Dependencies](#dependencies) — optional MCPs and tools
+- [Project Knowledge Packs](#project-knowledge-packs) — make Circle understand your project
+- [Architecture](#architecture) — zero footprint, role isolation, quality gates, context sharding, MCP
+- [Customization](#customization) — per-project config, adding roles and templates
+- [Workflows](#workflows) — new feature, bug fix, code review
+- [Changelog](#changelog)
+
+## Soul
+
+The team principles live in [`plugin/resources/soul.md`](plugin/resources/soul.md) — every role reads them on every invocation. Growth over ego. Iteration over perfection. Impact over activity. No gold-plating. No fear-driven engineering. To understand the culture behind Circle, start there.
+
 ## The Circle
 
 | Command | Role | Accountability |
@@ -80,6 +100,38 @@ Then in any project:
 /circle:scope             # Start by defining requirements
 /circle:greenfield        # Or run the full workflow
 ```
+
+## iOS Companion
+
+`circle-ios` is a companion plugin that adds iOS/Swift expertise to `/circle:code-review`. It ships in the same marketplace as core Circle.
+
+### Install
+
+```bash
+claude plugin marketplace add alessioroberto82/claude-plugin-circle
+claude plugin install circle-ios@circle
+```
+
+### How to use it
+
+- **Automatic (recommended)** — run `/circle:code-review <PR>` as usual. When the PR diff contains iOS markers (`Package.swift`, `*.xcodeproj`, `*.swift`), core dispatches `circle-ios:ios-review` in parallel with the generic reviewers and merges its findings into the same report.
+- **Standalone** — run `/circle-ios:ios-review <PR>` to review a PR using only the iOS lens, without the generic reviewers.
+
+### Dependencies
+
+All optional — the skill degrades when tools are missing. Core `/circle:init` does **not** scan the companion's manifest, so these must be installed directly:
+
+- **Cupertino MCP** — Apple documentation lookup
+- **SwiftUI Expert** — SwiftUI patterns and best practices
+- **Swift LSP** — Swift language server
+- **Swift Concurrency** — async/await, actors, Sendable
+- **Swift Testing Expert** — Swift Testing framework (`#expect`, `#require`)
+
+Full install commands are in [`plugin-ios/README.md`](plugin-ios/README.md) and [`plugin-ios/resources/deps-manifest.yaml`](plugin-ios/resources/deps-manifest.yaml).
+
+### Building your own platform companion
+
+Any plugin can register as a platform-review target via the frontmatter contract in [`docs/extensibility.md`](docs/extensibility.md) — declare `metadata.platform_review: true` and a `platform_markers` glob list, and core's dispatcher picks it up on matching PRs.
 
 ## Dependencies
 
@@ -267,10 +319,6 @@ Implementer (analyze) → Architecture Owner (review) → Implementer (fix) → 
 ```
 Implementer (implement) → Quality Guardian (test) → Code Review (multi-agent PR review) → Triage (handle feedback) → merge
 ```
-
-## Soul
-
-The team principles live in `plugin/resources/soul.md` — every role reads them on every invocation. To understand the culture behind Circle, start there.
 
 ## Changelog
 
