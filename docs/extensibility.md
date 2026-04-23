@@ -20,8 +20,10 @@ When a user runs `/circle:code-review <PR>`, the core `code-review` skill:
    `metadata.platform_review: true`.
 2. For each matching skill, reads its `metadata.platform_markers` glob list.
 3. Matches each glob against the paths in `gh pr diff --name-only`.
-4. The first skill whose markers hit becomes the dispatch target (alphabetical
-   by skill name if multiple match — the report logs the collision).
+4. The first skill whose markers hit becomes the dispatch target. If multiple
+   skills match, the tie is broken alphabetically by the **surfaced skill id**
+   (e.g., `circle-ios:ios-review`), not by the SKILL frontmatter `name`. The
+   report logs the collision using that id.
 5. The target is invoked via the Skill tool in parallel with Agents A and B,
    receiving: PR number, diff content, repo-root `CLAUDE.md`.
 
