@@ -19,12 +19,39 @@ groups:
       - id: cupertino
         type: mcp-brew
         name: Cupertino
-        description: "Apple documentation MCP server (frameworks, HIG, APIs)"
+        description: "Apple documentation MCP server (frameworks, HIG, APIs). Primary Apple docs source."
         requires: brew
         check_command: "command -v cupertino"
         install_command: "brew tap mihaelamj/tap && brew install cupertino"
         update_command: "brew upgrade cupertino"
         used_by: "ios-review"
+
+      - id: apple-docs-mcp
+        type: mcp
+        name: apple-docs-mcp
+        description: "Alternative Apple documentation MCP server. Interchangeable with Cupertino for Domain 1 API validation."
+        check_command: "grep -q apple-docs-mcp ~/.claude/mcp_servers.json 2>/dev/null || grep -q apple-docs-mcp ~/.claude.json 2>/dev/null"
+        install_command: "# Configure via your MCP client settings — consult the apple-docs-mcp project"
+        used_by: "ios-review"
+
+      - id: sosumi
+        type: mcp
+        name: Sosumi
+        description: "Alternative Apple documentation MCP server. Interchangeable with Cupertino for Domain 1 API validation."
+        check_command: "grep -q sosumi ~/.claude/mcp_servers.json 2>/dev/null || grep -q sosumi ~/.claude.json 2>/dev/null"
+        install_command: "# Configure via your MCP client settings — consult the Sosumi project"
+        used_by: "ios-review"
+
+      - id: swiftui
+        type: plugin
+        name: SwiftUI Reference Bundle
+        marketplace: swiftui-reference-bundle
+        description: "User-installed alias bundle exposing /swiftui, /swiftui-perf, /swiftui-state, /swiftui-modern references. Complements swiftui-expert."
+        check_command: "grep -q '\"swiftui\"' ~/.claude/plugins/installed_plugins.json 2>/dev/null"
+        install_command: "# User-managed bundle; install via your marketplace of choice"
+        used_by: "ios-review"
+        suggest_in:
+          ios-review: "SwiftUI quick-reference (perf, state, modern APIs) — consulted alongside swiftui-expert"
 
       - id: swiftui-expert
         type: plugin
