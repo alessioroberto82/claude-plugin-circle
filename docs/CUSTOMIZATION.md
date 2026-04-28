@@ -192,8 +192,8 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork            # fork = isolated subagent | same = main conversation
   agent: general-purpose   # Explore, Plan, qa, or general-purpose
-  model: sonnet            # opus, sonnet, or haiku
-  effort: medium           # low, medium, high, or max
+  model: claude-sonnet-4-6 # pin a specific model ID — do not use family aliases (opus/sonnet/haiku)
+  effort: medium           # low, medium, high, or max — do not use xhigh (Opus 4.7 only)
 ---
 
 # <Role Name>
@@ -264,38 +264,46 @@ Circle assigns a default Claude model and effort level to each fork-context role
 
 ### Default Assignments
 
+As of v2.1.0, defaults are pinned to specific Claude model IDs (not family aliases) for cost predictability and stable behaviour across Anthropic releases. See CLAUDE.md "Pinned models — current" for the canonical list.
+
 | Role | Default Model | Default Effort | Rationale |
 |------|--------------|----------------|-----------|
-| Scope Clarifier | sonnet | medium | Structured requirements gathering |
-| Refiner | sonnet | medium | Feature prioritization |
-| Experience Designer | sonnet | medium | UX design patterns |
-| Architecture Owner | opus | high | Deep trade-off reasoning |
-| Security Guardian | opus | high | Adversarial threat modeling |
-| Facilitator | haiku | low | Lightweight coordination |
-| Implementer | opus | high | Code generation quality |
-| PRD Validator | sonnet | low | Checklist-based validation |
-| Quality Guardian | sonnet | medium | Criteria-based validation |
+| Scope Clarifier | claude-sonnet-4-6 | medium | Structured requirements gathering |
+| Refiner | claude-sonnet-4-6 | medium | Feature prioritization |
+| Experience Designer | claude-sonnet-4-6 | medium | UX design patterns |
+| Architecture Owner | claude-opus-4-6 | high | Deep trade-off reasoning |
+| Security Guardian | claude-opus-4-6 | high | Adversarial threat modeling |
+| Facilitator | claude-haiku-4-5-20251001 | low | Lightweight coordination |
+| Implementer | claude-opus-4-6 | high | Code generation quality |
+| PRD Validator | claude-sonnet-4-6 | low | Checklist-based validation |
+| Quality Guardian | claude-sonnet-4-6 | medium | Criteria-based validation |
 
-Code review agents (spawned by `code-review` via Task tool) also default to **sonnet**. Configure via `code_review.agent_a_model` and `code_review.agent_b_model` in config.yaml. Note: `code-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
+Code review agents (spawned by `code-review` via Task tool) default to: agent_a → `claude-sonnet-4-6`, agent_b → `claude-haiku-4-5-20251001`, platform_review → `claude-sonnet-4-6`. Configure via `code_review.agent_a.model` / `code_review.agent_b.model` in config.yaml (the legacy flat keys `code_review.agent_a_model` and `code_review.agent_b_model` are still honoured as fallback). Note: `code-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
 
 ### Override via config.yaml
+
+Override accepts either a pinned model ID (recommended — matches the v2.1.0 convention) or a family alias (`opus`/`sonnet`/`haiku`, which resolves to the latest version on the Anthropic API and to the previous-major on Bedrock/Vertex).
 
 ```yaml
 agents:
   arch:
-    model: opus       # deep reasoning tasks
-    effort: high      # high reasoning depth
+    model: claude-opus-4-6        # pinned ID (matches v2.1.0 default)
+    effort: high
   scope:
-    model: sonnet     # structured tasks
-    effort: medium    # moderate reasoning depth
+    model: claude-sonnet-4-6      # pinned ID
+    effort: medium
   facilitate:
-    model: haiku      # lightweight tasks
-    effort: low       # minimal reasoning depth
+    model: claude-haiku-4-5-20251001
+    effort: low
 
-# Code review agent models
+# Code review agent models (use nested keys; legacy flat keys still accepted)
 code_review:
-  agent_a_model: sonnet
-  agent_b_model: sonnet
+  agent_a:
+    model: claude-sonnet-4-6
+    effort: medium
+  agent_b:
+    model: claude-haiku-4-5-20251001
+    effort: medium
 ```
 
 ### Effort Levels

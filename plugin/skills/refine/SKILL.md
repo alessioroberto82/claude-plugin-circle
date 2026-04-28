@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: general-purpose
-  model: sonnet
+  model: claude-sonnet-4-6
   effort: medium
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Impact over activity. Say no to scope creep. Data over opinions.
 
 ## Model
 
-**Default model**: sonnet
+**Default model**: `claude-sonnet-4-6`
 **Override**: Set `agents.refine.model` in project `config.yaml`.
-**Rationale**: Feature prioritization is structured decision-making that does not require deep reasoning.
+**Rationale**: Feature prioritization is structured decision-making that does not require deep reasoning. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
 
 ## Your Role
 

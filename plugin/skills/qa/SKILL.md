@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: qa
-  model: sonnet
+  model: claude-sonnet-4-6
   effort: medium
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Data over opinions. Measure before claiming success. Speak up abo
 
 ## Model
 
-**Default model**: sonnet
+**Default model**: `claude-sonnet-4-6`
 **Override**: Set `agents.qa.model` in project `config.yaml`.
-**Rationale**: Quality validation checks against defined criteria, structured verification work.
+**Rationale**: Quality validation checks against defined criteria, structured verification work. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
 
 ## Your Role
 

@@ -55,17 +55,19 @@ Each role runs with a recommended Claude model and effort level. The orchestrato
 
 | Role | Default Model | Default Effort | Rationale |
 |------|--------------|----------------|-----------|
-| Scope Clarifier | sonnet | medium | Structured requirements gathering |
-| Refiner | sonnet | medium | Feature prioritization |
-| Experience Designer | sonnet | medium | UX design patterns |
-| Architecture Owner | opus | high | Deep trade-off reasoning |
-| Security Guardian | opus | high | Adversarial threat modeling |
-| Facilitator | haiku | low | Lightweight coordination |
-| Implementer | opus | high | Code generation quality |
-| PRD Validator | sonnet | low | Structured criteria-based validation |
-| Quality Guardian | sonnet | medium | Criteria-based validation |
+| Scope Clarifier | claude-sonnet-4-6 | medium | Structured requirements gathering |
+| Refiner | claude-sonnet-4-6 | medium | Feature prioritization |
+| Experience Designer | claude-sonnet-4-6 | medium | UX design patterns |
+| Architecture Owner | claude-opus-4-6 | high | Deep trade-off reasoning |
+| Security Guardian | claude-opus-4-6 | high | Adversarial threat modeling |
+| Facilitator | claude-haiku-4-5-20251001 | low | Lightweight coordination |
+| Implementer | claude-opus-4-6 | high | Code generation quality |
+| PRD Validator | claude-sonnet-4-6 | low | Structured criteria-based validation |
+| Quality Guardian | claude-sonnet-4-6 | medium | Criteria-based validation |
 
-**Effort levels**: `low`, `medium`, `high`, `max` — controls reasoning depth per role.
+**Models are pinned to specific IDs** (instead of family aliases like `opus`/`sonnet`/`haiku`) for cost predictability and stable behavior across Anthropic releases. Maintainers update these pins when Anthropic deprecates a version.
+
+**Effort levels**: `low`, `medium`, `high`, `max` — controls reasoning depth per role. Note: `xhigh` is intentionally NOT used because it is only supported on Opus 4.7, while the plugin pins Opus 4.6.
 
 **Config override**: `agents.{name}.model` and `agents.{name}.effort` in `~/.claude/circle/projects/{project}/config.yaml`
 
@@ -174,15 +176,15 @@ Optional phases:
         "validate_prd": true/false
       },
       "model_routing": {
-        "scope": "sonnet",
-        "refine": "sonnet",
-        "validate-prd": "sonnet",
-        "ux": "sonnet",
-        "arch": "opus",
-        "security": "opus",
-        "facilitate": "haiku",
-        "impl": "opus",
-        "qa": "sonnet"
+        "scope": "claude-sonnet-4-6",
+        "refine": "claude-sonnet-4-6",
+        "validate-prd": "claude-sonnet-4-6",
+        "ux": "claude-sonnet-4-6",
+        "arch": "claude-opus-4-6",
+        "security": "claude-opus-4-6",
+        "facilitate": "claude-haiku-4-5-20251001",
+        "impl": "claude-opus-4-6",
+        "qa": "claude-sonnet-4-6"
       },
       "effort_routing": {
         "scope": "medium",
@@ -248,15 +250,15 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 
 | Step | Role | Model | Effort | Purpose | Input | Output |
 |---|---|---|---|---|---|---|
-| 1 | **Scope Clarifier** | sonnet | medium | Gather requirements | User description | `scope/requirements.md` |
-| 2 | **Refiner** | sonnet | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
-| 3* | **PRD Validator** | sonnet | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
-| 4* | **Experience Designer** | sonnet | medium | Design UX | PRD | `ux/ux-design.md` |
-| 5 | **Architecture Owner** | opus | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
-| 6 | **Security Guardian** | opus | high | Security audit | Architecture | `security/security-audit.md` |
-| 7* | **Facilitator** | haiku | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
-| 8 | **Implementer** | opus | high | Implement | Architecture + PRD | Code in repo |
-| 9 | **Quality Guardian** | sonnet | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
+| 1 | **Scope Clarifier** | claude-sonnet-4-6 | medium | Gather requirements | User description | `scope/requirements.md` |
+| 2 | **Refiner** | claude-sonnet-4-6 | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
+| 3* | **PRD Validator** | claude-sonnet-4-6 | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
+| 4* | **Experience Designer** | claude-sonnet-4-6 | medium | Design UX | PRD | `ux/ux-design.md` |
+| 5 | **Architecture Owner** | claude-opus-4-6 | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
+| 6 | **Security Guardian** | claude-opus-4-6 | high | Security audit | Architecture | `security/security-audit.md` |
+| 7* | **Facilitator** | claude-haiku-4-5-20251001 | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
+| 8 | **Implementer** | claude-opus-4-6 | high | Implement | Architecture + PRD | Code in repo |
+| 9 | **Quality Guardian** | claude-sonnet-4-6 | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
 
 *Optional steps
 

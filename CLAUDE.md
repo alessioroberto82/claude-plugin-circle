@@ -40,7 +40,16 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **TDD**: On by default. `impl` uses `/circle:tdd` for red-green-refactor. `qa` verifies via commit history. Disable: `tdd.enabled: false` in config.yaml. Enforcement: `hard` (blocks) or `soft` (warns).
 
-**Model routing**: Fork-context skills specify a default model (opus/sonnet/haiku) in frontmatter `metadata.model`. Orchestrators pass the `model` parameter to Task tool. Override per-project in `config.yaml` under `agents.<name>.model`. Same-context skills inherit the session model.
+**Model routing**: Fork-context skills pin a specific Claude model ID in frontmatter `metadata.model` (e.g., `claude-opus-4-6`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`) for cost predictability and stable behavior across Anthropic releases. Orchestrators pass the `model` parameter to Task tool. Override per-project in `config.yaml` under `agents.<name>.model` (accepts both alias and full ID). Same-context skills inherit the session model.
+
+**Cross-provider note**: family aliases (`opus`/`sonnet`/`haiku`) resolve to **different versions on different providers** — latest on Anthropic API; the previous-major on Bedrock/Vertex unless overridden via `ANTHROPIC_DEFAULT_OPUS_MODEL` (or `_SONNET_`, `_HAIKU_`). The plugin's pinned IDs avoid this divergence; Bedrock/Vertex users must confirm the pinned IDs are available on their provider, or override via `agents.<name>.model`.
+
+**Pinned models — current** (as of v2.1.0):
+- Opus: `claude-opus-4-6` → arch, security, impl
+- Sonnet: `claude-sonnet-4-6` → scope, refine, ux, qa, validate-prd, code-review.agent_a, code-review.platform_review
+- Haiku: `claude-haiku-4-5-20251001` → facilitate, code-review.agent_b
+
+Maintainers: monitor [Anthropic deprecation page](https://docs.claude.com/en/docs/about-claude/model-deprecations) and bump pins when a model is retired. The 12 pin sites are: 9 fork-skill frontmatters + 3 entries in `plugin/skills/code-review/SKILL.md` `metadata.model_routing`. Both `plugin/skills/greenfield/SKILL.md` routing tables (Role table + Role Sequence Detail + the JSON `model_routing` example) must stay in sync — see Gotchas.
 
 **Holacracy**: Roles have purposes, not personas. Reference roles, not names. External comms use team voice.
 
@@ -48,3 +57,5 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 - **Marketplace frontmatter**: Only `name`, `description`, `allowed-tools`, `compatibility`, `license`, `metadata` allowed as top-level fields. `context`/`agent` go inside `metadata:`
 - **marketplace.json vs plugin.json**: Different files, different locations (root `.claude-plugin/` vs `plugin/.claude-plugin/`), different purposes
+- **Pinned model drift**: when changing a skill's `metadata.model`, also update the corresponding row in `plugin/skills/greenfield/SKILL.md` (Role table at section "Model & Effort Routing", Role Sequence Detail table, AND the `model_routing` JSON example in the session-state schema). Drift is silent at runtime (skill frontmatter wins) but breaks audit consistency and confuses contributors.
+- **`xhigh` effort is Opus 4.7-only**: do NOT declare `effort: xhigh` on any skill — the plugin pins Opus 4.6 (and Sonnet/Haiku versions that don't support `xhigh`). Stick to `low|medium|high`.
