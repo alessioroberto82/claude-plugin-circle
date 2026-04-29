@@ -1,5 +1,37 @@
 # Changelog
 
+## v2.1.0 — Pinned Model IDs
+
+Core skills now pin specific Claude model IDs in their frontmatter (was family aliases). The change gives users cost predictability and stable behaviour across Anthropic releases — Anthropic can ship Opus 4.8 without silently changing how Circle dispatches roles.
+
+### Changed
+
+- **Pinned 12 routing points to specific model IDs** (was family aliases `opus`/`sonnet`/`haiku`):
+  - `arch`, `security`, `impl` → `claude-opus-4-6` (was `opus` → resolved to Opus 4.7)
+  - `scope`, `refine`, `ux`, `qa`, `validate-prd` → `claude-sonnet-4-6`
+  - `facilitate` → `claude-haiku-4-5-20251001`
+  - `code-review.agent_a` → `claude-sonnet-4-6`
+  - `code-review.agent_b` → `claude-haiku-4-5-20251001`
+  - `code-review.platform_review` → `claude-sonnet-4-6`
+- `greenfield/SKILL.md` routing tables (Role table, Role Sequence Detail, JSON `model_routing` example) updated to match.
+- `CLAUDE.md` "Model routing" section rewritten; new "Pinned models — current" reference subsection added; two new Gotchas (pinned model drift, `xhigh` is Opus-4.7-only).
+
+### Added
+
+- `docs/MODEL-ROUTING-VERIFICATION.md` — one-time verification protocol (5 tests using `/cost`) to confirm the per-skill routing actually applies at runtime. Includes privacy guidance for recording results.
+
+### Migration notes
+
+- **Backward compat**: precedence `config.yaml > frontmatter` is unchanged. Users with `agents.<name>.model: opus|sonnet|haiku` in their `config.yaml` will continue to use the alias. To get the new defaults, remove the override or set it to a full model ID.
+- **Bedrock/Vertex users**: confirm the pinned IDs are available on your provider. Anthropic family aliases resolve to different versions on Bedrock/Vertex than on the Anthropic API. If a pin isn't available on your provider, override via `agents.<name>.model` in `config.yaml`.
+- **Maintainers**: monitor [Anthropic deprecation page](https://docs.claude.com/en/docs/about-claude/model-deprecations). When a pinned model is retired, bump the pin in 12 places (9 fork-skill frontmatters + 3 `code-review` `model_routing` entries) and update `greenfield/SKILL.md` tables and `CLAUDE.md` "Pinned models — current".
+
+### Verification
+
+Run the 5-test protocol in `docs/MODEL-ROUTING-VERIFICATION.md` after install. Record results here when completed:
+
+> Verification result (YYYY-MM-DD): Test A/B/C/D/E = pending — to be filled before tagging release.
+
 ## circle-ios v1.1.0 — Local Project Skills + Alternate Apple Docs MCPs
 
 Companion plugin improvement (core `circle` unchanged).

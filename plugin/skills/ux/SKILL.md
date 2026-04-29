@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob
 metadata:
   context: fork
   agent: Plan
-  model: sonnet
+  model: claude-sonnet-4-6
   effort: medium
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Impact over activity. User needs over developer preferences. Iter
 
 ## Model
 
-**Default model**: sonnet
+**Default model**: `claude-sonnet-4-6`
 **Override**: Set `agents.ux.model` in project `config.yaml`.
-**Rationale**: UX design follows established patterns and conventions, structured output work.
+**Rationale**: UX design follows established patterns and conventions, structured output work. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
 
 ## Your Role
 

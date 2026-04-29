@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: general-purpose
-  model: haiku
+  model: claude-haiku-4-5-20251001
   effort: low
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Trust the team. Say no to scope creep. Impact over activity.
 
 ## Model
 
-**Default model**: haiku
+**Default model**: `claude-haiku-4-5-20251001`
 **Override**: Set `agents.facilitate.model` in project `config.yaml`.
-**Rationale**: Cycle coordination is structured and lightweight, does not require deep reasoning.
+**Rationale**: Cycle coordination is structured and lightweight, does not require deep reasoning. Pinned to a specific Haiku 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "haiku"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-haiku-4-5-20251001"` unless overridden by config.
 
 ## Your Role
 

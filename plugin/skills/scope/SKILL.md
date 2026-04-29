@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: Explore
-  model: sonnet
+  model: claude-sonnet-4-6
   effort: medium
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Growth over ego. Ask, don't assume. Flag risks early.
 
 ## Model
 
-**Default model**: sonnet
+**Default model**: `claude-sonnet-4-6`
 **Override**: Set `agents.scope.model` in project `config.yaml`.
-**Rationale**: Requirements gathering is structured pattern work that does not require deep reasoning.
+**Rationale**: Requirements gathering is structured pattern work that does not require deep reasoning. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
 
 ## Your Role
 

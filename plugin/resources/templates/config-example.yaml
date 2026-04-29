@@ -40,20 +40,30 @@ tdd:
 # Model & effort routing — assign Claude model and effort level per role
 # Roles with context: fork run as subagents and respect these settings.
 # Roles with context: same inherit the session model (settings are ignored).
-# Model default: inherits from session (usually opus).
-# Effort levels: low, medium, high, max (controls reasoning depth).
+#
+# As of v2.1.0, the plugin pins specific Claude model IDs per role (not family
+# aliases) for cost predictability. The values below mirror the v2.1.0 defaults —
+# you only need to keep entries you actually want to OVERRIDE. Remove any role
+# block to fall back to the plugin default. See CLAUDE.md "Pinned models — current".
+#
+# Override accepts a pinned ID (e.g. claude-opus-4-6, recommended) or a family
+# alias (opus/sonnet/haiku — resolves to latest on Anthropic API, previous-major
+# on Bedrock/Vertex unless you set ANTHROPIC_DEFAULT_OPUS_MODEL etc).
+#
+# Effort levels: low, medium, high, max. Do NOT use xhigh — it is Opus 4.7-only
+# and the plugin pins Opus 4.6.
 # Effort precedence: config.yaml > session-state.json > skill frontmatter default.
 #
 # Role overrides — add model, effort, extra context, or instructions per role
 agents:
   scope:
-    model: sonnet
+    model: claude-sonnet-4-6
     effort: medium
   refine:
-    model: sonnet
+    model: claude-sonnet-4-6
     effort: medium
   arch:
-    model: opus
+    model: claude-opus-4-6
     effort: high
     # Additional files to read for architectural context
     context_files:
@@ -64,16 +74,16 @@ agents:
       This project uses a layered architecture with dependency injection.
       All new modules must follow the existing pattern.
   validate-prd:
-    model: sonnet
+    model: claude-sonnet-4-6
     effort: low
   security:
-    model: opus
+    model: claude-opus-4-6
     effort: high
   facilitate:
-    model: haiku
+    model: claude-haiku-4-5-20251001
     effort: low
   impl:
-    model: opus
+    model: claude-opus-4-6
     effort: high
     context_files:
       - src/
@@ -81,13 +91,13 @@ agents:
       Follow project coding standards and existing conventions.
       All public APIs must have documentation comments.
   qa:
-    model: sonnet
+    model: claude-sonnet-4-6
     effort: medium
     extra_instructions: |
       Minimum test coverage target: 80%.
       Focus on integration tests for data flows.
   ux:
-    model: sonnet
+    model: claude-sonnet-4-6
     effort: medium
     extra_instructions: |
       Follow platform design guidelines.
@@ -101,10 +111,21 @@ parallel:
   enabled: true           # Enable parallel impl (default: true)
   max_agents: 3           # Max concurrent worktree agents (default: 3)
 
-# Code review agent models (code-review spawns 2 parallel agents)
+# Code review agent models (code-review spawns 2 parallel agents).
+# As of v2.1.0, the plugin pins these to specific Claude model IDs.
+# The values below mirror the v2.1.0 defaults; only modify what you want to override.
+# Prefer the nested form (agent_a.model / agent_a.effort); the flat form
+# (agent_a_model) is still honoured as legacy fallback.
 code_review:
-  agent_a_model: sonnet    # Standards & Bugs
-  agent_b_model: sonnet    # Security
+  agent_a:
+    model: claude-sonnet-4-6        # Standards & Bugs
+    effort: medium
+  agent_b:
+    model: claude-haiku-4-5-20251001  # Security
+    effort: medium
+  platform_review:
+    model: claude-sonnet-4-6        # iOS / language-specific platform review (when matched)
+    effort: medium
 
 # Linear project mapping (for MCP integration)
 # linear:

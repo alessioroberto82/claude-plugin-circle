@@ -5,7 +5,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 metadata:
   context: fork
   agent: general-purpose
-  model: opus
+  model: claude-opus-4-6
   effort: high
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Follow the design. Iteration over perfection. No gold-plating.
 
 ## Model
 
-**Default model**: opus
+**Default model**: `claude-opus-4-6`
 **Override**: Set `agents.impl.model` in project `config.yaml`.
-**Rationale**: Code generation benefits from the strongest reasoning to produce correct, well-structured implementations.
+**Rationale**: Code generation benefits from strong reasoning to produce correct, well-structured implementations. Pinned to a specific Opus 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "opus"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-opus-4-6"` unless overridden by config.
 
 ## Your Role
 

@@ -7,14 +7,14 @@ metadata:
   agent: general-purpose
   model_routing:
     agent_a:
-      model: sonnet
+      model: claude-sonnet-4-6
       effort: medium
     agent_b:
-      model: haiku
+      model: claude-haiku-4-5-20251001
       effort: medium
     platform_review:
       enabled: true
-      model: sonnet
+      model: claude-sonnet-4-6
       effort: medium
 ---
 
@@ -112,7 +112,7 @@ Discover installed platform-review skills via the harness's available-skills lis
 3. **Scan available skills**: from the harness-provided skill list, collect skills whose frontmatter declares `metadata.platform_review: true`. Wrap the frontmatter parse for each candidate in a try/catch; on parse error, skip that skill and log `⚠️ Skipped '{skill}' — malformed frontmatter`.
 4. **Match markers against the diff**: for each candidate, read `metadata.platform_markers` (list of glob patterns). Match each glob against the paths from Step 2 using **pure glob matching** — treat patterns as literal match expressions, never pass them to a shell or `eval`. A candidate matches if any of its markers hits any diff path.
 5. **Resolve target**: if one candidate matches, `platform_review_target = <skill-id>`. If multiple match, pick the alphabetically-first by skill id and log `⚠️ Multiple platform-review skills matched: [list]. Using '<chosen>' (alphabetical). Uninstall the one you don't want to silence this.` If none match, `platform_review_target = null`.
-6. **Resolve model/effort** (only when `platform_review_target != null`): dispatched skill's own frontmatter model/effort wins. Fall back to `code_review.platform_review.model` / `.effort`. Final fallback to skill default (`sonnet` / `medium`).
+6. **Resolve model/effort** (only when `platform_review_target != null`): dispatched skill's own frontmatter model/effort wins. Fall back to `code_review.platform_review.model` / `.effort`. Final fallback to skill default (`claude-sonnet-4-6` / `medium`).
 
 **Step 6 — Summary**:
 Summarize: what changed, why, risk areas (2-3 sentences max — internal context, not output). If the PR diff modifies `.claude/` files, flag this as a heightened-attention area.
@@ -146,12 +146,12 @@ Read `~/.claude/circle/projects/{project}/config.yaml` (if it exists). Resolve m
 Agent A (standards, bugs, language best practices):
 1. `code_review.agent_a.model` / `code_review.agent_a.effort` (new nested keys)
 2. `code_review.agent_a_model` (old flat key, backward-compat fallback)
-3. Skill default: `sonnet` / `medium`
+3. Skill default: `claude-sonnet-4-6` / `medium`
 
 Agent B (security):
 1. `code_review.agent_b.model` / `code_review.agent_b.effort` (new nested keys)
 2. `code_review.agent_b_model` (old flat key, backward-compat fallback)
-3. Skill default: `haiku` / `medium`
+3. Skill default: `claude-haiku-4-5-20251001` / `medium`
 
 Pass `model` and `effort` parameters to each Task tool invocation. (Platform-review model/effort resolves separately in step 5c.6 above.)
 

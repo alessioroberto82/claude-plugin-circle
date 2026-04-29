@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: qa
-  model: opus
+  model: claude-opus-4-6
   effort: high
 ---
 
@@ -20,11 +20,11 @@ Key reminders: Impact over activity — focus on real risks, not security theate
 
 ## Model
 
-**Default model**: opus
+**Default model**: `claude-opus-4-6`
 **Override**: Set `agents.security.model` in project `config.yaml`.
-**Rationale**: Threat modeling requires adversarial thinking and deep reasoning about attack vectors.
+**Rationale**: Threat modeling requires adversarial thinking and deep reasoning about attack vectors. Pinned to a specific Opus 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "opus"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "claude-opus-4-6"` unless overridden by config.
 
 ## Your Role
 
