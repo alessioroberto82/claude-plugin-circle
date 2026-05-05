@@ -341,7 +341,7 @@ Progress: [{completed}/{total}]
 Completed:
   ✓ init
   ✓ scope → sessions/{SESSION_ID}/scope/requirements.md
-  ✓ refine → sessions/{SESSION_ID}/refine/PRD.md
+  ✓ refine → sessions/{SESSION_ID}/refine/PRD-{date}.md
   → arch (current)
   ○ impl
   ○ qa
@@ -372,33 +372,47 @@ After the validate-prd step:
 ### Gate 1: Security P0 Block
 
 After the security review step:
-1. Read `$BASE/output/sessions/{SESSION_ID}/security/security-audit.md`
-2. If the document contains "P0" severity issues:
+1. Resolve the security artifact filename based on the project domain (read `domain` from the root of `$BASE/output/session-state.json`):
+   - `software` → `security-audit.md`
+   - `business` → `compliance-report.md`
+   - `personal` → `privacy-audit.md`
+   - any other / unknown → `security-audit.md` (fallback)
+
+   This must match the filename written by the `security` skill (see `security/SKILL.md` Domain-Specific Behavior).
+2. Read `$BASE/output/sessions/{SESSION_ID}/security/{filename}`
+3. If the document contains "P0" severity issues:
    ```
    SECURITY GATE FAILED
    P0 critical issues found in security audit.
    These MUST be resolved before implementation.
 
-   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/security/security-audit.md
+   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/security/{filename}
 
    Resolve the issues, then type 'next' to re-run security review.
    ```
-3. Do NOT advance to the Implementer until P0 issues are resolved
+4. Do NOT advance to the Implementer until P0 issues are resolved
 
 ### Gate 2: QA Reject Block
 
 After the Quality Guardian's final verification:
-1. Read `$BASE/output/sessions/{SESSION_ID}/qa/test-report.md`
-2. If verdict is "REJECT":
+1. Resolve the QA report filename prefix based on the project domain (read `domain` from the root of `$BASE/output/session-state.json`):
+   - `software` → `test-report`
+   - `business` → `validation-report`
+   - `personal` → `progress-report`
+   - any other / unknown → `test-report` (fallback)
+
+   This must match the prefix written by the `qa` skill (see `qa/SKILL.md` Domain-Specific Behavior). The skill writes `{prefix}-{date}.md`.
+2. Locate the most recent report under `$BASE/output/sessions/{SESSION_ID}/qa/{prefix}-*.md` (highest mtime, or fall back to lexicographic sort on `{date}` since the skill uses ISO-style date stamps).
+3. If verdict is "REJECT":
    ```
    QA GATE FAILED
    The Quality Guardian has rejected the implementation.
 
-   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/test-report.md
+   Review: ~/.claude/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/{report-filename}
 
    Fix the issues with /circle:impl, then re-run QA.
    ```
-3. Loop back to Implementer step
+4. Loop back to Implementer step
 
 ### Gate 3: Completeness Check
 
