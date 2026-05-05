@@ -9,7 +9,7 @@ claude plugin marketplace add alessioroberto82/claude-plugin-circle
 claude plugin install circle-ios@circle
 ```
 
-Core `/circle:init` does **not** scan this companion's `deps-manifest.yaml`, so it will not prompt for the dependencies below automatically. Install them directly with the commands listed for each dep, or adapt `plugin/resources/scripts/install-deps.sh` from core against `plugin-ios/resources/deps-manifest.yaml`.
+Core `/circle:init` does **not** scan this companion's `deps-manifest.yaml`, so it will not prompt for the dependencies below automatically. Install them directly with the commands listed for each dep, or adapt the core plugin's `resources/scripts/install-deps.sh` against this companion plugin's `resources/deps-manifest.yaml` (resolvable via `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml` once the plugin is installed).
 
 ## Dependencies
 

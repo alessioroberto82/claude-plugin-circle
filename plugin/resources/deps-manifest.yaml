@@ -32,8 +32,9 @@ groups:
         used_by: "all roles"
 
   # iOS / Swift development deps have moved to the companion plugin `circle-ios`
-  # as of v2.0.0. See https://github.com/alessioroberto82/claude-plugin-circle
-  # — plugin-ios/resources/deps-manifest.yaml
+  # as of v2.0.0. See the companion plugin's `resources/deps-manifest.yaml`
+  # (resolvable via `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml` from
+  # within the circle-ios plugin context).
 
   extras:
     label: "Additional tools"
