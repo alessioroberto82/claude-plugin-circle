@@ -3,6 +3,9 @@
 **Date**: [Date]
 **Period Covered**: Current state as of [Date]
 
+> ⚠️ **NEVER record actual passwords, secrets, recovery codes, or 2FA seeds in this document.**
+> This audit captures *metadata about* credentials (strength category, age, breach exposure, reuse) — not the credentials themselves. If you need to track real secrets, use a password manager. Treat this file as if it could be leaked.
+
 ---
 
 ## Executive Summary
@@ -35,10 +38,14 @@
 
 ### Accounts with Weak Passwords
 
-1. **Email ([Provider])**: "[password]" 🔴 CRITICAL
-2. **Bank**: "[password]" 🔴 CRITICAL
-3. **[Account]**: "[password]" 🟡 High priority
-4. [...]
+> Do NOT write actual password values here. Record only metadata.
+
+| # | Account | Strength category | Length | Last rotated | Priority |
+|---|---------|-------------------|--------|--------------|----------|
+| 1 | Email ([Provider]) | Weak (<8 chars) | [N] | [date or "unknown"] | 🔴 CRITICAL |
+| 2 | Bank | Weak | [N] | [date] | 🔴 CRITICAL |
+| 3 | [Account] | Reused | [N] | [date] | 🟡 High |
+| 4 | [...] | [...] | [...] | [...] | [...] |
 
 **Immediate Action Required**:
 - [ ] Change all weak passwords TODAY (especially email, bank)
@@ -47,7 +54,9 @@
 
 ### Reused Passwords
 
-**Password "[X]" reused across**:
+> Identify reuse by *group label* (e.g., "Group A"), not by the password value.
+
+**Reuse group A reused across**:
 - [Account 1]
 - [Account 2]
 - [Account 3]
