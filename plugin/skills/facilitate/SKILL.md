@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: general-purpose
-  model: claude-haiku-4-5-20251001
+  model: haiku
   effort: low
 ---
 

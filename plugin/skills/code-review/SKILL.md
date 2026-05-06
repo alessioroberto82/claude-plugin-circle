@@ -7,14 +7,14 @@ metadata:
   agent: general-purpose
   model_routing:
     agent_a:
-      model: claude-sonnet-4-6
+      model: sonnet
       effort: medium
     agent_b:
-      model: claude-haiku-4-5-20251001
+      model: haiku
       effort: medium
     platform_review:
       enabled: true
-      model: claude-sonnet-4-6
+      model: sonnet
       effort: medium
 ---
 

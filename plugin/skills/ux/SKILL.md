@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob
 metadata:
   context: fork
   agent: Plan
-  model: claude-sonnet-4-6
+  model: sonnet
   effort: medium
 ---
 

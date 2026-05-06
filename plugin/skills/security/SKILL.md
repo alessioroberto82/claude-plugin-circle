@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: qa
-  model: claude-opus-4-6
+  model: opus
   effort: high
 ---
 
