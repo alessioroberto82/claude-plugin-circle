@@ -5,7 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork
   agent: general-purpose
-  model: claude-sonnet-4-6
+  model: sonnet
   effort: medium
 ---
 

@@ -53,19 +53,19 @@ Detect the project domain by analyzing files in the current directory:
 
 Each role runs with a recommended Claude model and effort level. The orchestrator passes the `model` **alias** (`opus`/`sonnet`/`haiku`) to the Task tool when dispatching sub-agents — full model IDs are not accepted by the Task tool schema and are silently discarded. Effort is shown in step banners for transparency but is **not** passed to the Task tool (the parameter does not exist; upstream: [anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Users can override per-project in `config.yaml`.
 
-| Role | Frontmatter model (full ID) | Task tool alias | Effort (advisory) | Rationale |
-|------|----------------------------|----------------|-------------------|-----------|
-| Scope Clarifier | claude-sonnet-4-6 | sonnet | medium | Structured requirements gathering |
-| Refiner | claude-sonnet-4-6 | sonnet | medium | Feature prioritization |
-| Experience Designer | claude-sonnet-4-6 | sonnet | medium | UX design patterns |
-| Architecture Owner | claude-opus-4-6 | opus | high | Deep trade-off reasoning |
-| Security Guardian | claude-opus-4-6 | opus | high | Adversarial threat modeling |
-| Facilitator | claude-haiku-4-5-20251001 | haiku | low | Lightweight coordination |
-| Implementer | claude-opus-4-6 | opus | high | Code generation quality |
-| PRD Validator | claude-sonnet-4-6 | sonnet | low | Structured criteria-based validation |
-| Quality Guardian | claude-sonnet-4-6 | sonnet | medium | Criteria-based validation |
+| Role | Model alias | Effort (advisory) | Rationale |
+|------|------------|-------------------|-----------|
+| Scope Clarifier | sonnet | medium | Structured requirements gathering |
+| Refiner | sonnet | medium | Feature prioritization |
+| Experience Designer | sonnet | medium | UX design patterns |
+| Architecture Owner | opus | high | Deep trade-off reasoning |
+| Security Guardian | opus | high | Adversarial threat modeling |
+| Facilitator | haiku | low | Lightweight coordination |
+| Implementer | opus | high | Code generation quality |
+| PRD Validator | sonnet | low | Structured criteria-based validation |
+| Quality Guardian | sonnet | medium | Criteria-based validation |
 
-**Two-layer model**: Frontmatter `metadata.model` in fork-context skills uses the **full model ID** (e.g., `claude-opus-4-6`) — Claude Code resolves it when launching the skill. The Task tool `model:` parameter in orchestrators uses only the **alias** (`opus`/`sonnet`/`haiku`). These are different layers with different constraints.
+**Model aliases**: Both frontmatter `metadata.model` and Task tool `model:` use aliases (`opus`/`sonnet`/`haiku`). Full model IDs are silently discarded by the Task tool.
 
 **Mapping rule** (applied at every Task tool dispatch): if model string contains `"opus"` → pass `"opus"`; contains `"sonnet"` → pass `"sonnet"`; contains `"haiku"` → pass `"haiku"`; otherwise → omit model parameter. Precedence: opus > sonnet > haiku.
 
@@ -250,17 +250,17 @@ After completion, type one of:
 
 All output paths below are relative to `sessions/{SESSION_ID}/`:
 
-| Step | Role | Frontmatter model | Task tool alias | Effort (advisory) | Purpose | Input | Output |
-|---|---|---|---|---|---|---|---|
-| 1 | **Scope Clarifier** | claude-sonnet-4-6 | sonnet | medium | Gather requirements | User description | `scope/requirements.md` |
-| 2 | **Refiner** | claude-sonnet-4-6 | sonnet | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
-| 3* | **PRD Validator** | claude-sonnet-4-6 | sonnet | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
-| 4* | **Experience Designer** | claude-sonnet-4-6 | sonnet | medium | Design UX | PRD | `ux/ux-design.md` |
-| 5 | **Architecture Owner** | claude-opus-4-6 | opus | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
-| 6 | **Security Guardian** | claude-opus-4-6 | opus | high | Security audit | Architecture | `security/security-audit.md` |
-| 7* | **Facilitator** | claude-haiku-4-5-20251001 | haiku | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
-| 8 | **Implementer** | claude-opus-4-6 | opus | high | Implement | Architecture + PRD | Code in repo |
-| 9 | **Quality Guardian** | claude-sonnet-4-6 | sonnet | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
+| Step | Role | Model alias | Effort (advisory) | Purpose | Input | Output |
+|---|---|---|---|---|---|---|
+| 1 | **Scope Clarifier** | sonnet | medium | Gather requirements | User description | `scope/requirements.md` |
+| 2 | **Refiner** | sonnet | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
+| 3* | **PRD Validator** | sonnet | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
+| 4* | **Experience Designer** | sonnet | medium | Design UX | PRD | `ux/ux-design.md` |
+| 5 | **Architecture Owner** | opus | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
+| 6 | **Security Guardian** | opus | high | Security audit | Architecture | `security/security-audit.md` |
+| 7* | **Facilitator** | haiku | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
+| 8 | **Implementer** | opus | high | Implement | Architecture + PRD | Code in repo |
+| 9 | **Quality Guardian** | sonnet | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
 
 *Optional steps
 
