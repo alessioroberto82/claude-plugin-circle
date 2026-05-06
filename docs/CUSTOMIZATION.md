@@ -192,7 +192,7 @@ allowed-tools: Read, Grep, Glob, Bash
 metadata:
   context: fork            # fork = isolated subagent | same = main conversation
   agent: general-purpose   # Explore, Plan, qa, or general-purpose
-  model: claude-sonnet-4-6 # pin a specific model ID — do not use family aliases (opus/sonnet/haiku)
+  model: sonnet             # use alias: opus, sonnet, or haiku
   effort: medium           # low, medium, high, or max — do not use xhigh (Opus 4.7 only)
 ---
 

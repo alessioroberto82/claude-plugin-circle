@@ -12,10 +12,8 @@ allowed-tools: []
 metadata:
   context: fork
   agent: general-purpose
-  # Pin a specific model ID — see CLAUDE.md "Pinned models — current".
-  # Do NOT use family aliases like 'sonnet'/'opus'/'haiku' — they resolve to
-  # the latest version and break cost predictability.
-  model: claude-sonnet-4-6
+  # Use alias: opus, sonnet, or haiku — see CLAUDE.md "Default models".
+  model: sonnet
   effort: medium
 ---
 
