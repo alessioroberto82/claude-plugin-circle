@@ -1,5 +1,30 @@
 # Changelog
 
+## v2.2.0 — Fix model/effort routing to Task tool
+
+The Task tool accepts only alias strings (`opus`/`sonnet`/`haiku`) as the `model` parameter — not full model IDs. Circle was passing full IDs (e.g., `claude-opus-4-6`) which were silently discarded, causing all sub-agents to fall back to the session default model. Additionally, `effort` was being passed to the Task tool which has no such parameter.
+
+### Fixed
+
+- **Task tool model dispatch**: all orchestrator dispatch sites (greenfield parallel impl, code-review agent A/B/platform) now pass the alias (`opus`/`sonnet`/`haiku`) instead of the full model ID. A substring-mapping rule handles both legacy full-ID values and alias values.
+- **Effort parameter removed from Task tool calls**: effort is not in the Task tool schema ([upstream: anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Removed from all dispatch instructions. Effort values are retained in routing tables and step banners for display only.
+- **9 fork-context skills**: updated the `> When invoked by an orchestrator` instruction from full model IDs to aliases.
+
+### Changed
+
+- **`greenfield/SKILL.md`**: routing tables now have two columns — "Frontmatter model (full ID)" and "Task tool alias". Session-state `model_routing` JSON example updated to use aliases. Parallel impl dispatch updated with mapping rule.
+- **`code-review/SKILL.md`**: config resolution section updated — model alias mapping rule added, effort removed from Task tool dispatch. Output template footers simplified (effort removed).
+- **`CLAUDE.md`**: "Model routing" section rewritten as "Model routing (two layers)"; three new Gotchas added (Task tool model alias, effort not supported, pinned model drift two-column update).
+- **`config.yaml` override**: documented that `agents.<name>.model` should use aliases (full IDs also work via the mapping rule).
+
+### Migration notes
+
+- **Backward compat**: existing `session-state.json` files with full model IDs in `model_routing` continue to work — the mapping rule handles both forms.
+- **config.yaml**: existing overrides with full IDs continue to work. Aliases are preferred for clarity.
+- **Effort**: `effort_routing` in session-state is retained for display purposes. When the upstream effort parameter ships (#14321), restore effort in dispatch sites.
+
+---
+
 ## v2.1.0 — Pinned Model IDs
 
 Core skills now pin specific Claude model IDs in their frontmatter (was family aliases). The change gives users cost predictability and stable behaviour across Anthropic releases — Anthropic can ship Opus 4.8 without silently changing how Circle dispatches roles.

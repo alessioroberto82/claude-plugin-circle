@@ -153,7 +153,7 @@ Agent B (security):
 2. `code_review.agent_b_model` (old flat key, backward-compat fallback)
 3. Skill default: `claude-haiku-4-5-20251001` / `medium`
 
-Pass `model` and `effort` parameters to each Task tool invocation. (Platform-review model/effort resolves separately in step 5c.6 above.)
+Pass `model` **alias** to each Task tool invocation (map: contains "opus"→`"opus"`, "sonnet"→`"sonnet"`, "haiku"→`"haiku"`; precedence: opus > sonnet > haiku). Do **NOT** pass `effort` — the Task tool does not support this parameter ([upstream: anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Platform-review model resolves separately in step 5c.6 above; same alias mapping applies.
 
 **Confidence scale** (each agent scores its own findings):
 - **0-25**: Uncertain, might be false positive or pre-existing
@@ -312,7 +312,7 @@ Found {N} issues:
 2. ...
 
 ---
-Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr + "/" + effort_pr}  | Threshold: 90/100 (75 for foundational files)
+Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr}  | Threshold: 90/100 (75 for foundational files)
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 {truncation_warning if applicable}
 
@@ -329,7 +329,7 @@ Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
 No issues found. Checked for bugs, security, CLAUDE.md compliance{if platform_review_target: ", and platform best practices via " + platform_review_target}.
 
 ---
-Agent A: {model_a}/{effort_a} | Agent B: {model_b}/{effort_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr + "/" + effort_pr}  | Threshold: 90/100 (75 for foundational files)
+Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr}  | Threshold: 90/100 (75 for foundational files)
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 
 Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
@@ -385,7 +385,7 @@ Include findings where `confidence >= 75` but below the applicable threshold (90
 > **Code Review — Complete.**
 > PR #{number} reviewed. {N} issues found (threshold: 90/100, 75 for foundational files).
 > Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
-> Agents: A={model_a}/{effort_a}, B={model_b}/{effort_b}{if platform_review_target: ", " + platform_review_target + "=" + model_pr + "/" + effort_pr}
+> Agents: A={model_a}, B={model_b}{if platform_review_target: ", " + platform_review_target + "=" + model_pr}
 
 ## False Positive Guide
 

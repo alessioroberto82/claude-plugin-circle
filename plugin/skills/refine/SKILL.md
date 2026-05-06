@@ -24,7 +24,7 @@ Key reminders: Impact over activity. Say no to scope creep. Data over opinions.
 **Override**: Set `agents.refine.model` in project `config.yaml`.
 **Rationale**: Feature prioritization is structured decision-making that does not require deep reasoning. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` (alias, not full ID) unless overridden by config.
 
 ## Your Role
 

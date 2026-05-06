@@ -24,7 +24,7 @@ Key reminders: Growth over ego. Ask, don't assume. Flag risks early.
 **Override**: Set `agents.scope.model` in project `config.yaml`.
 **Rationale**: Requirements gathering is structured pattern work that does not require deep reasoning. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "claude-sonnet-4-6"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` (alias, not full ID) unless overridden by config.
 
 ## Your Role
 

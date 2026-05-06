@@ -24,7 +24,7 @@ Key reminders: Data over opinions. Document trade-offs honestly. No fear-driven 
 **Override**: Set `agents.arch.model` in project `config.yaml`.
 **Rationale**: Architecture decisions require deep reasoning about trade-offs and system design. Pinned to a specific Opus 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "claude-opus-4-6"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "opus"` (alias, not full ID) unless overridden by config.
 
 ## Your Role
 

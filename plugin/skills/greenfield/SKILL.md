@@ -51,27 +51,29 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Model & Effort Routing
 
-Each role runs with a recommended Claude model and effort level. The orchestrator passes both `model` and effort parameters when presenting role invocations. Users can override per-project in `config.yaml`.
+Each role runs with a recommended Claude model and effort level. The orchestrator passes the `model` **alias** (`opus`/`sonnet`/`haiku`) to the Task tool when dispatching sub-agents — full model IDs are not accepted by the Task tool schema and are silently discarded. Effort is shown in step banners for transparency but is **not** passed to the Task tool (the parameter does not exist; upstream: [anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Users can override per-project in `config.yaml`.
 
-| Role | Default Model | Default Effort | Rationale |
-|------|--------------|----------------|-----------|
-| Scope Clarifier | claude-sonnet-4-6 | medium | Structured requirements gathering |
-| Refiner | claude-sonnet-4-6 | medium | Feature prioritization |
-| Experience Designer | claude-sonnet-4-6 | medium | UX design patterns |
-| Architecture Owner | claude-opus-4-6 | high | Deep trade-off reasoning |
-| Security Guardian | claude-opus-4-6 | high | Adversarial threat modeling |
-| Facilitator | claude-haiku-4-5-20251001 | low | Lightweight coordination |
-| Implementer | claude-opus-4-6 | high | Code generation quality |
-| PRD Validator | claude-sonnet-4-6 | low | Structured criteria-based validation |
-| Quality Guardian | claude-sonnet-4-6 | medium | Criteria-based validation |
+| Role | Frontmatter model (full ID) | Task tool alias | Effort (advisory) | Rationale |
+|------|----------------------------|----------------|-------------------|-----------|
+| Scope Clarifier | claude-sonnet-4-6 | sonnet | medium | Structured requirements gathering |
+| Refiner | claude-sonnet-4-6 | sonnet | medium | Feature prioritization |
+| Experience Designer | claude-sonnet-4-6 | sonnet | medium | UX design patterns |
+| Architecture Owner | claude-opus-4-6 | opus | high | Deep trade-off reasoning |
+| Security Guardian | claude-opus-4-6 | opus | high | Adversarial threat modeling |
+| Facilitator | claude-haiku-4-5-20251001 | haiku | low | Lightweight coordination |
+| Implementer | claude-opus-4-6 | opus | high | Code generation quality |
+| PRD Validator | claude-sonnet-4-6 | sonnet | low | Structured criteria-based validation |
+| Quality Guardian | claude-sonnet-4-6 | sonnet | medium | Criteria-based validation |
 
-**Models are pinned to specific IDs** (instead of family aliases like `opus`/`sonnet`/`haiku`) for cost predictability and stable behavior across Anthropic releases. Maintainers update these pins when Anthropic deprecates a version.
+**Two-layer model**: Frontmatter `metadata.model` in fork-context skills uses the **full model ID** (e.g., `claude-opus-4-6`) — Claude Code resolves it when launching the skill. The Task tool `model:` parameter in orchestrators uses only the **alias** (`opus`/`sonnet`/`haiku`). These are different layers with different constraints.
 
-**Effort levels**: `low`, `medium`, `high`, `max` — controls reasoning depth per role. Note: `xhigh` is intentionally NOT used because it is only supported on Opus 4.7, while the plugin pins Opus 4.6.
+**Mapping rule** (applied at every Task tool dispatch): if model string contains `"opus"` → pass `"opus"`; contains `"sonnet"` → pass `"sonnet"`; contains `"haiku"` → pass `"haiku"`; otherwise → omit model parameter. Precedence: opus > sonnet > haiku.
 
-**Config override**: `agents.{name}.model` and `agents.{name}.effort` in `~/.claude/circle/projects/{project}/config.yaml`
+**Effort levels**: `low`, `medium`, `high`, `max` — shown in step banners to indicate expected reasoning depth. Not passed to Task tool. Note: `xhigh` is intentionally NOT used because it is only supported on Opus 4.7, while the plugin pins Opus 4.6.
 
-**Effort precedence**: config.yaml > session-state.json > skill frontmatter default
+**Config override**: `agents.{name}.model` (must be an alias: `opus`/`sonnet`/`haiku`) and `agents.{name}.effort` in `~/.claude/circle/projects/{project}/config.yaml`. Full model IDs in config.yaml also work (the mapping rule handles them) but aliases are preferred.
+
+**Effort precedence** (for display only): config.yaml > session-state.json > skill frontmatter default
 
 ---
 
@@ -176,15 +178,15 @@ Optional phases:
         "validate_prd": true/false
       },
       "model_routing": {
-        "scope": "claude-sonnet-4-6",
-        "refine": "claude-sonnet-4-6",
-        "validate-prd": "claude-sonnet-4-6",
-        "ux": "claude-sonnet-4-6",
-        "arch": "claude-opus-4-6",
-        "security": "claude-opus-4-6",
-        "facilitate": "claude-haiku-4-5-20251001",
-        "impl": "claude-opus-4-6",
-        "qa": "claude-sonnet-4-6"
+        "scope": "sonnet",
+        "refine": "sonnet",
+        "validate-prd": "sonnet",
+        "ux": "sonnet",
+        "arch": "opus",
+        "security": "opus",
+        "facilitate": "haiku",
+        "impl": "opus",
+        "qa": "sonnet"
       },
       "effort_routing": {
         "scope": "medium",
@@ -248,17 +250,17 @@ After completion, type one of:
 
 All output paths below are relative to `sessions/{SESSION_ID}/`:
 
-| Step | Role | Model | Effort | Purpose | Input | Output |
-|---|---|---|---|---|---|---|
-| 1 | **Scope Clarifier** | claude-sonnet-4-6 | medium | Gather requirements | User description | `scope/requirements.md` |
-| 2 | **Refiner** | claude-sonnet-4-6 | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
-| 3* | **PRD Validator** | claude-sonnet-4-6 | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
-| 4* | **Experience Designer** | claude-sonnet-4-6 | medium | Design UX | PRD | `ux/ux-design.md` |
-| 5 | **Architecture Owner** | claude-opus-4-6 | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
-| 6 | **Security Guardian** | claude-opus-4-6 | high | Security audit | Architecture | `security/security-audit.md` |
-| 7* | **Facilitator** | claude-haiku-4-5-20251001 | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
-| 8 | **Implementer** | claude-opus-4-6 | high | Implement | Architecture + PRD | Code in repo |
-| 9 | **Quality Guardian** | claude-sonnet-4-6 | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
+| Step | Role | Frontmatter model | Task tool alias | Effort (advisory) | Purpose | Input | Output |
+|---|---|---|---|---|---|---|---|
+| 1 | **Scope Clarifier** | claude-sonnet-4-6 | sonnet | medium | Gather requirements | User description | `scope/requirements.md` |
+| 2 | **Refiner** | claude-sonnet-4-6 | sonnet | medium | Prioritize & create PRD | Requirements | `refine/PRD-{date}.md` |
+| 3* | **PRD Validator** | claude-sonnet-4-6 | sonnet | low | Validate PRD quality | PRD + Requirements | `qa/prd-validation-report.md` |
+| 4* | **Experience Designer** | claude-sonnet-4-6 | sonnet | medium | Design UX | PRD | `ux/ux-design.md` |
+| 5 | **Architecture Owner** | claude-opus-4-6 | opus | high | Design architecture | PRD + UX (if available) | `arch/architecture.md` |
+| 6 | **Security Guardian** | claude-opus-4-6 | opus | high | Security audit | Architecture | `security/security-audit.md` |
+| 7* | **Facilitator** | claude-haiku-4-5-20251001 | haiku | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
+| 8 | **Implementer** | claude-opus-4-6 | opus | high | Implement | Architecture + PRD | Code in repo |
+| 9 | **Quality Guardian** | claude-sonnet-4-6 | sonnet | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
 
 *Optional steps
 
@@ -539,7 +541,7 @@ When either condition fails, fall back to sequential impl (current behavior, no 
    a. Launch `min(wave_size, parallel.max_agents)` Task agents in a single message:
       - Each with `isolation: "worktree"`
       - Each with prompt: `/circle:impl TASK-xxx`
-      - Each with `model` from model_routing and effort from effort_routing
+      - Each with `model` alias from model_routing (map: contains "opus"→"opus", "sonnet"→"sonnet", "haiku"→"haiku"; unrecognised → omit). Do NOT pass effort to Task tool.
    b. Wait for all agents in the wave to complete
    c. For each completed agent, merge into the feature branch:
       ```
@@ -604,7 +606,7 @@ When parallel impl is active, add `parallel` to the session entry in `sessions[S
 | Merge conflict | Pause workflow, show conflict files, wait for user resolution |
 | Agent failure | Log failure, continue other agents in wave, report at wave end |
 | All agents in wave fail | Pause workflow, suggest manual intervention |
-| Invalid effort value in config | Warn, fall back to skill frontmatter default |
+| Invalid effort value in config | Warn, fall back to skill frontmatter default (effort is advisory; not passed to Task tool) |
 
 ---
 

@@ -24,7 +24,7 @@ Key reminders: Follow the design. Iteration over perfection. No gold-plating.
 **Override**: Set `agents.impl.model` in project `config.yaml`.
 **Rationale**: Code generation benefits from strong reasoning to produce correct, well-structured implementations. Pinned to a specific Opus 4.x version for cost predictability and stable behavior across Anthropic releases.
 
-> When invoked by an orchestrator, use the Task tool with `model: "claude-opus-4-6"` unless overridden by config.
+> When invoked by an orchestrator, use the Task tool with `model: "opus"` (alias, not full ID) unless overridden by config.
 
 ## Your Role
 
