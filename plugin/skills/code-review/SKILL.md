@@ -75,6 +75,9 @@ From the changed file paths (step 2), compute the set of changed directories and
 
 Nested CLAUDE.md content counts toward the 50 KB cap (combined with `.claude/` content).
 
+**4c. Extract design rationale docs from diff**:
+From the changed file paths (step 2), identify files matching `Docs/Architecture/ADR-*`, `docs/adr-*`, `**/ADR-*`, `**/adr-*`, or `DESIGN.md`. For each matched file that exists in the repo, read its content and concatenate into `adr_docs`. Cap at 20 KB. If the PR modifies an ADR, the change is likely an intentional design decision — Agent A must weigh this context before flagging "regressions" or "missing fallbacks".
+
 **Step 5 — Language Detection & Skill Discovery**:
 
 **5a. Detect project language**:
@@ -102,9 +105,6 @@ Read `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml`. For each detected lan
 4. If the file doesn't exist, skip silently.
 
 Concatenate into `language_context`. If no language detected or no skills found, `language_context` is empty.
-
-**4c. Extract design rationale docs from diff**:
-From the changed file paths (step 2), identify files matching `Docs/Architecture/ADR-*`, `docs/adr-*`, `**/ADR-*`, `**/adr-*`, or `DESIGN.md`. For each matched file that exists in the repo, read its content and concatenate into `adr_docs`. Cap at 20 KB. If the PR modifies an ADR, the change is likely an intentional design decision — Agent A must weigh this context before flagging "regressions" or "missing fallbacks".
 
 **5c. Platform-review discovery**:
 
