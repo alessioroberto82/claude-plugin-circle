@@ -78,6 +78,15 @@ Read from `~/.claude/circle/projects/{project}/output/`:
    - **Could Have**: Nice to have, defer if needed
    - **Won't Have**: Explicitly out of scope
 
+   <!-- Council hook (optional, non-blocking): emit ONLY when competing
+        priorities are genuinely unresolved (e.g. two Must-Haves contend for
+        the same appetite and one must be cut). Do not emit when the ranking
+        is clear. -->
+   > **Council available**: If competing priorities are hard to resolve and a
+   > cut is contested, pressure-test it with five analytical lenses:
+   > → `/circle:council Which of these priorities should we cut: {list items}`
+   > Optional — proceed with your MoSCoW ranking if you're confident.
+
 4. **Generate PRD**:
    ```markdown
    # PRD: {Product/Feature Name}

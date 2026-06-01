@@ -74,6 +74,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 | `/circle:tdd` | Enforces strict red-green-refactor TDD cycle. Write a failing test, make it pass, refactor. Used standalone or as sub-workflow of the Implementer |
 | `/circle:shard` | Splits large documents into smaller pieces (called "shards") so roles can work with just the part they need — reduces token usage by ~90% |
 | `/circle:skills-discovery` | Discovers and installs third-party skills with security-gated validation |
+| `/circle:council` | Pressure-tests a hard decision through 5 analytical lenses, blind peer review, and a chairman verdict — for trade-offs with 2+ viable options |
 | `/circle` | Shows project status: what phase you're in, what's been done, and what roles are available. Pass `detailed` for version info and dependency status. |
 
 > **Token** = the unit of text that AI models process. Fewer tokens means faster responses and lower cost.
@@ -227,7 +228,8 @@ Circle never adds files to your project repository. All outputs are stored in a 
 │   ├── ux/           # UX designs
 │   ├── refine/       # PRDs
 │   ├── facilitate/   # Cycle plans
-│   └── docs/         # Generated docs
+│   ├── docs/         # Generated docs
+│   └── council/      # Decision council verdicts (when saved)
 ├── shards/           # Context shards
 │   ├── requirements/
 │   ├── architecture/

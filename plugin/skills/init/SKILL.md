@@ -219,6 +219,7 @@ Utilities:
   /circle:tdd              - TDD red-green-refactor cycle
   /circle:shard            - Split large documents into shards
   /circle:skills-discovery - Discover and install external skills (security-gated)
+  /circle:council          - Pressure-test a hard decision (5 lenses + chairman)
   /circle:init             - Project initialization (already done)
 
 Start with: /circle:scope to gather requirements, or /circle:greenfield for the full workflow.

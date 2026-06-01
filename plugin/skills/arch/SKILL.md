@@ -129,6 +129,14 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    **Consequences**: Impact on the system
    ```
 
+   <!-- Council hook (optional, non-blocking): emit ONLY when an ADR presents
+        2+ alternatives and neither is clearly dominant. Do not emit for
+        single-option decisions or where the trade-off is obvious. -->
+   > **Council available**: If two or more options are genuinely close and the
+   > trade-off is hard, pressure-test the decision with five analytical lenses:
+   > → `/circle:council {paste the decision question}`
+   > Optional — proceed with your chosen option if you're confident.
+
 6. **Generate architecture document**: Write to `~/.claude/circle/projects/$PROJECT_NAME/output/arch/{filename}`
 
 7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `refine/PRD.md`.
