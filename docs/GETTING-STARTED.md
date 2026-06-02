@@ -123,6 +123,7 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:tdd` | Enforce test-driven development (red-green-refactor cycle) |
 | `/circle:shard` | Split large documents into smaller pieces (saves time and cost) |
 | `/circle:skills-discovery` | Discover and install third-party skills with security validation |
+| `/circle:council` | Pressure-test a hard decision with multi-perspective analysis |
 | `/circle:init` | Set up Circle for your current project (run once) |
 | `/circle` | See project status and what's been done (pass `detailed` for version and dependency info) |
 

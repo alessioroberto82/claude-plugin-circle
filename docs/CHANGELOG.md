@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.3.0 — Decision Council skill
+
+Adds `/circle:council`, a multi-perspective decision-analysis skill. When facing a hard trade-off with 2+ viable options, the council routes the decision through five analytical lenses in parallel, a blind peer-review round, and a chairman synthesis — surfacing where perspectives agree, where they clash, what they all missed, and a concrete next step.
+
+### Added
+
+- **`/circle:council` skill** (`plugin/skills/council/SKILL.md`): the 19th core skill (10th utility). Standalone — invocable any time, with or without an active greenfield session. Runs 11 sub-agents across 3 waves (5 advisors → 5 peer reviewers → 1 chairman), all defaulting to Sonnet (~$0.10–0.15/run).
+- **Five purpose-first lenses**: Critical Perspective, Root Cause Analysis, Opportunity Scout, Fresh Context, Execution Lens — expressed as thinking modes, not personas, consistent with Circle's holacracy model. Natural tension pairs documented inline.
+- **Blind peer review**: advisor outputs are anonymized (fixed rotation A–E) before peer review so reviewers judge content, not lens identity. The chairman de-anonymizes for attribution.
+- **Context enrichment**: best-effort scan of `CLAUDE.md` + active session artifacts (capped ~4000 tokens), injected as quoted reference into advisor prompts.
+- **Optional save**: verdict is in-chat by default; auto-saves to `~/.claude/circle/projects/{project}/output/council/` when convened inside an active greenfield session (audit trail), or on request.
+- **Proactive hooks** in `/circle:arch` (ADR alternatives) and `/circle:refine` (contested priorities): non-blocking suggestions to convene the council when a decision is genuinely close.
+
+### Security
+
+- **Read-only sub-agents**: advisors/reviewers/chairman inherit a read-only `allowed-tools` surface (no `Bash(cat:*)` — `Read` covers file access; SEC-01).
+- **Path validation**: globbed session artifacts are `realpath`-checked against the expected prefix before reading (symlink guard; SEC-03). Save path is validated under the project output dir with no `..` (zero-footprint guard).
+- **Config validation**: an unknown `agents.council.chairman_model` value warns and falls back to Sonnet rather than failing silently (SEC-04).
+- **Prompt-injection posture**: project context is injected as quoted DATA, never as instructions.
+
+### Attribution
+
+- Methodology credits in the SKILL.md header: Andrej Karpathy's LLM Council (Apache 2.0) and Ole Lehmann's skills adaptation. Implemented independently for Circle — no code copied; the five lenses are re-expressed in purpose-first language.
+
+---
+
 ## v2.2.1 — Code-review design-intent gate
 
 Agent A (Sonnet, multi-agent code review) posted two false-positive bug reports at 90-95% confidence on a real PR because it judged the diff in isolation — missing the design rationale documented in the PR description and the cross-platform precedent referenced there. This release closes that gap.

@@ -60,6 +60,7 @@ Utilities:
   /circle:init         — Set up Circle for this project
   /circle:skills-discovery — Discover and install external skills (security-gated)
   /circle:shard        — Split large docs for faster processing
+  /circle:council      — Pressure-test a hard decision with 5 analytical lenses
 
 Tip: Type /circle detailed for version info and dependency status.
 ```

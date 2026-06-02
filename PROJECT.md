@@ -4,7 +4,7 @@ Holacracy-based development workflow plugin for Claude Code with distributed rol
 
 ## Overview
 
-Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin `circle` ships 18 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 9 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, skills discovery).
+Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin `circle` ships 19 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 10 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, skills discovery, decision council).
 
 The core is domain-agnostic: platform-specific review capabilities are packaged as companion plugins that register via a frontmatter extensibility contract. The companion plugin `circle-ios` ships alongside core in this repository and supplies iOS/Swift review via the same monorepo marketplace listing. See [`docs/extensibility.md`](docs/extensibility.md) for the contract.
 
@@ -37,7 +37,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │   │   ├── work-summary-template.md — Assessment-aware work summary
 │   │   ├── scripts/       — install-deps.sh, update-deps.sh
 │   │   └── templates/     — Output templates (docs/, software/, business/, personal/)
-│   └── skills/            — 18 skills (one SKILL.md per directory)
+│   └── skills/            — 19 skills (one SKILL.md per directory)
 │       ├── arch/          — Architecture Owner
 │       ├── code-review/   — Multi-agent PR review with platform-review dispatch
 │       ├── cycle/         — Cycle planning ceremony
