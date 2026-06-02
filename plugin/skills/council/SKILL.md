@@ -5,8 +5,6 @@ allowed-tools: Read, Grep, Glob, Task, Bash(mkdir -p ~/.claude/circle/*), Bash(r
 metadata:
   context: same
   agent: general-purpose
-  model: sonnet
-  effort: medium
 ---
 
 <!--
