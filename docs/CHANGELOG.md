@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.4.0 — no-mistakes pre-push gate awareness
+
+Adds optional awareness of [`no-mistakes`](https://github.com/kunchenguid/no-mistakes), a local git proxy that runs an AI validation pipeline (review → test → lint → docs) before a branch reaches the remote and opens a clean PR only when every check is green. It is **complementary** to `/circle:code-review`: no-mistakes gates mechanical/correctness issues *before* the PR exists; the code-review skill reviews architecture and design intent *after*. The integration is purely referential — Circle gains zero hard dependency and behaves identically when no-mistakes is absent.
+
+### Added
+
+- **`no-mistakes` as an optional `extras` dependency** (`plugin/resources/deps-manifest.yaml`): introduces a new `type: binary` (curl-installed CLI, detected via `command -v`). Registered in both `install-deps.sh` (DEPS array) and `update-deps.sh` (new binaries section that updates only if already installed), keeping the script/manifest sync rule intact.
+- **Conditional push hint in `/circle:greenfield` completion phase**: the workflow summary and completion banner now tell the user to push via `git push no-mistakes <branch>` when the tool is installed, falling back to `git push origin <branch>` otherwise. The hint is prose for the user, not a script Circle executes.
+
+### Security
+
+- **`curl | sh` install is opt-in only** and never run by `/circle:init`. The install/update commands use the pipe-free form `sh -c "$(curl -fsSL <official-url>)"` — functionally equivalent to the upstream `curl … | sh`, and required because a literal `|` would collide with the `|`-delimited DEPS array in `install-deps.sh`.
+- **Remote-script caveat**: install/update execute a script fetched from `raw.githubusercontent.com/kunchenguid/no-mistakes/main` with the user's privileges, without checksum or version pinning (tracks `main`). This is the same posture as the tool's official installer (and rustup/brew/nvm); inspect the script if operating in a sensitive context. Both findings were rated P3 (informational) by the security audit — opt-in, official URL, no auto-install.
+
+---
+
 ## v2.3.0 — Decision Council skill
 
 Adds `/circle:council`, a multi-perspective decision-analysis skill. When facing a hard trade-off with 2+ viable options, the council routes the decision through five analytical lenses in parallel, a blind peer-review round, and a chairman synthesis — surfacing where perspectives agree, where they clash, what they all missed, and a concrete next step.

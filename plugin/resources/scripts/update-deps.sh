@@ -7,6 +7,7 @@
 # Components managed:
 #   - Claude plugins (marketplace + installed)
 #   - npm global packages (bmad-mcp)
+#   - binaries (no-mistakes, curl-installed — updated only if already present)
 #   (iOS/Swift deps — including Cupertino — moved to companion plugin circle-ios in v2.0.0)
 #   - circle plugin (git pull if remote exists)
 
@@ -31,6 +32,17 @@ echo ""
 # 3. npm globals
 echo "→ Updating npm global packages..."
 npm install -g bmad-mcp 2>/dev/null && echo "  bmad-mcp: updated" || echo "  ⚠ bmad-mcp: update failed (try with sudo)"
+echo ""
+
+# 3b. Binaries (curl-installed tools) — update only if already installed
+echo "→ Updating binaries..."
+if command -v no-mistakes >/dev/null 2>&1; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)" \
+        && echo "  no-mistakes: updated" \
+        || echo "  ⚠ no-mistakes: update failed"
+else
+    echo "  no-mistakes: not installed (skipped)"
+fi
 echo ""
 
 # iOS / Swift development deps moved to the `circle-ios` companion plugin

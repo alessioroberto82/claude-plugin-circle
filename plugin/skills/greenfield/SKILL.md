@@ -452,12 +452,15 @@ When all steps are completed:
    | QA | Quality Guardian | ✓ | test-report.md |
 
    ## Next Steps
-   - [ ] Commit and push changes
-   - [ ] Create a pull request
+   - [ ] Commit changes
+   - [ ] Push: if `no-mistakes` is installed (check with `command -v no-mistakes`), push via `git push no-mistakes <branch>` to run the pre-PR validation gate (review/test/lint/docs); otherwise `git push origin <branch>`
+   - [ ] Create a pull request (with `no-mistakes`, the gate opens a clean PR for you once every check is green)
    - [ ] Run `/circle:code-review <PR>` for multi-agent review with CLAUDE.md compliance
    - [ ] Merge to main branch
    - [ ] Update Linear cycle
    ```
+
+   > **Note**: the push line is a conditional hint for the user, not a script Circle executes. Default-safe behavior is to render both branches so the instruction is valid regardless of install state; the orchestrator MAY run `command -v no-mistakes` and show only the matching branch.
 
 2. **Cleanup session artifacts**: After the summary is written successfully:
    - **Validate the delete path** (security P2-3 mitigation): confirm the target path is under `$BASE/output/sessions/` and does not contain `..`
@@ -478,6 +481,8 @@ When all steps are completed:
    Session artifacts cleaned up.
 
    Only code changes need to be committed to Git.
+   Push tip: if no-mistakes is installed, push via `git push no-mistakes`
+   to run the pre-PR validation gate. Otherwise `git push origin`.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ```
 
