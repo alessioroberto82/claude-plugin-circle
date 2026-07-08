@@ -20,11 +20,7 @@ Key reminders: Trust the team. Say no to scope creep. Impact over activity.
 
 ## Model
 
-**Default model**: `claude-haiku-4-5-20251001`
-**Override**: Set `agents.facilitate.model` in project `config.yaml`.
-**Rationale**: Cycle coordination is structured and lightweight, does not require deep reasoning. Pinned to a specific Haiku 4.x version for cost predictability and stable behavior across Anthropic releases.
-
-> When invoked by an orchestrator, use the Task tool with `model: "haiku"` (alias, not full ID) unless overridden by config.
+Default `haiku` (pinned `claude-haiku-4-5-20251001`); override via `agents.facilitate.model` in `config.yaml`. Orchestrators pass the alias `haiku` to the Task tool (not the full ID).
 
 ## Your Role
 
@@ -125,14 +121,4 @@ Read from `~/.claude/circle/projects/{project}/output/`:
 
 ## Tension Sensing
 
-During your work, if you encounter a task that falls outside your defined scope
-and no existing Circle role covers it, this is a **tension** — a gap in the circle.
-
-When you detect a tension:
-1. Read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md`
-2. Formulate the tension using the standard format
-3. Present the proposal to the user for approval
-4. If approved, create the temporary role and continue
-
-Do NOT generate tensions for tasks covered by existing roles.
-Do NOT interrupt flow for minor gaps — only for recurring or significant ones.
+If a task falls outside every existing role (a real, recurring gap — not a minor one), read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md` and follow the tension protocol. Don't interrupt flow for work another role covers.

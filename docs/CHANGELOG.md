@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.4.1 — role boilerplate compression
+
+Maintenance release that shrinks the static payload every fork-context role reloads on each invocation. No behavioral change intended — every principle, gate, and routing rule is preserved; the edits are pure compression and de-duplication. Token impact per fork is modest (the static payload is a small fraction of a role's context — the dominant cost is full upstream-doc reloads and prompt-cache expiry across human-in-the-loop pauses), but it compounds across every fork start and every cache re-bill, and it removes ~12× duplicated blocks that were a maintenance burden. Larger savings are deferred to a follow-up that introduces compact digest handoffs between roles.
+
+### Changed
+
+- **Condensed `plugin/resources/soul.md`** (~67 → ~48 lines): tightened prose and merged overlapping bullets while keeping every principle — core mindset, how-you-work, what-you-don't-do, the standard, holacracy, per-domain adaptations, and the internal/external communication rules. Loaded by ~19 skills, so it compounds widest. Dropped only the redundant "Every role should 1/2/3" meta-list.
+- **Compressed the `## Tension Sensing` block** from 14 near-identical lines to a 3-line trigger across 12 skills (`arch, scope, refine, ux, qa, facilitate, security, impl, code-review, council, docs, skills-discovery`) and the `role-template.md` generator. The full protocol still lives in `resources/governance-protocol.md` and is read lazily only when a tension actually fires.
+- **Compressed the `## Model` prose block** to a single line across the 9 fork roles (`arch, scope, refine, ux, qa, facilitate, security, impl, validate-prd`), dropping the duplicated rationale sentence. Frontmatter `metadata.model` remains the source of truth and is unchanged; no model alias, greenfield routing table, or `code-review` `model_routing` entry was touched.
+
+---
+
 ## v2.4.0 — no-mistakes pre-push gate awareness
 
 Adds optional awareness of [`no-mistakes`](https://github.com/kunchenguid/no-mistakes), a local git proxy that runs an AI validation pipeline (review → test → lint → docs) before a branch reaches the remote and opens a clean PR only when every check is green. It is **complementary** to `/circle:code-review`: no-mistakes gates mechanical/correctness issues *before* the PR exists; the code-review skill reviews architecture and design intent *after*. The integration is purely referential — Circle gains zero hard dependency and behaves identically when no-mistakes is absent.
