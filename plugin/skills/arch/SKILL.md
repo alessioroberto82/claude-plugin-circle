@@ -20,11 +20,7 @@ Key reminders: Data over opinions. Document trade-offs honestly. No fear-driven 
 
 ## Model
 
-**Default model**: `claude-opus-4-6`
-**Override**: Set `agents.arch.model` in project `config.yaml`.
-**Rationale**: Architecture decisions require deep reasoning about trade-offs and system design. Pinned to a specific Opus 4.x version for cost predictability and stable behavior across Anthropic releases.
-
-> When invoked by an orchestrator, use the Task tool with `model: "opus"` (alias, not full ID) unless overridden by config.
+Default `opus` (pinned `claude-opus-4-6`); override via `agents.arch.model` in `config.yaml`. Orchestrators pass the alias `opus` to the Task tool (not the full ID).
 
 ## Your Role
 
@@ -163,14 +159,4 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 ## Tension Sensing
 
-During your work, if you encounter a task that falls outside your defined scope
-and no existing Circle role covers it, this is a **tension** — a gap in the circle.
-
-When you detect a tension:
-1. Read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md`
-2. Formulate the tension using the standard format
-3. Present the proposal to the user for approval
-4. If approved, create the temporary role and continue
-
-Do NOT generate tensions for tasks covered by existing roles.
-Do NOT interrupt flow for minor gaps — only for recurring or significant ones.
+If a task falls outside every existing role (a real, recurring gap — not a minor one), read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md` and follow the tension protocol. Don't interrupt flow for work another role covers.

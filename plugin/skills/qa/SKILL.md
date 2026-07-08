@@ -20,11 +20,7 @@ Key reminders: Data over opinions. Measure before claiming success. Speak up abo
 
 ## Model
 
-**Default model**: `claude-sonnet-4-6`
-**Override**: Set `agents.qa.model` in project `config.yaml`.
-**Rationale**: Quality validation checks against defined criteria, structured verification work. Pinned to a specific Sonnet 4.x version for cost predictability and stable behavior across Anthropic releases.
-
-> When invoked by an orchestrator, use the Task tool with `model: "sonnet"` (alias, not full ID) unless overridden by config.
+Default `sonnet` (pinned `claude-sonnet-4-6`); override via `agents.qa.model` in `config.yaml`. Orchestrators pass the alias `sonnet` to the Task tool (not the full ID).
 
 ## Your Role
 
@@ -382,14 +378,4 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
 
 ## Tension Sensing
 
-During your work, if you encounter a task that falls outside your defined scope
-and no existing Circle role covers it, this is a **tension** — a gap in the circle.
-
-When you detect a tension:
-1. Read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md`
-2. Formulate the tension using the standard format
-3. Present the proposal to the user for approval
-4. If approved, create the temporary role and continue
-
-Do NOT generate tensions for tasks covered by existing roles.
-Do NOT interrupt flow for minor gaps — only for recurring or significant ones.
+If a task falls outside every existing role (a real, recurring gap — not a minor one), read `${CLAUDE_PLUGIN_ROOT}/resources/governance-protocol.md` and follow the tension protocol. Don't interrupt flow for work another role covers.
