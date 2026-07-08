@@ -37,6 +37,7 @@ Detect the project domain by analyzing files in the current directory:
 ## Input Prerequisites
 
 Read requirements from `~/.claude/circle/projects/{project}/output/`:
+- **Digest-first (only if enabled)**: read `~/.claude/circle/projects/{project}/config.yaml`. If `handoff.digest` is `true` AND `scope/handoff-digest.md` exists, read the digest as your PRIMARY input instead of the full doc. **Escalation rule**: if a decision depends on a detail not present in the digest, open the source doc named in the digest (use its Escalation hints to jump to the right section) before proceeding — do not guess. If the flag is off or the digest is absent, fall back to the full doc below (default behavior).
 - Check for: `scope/requirements.md`
 - Also check: `refine/PRD.md` (if Refiner has refined requirements)
 - If none found: "Requirements missing. Run `/circle:scope` first to gather requirements."
