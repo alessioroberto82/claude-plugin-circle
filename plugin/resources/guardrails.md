@@ -13,7 +13,7 @@ Before handoff, verify your output covers upstream requirements. This closes the
 
 | Your Role | Read This | Check For |
 |---|---|---|
-| arch | `scope/requirements.md` or `refine/PRD.md` | Each FR-*/work item addressed in architecture |
+| arch | `scope/requirements.md` or `refine/PRD.md` (or `scope/handoff-digest.md` if `handoff.digest` enabled) | Each FR-*/work item addressed in architecture |
 | impl | `arch/architecture.md` | Each component/module implemented |
 | qa | `scope/requirements.md` or `refine/PRD.md` | Each acceptance criterion has a test |
 | refine | `scope/requirements.md` | Each FR-* has a work item |
