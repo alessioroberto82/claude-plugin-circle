@@ -1,5 +1,23 @@
 # Changelog
 
+## v2.5.0 — digest handoff (scope→arch pilot)
+
+Adds a compact **handoff digest** between roles, wired on the scope→arch hop only, behind config flag `handoff.digest` (default **`false`**). Targets the two real cost drivers behind Circle's fork token usage: full upstream-doc reloads and a second full-doc read inside `guardrails.md` self-verification. Complements v2.4.1's boilerplate compression (which addressed the static payload, not the dominant cost).
+
+### Added
+
+- **`handoff.digest` config flag** (`config.yaml`, default `false`): when enabled, `scope` writes an additive `scope/handoff-digest.md` at handoff (`plugin/resources/handoff-digest-template.md`) — the full `requirements.md`/PRD is always still written; the digest never replaces it.
+- **`arch` reads the digest first**, with an explicit escalation rule: open the full source doc only when a decision needs a detail absent from the digest. Falls back to the full doc automatically when the flag is off or no digest exists.
+- **`guardrails.md` self-verification builds its Traceability table from the digest's `## Verifiable items`** when the digest path applies — eliminating the second full-doc read that self-verification previously required. Falls back to the full artifact otherwise.
+- Documented in `docs/CUSTOMIZATION.md` and `plugin/resources/templates/config-example.yaml`.
+
+### Notes
+
+- Scoped intentionally to **one hop** (scope→arch) as a measurement pilot; smoke-tested end-to-end on a scratch project (digest produced, read as primary input, zero escalations needed, Traceability built entirely from the digest, 7/7 items covered). Token-delta measurement on real projects (dogfooding) is the next step before extending to all hops and flipping the default to `true`.
+- Design spec: `docs/superpowers/specs/2026-07-08-circle-digest-handoff-design.md`. Implementation plan: `docs/superpowers/plans/2026-07-08-digest-handoff-pra.md`.
+
+---
+
 ## v2.4.1 — role boilerplate compression
 
 Maintenance release that shrinks the static payload every fork-context role reloads on each invocation. No behavioral change intended — every principle, gate, and routing rule is preserved; the edits are pure compression and de-duplication. Token impact per fork is modest (the static payload is a small fraction of a role's context — the dominant cost is full upstream-doc reloads and prompt-cache expiry across human-in-the-loop pauses), but it compounds across every fork start and every cache re-bill, and it removes ~12× duplicated blocks that were a maintenance burden. Larger savings are deferred to a follow-up that introduces compact digest handoffs between roles.
