@@ -37,6 +37,16 @@ tdd:
   enabled: true           # Enable TDD workflow (default: true)
   enforcement: hard       # hard = QA blocks on violation; soft = QA warns only
 
+# ─────────────────────────────────────────────────────────────────
+
+# Handoff digest (Phase 2 — token reduction)
+# When true, each role writes a compact handoff-digest.md at handoff and
+# downstream roles read it as their primary input (escalating to the full doc
+# on demand). guardrails builds its Traceability table from the digest too.
+# Currently wired on the scope→arch hop only.
+handoff:
+  digest: false           # Enable digest handoff (default: false)
+
 # Model & effort routing — assign Claude model and effort level per role
 # Roles with context: fork run as subagents and respect these settings.
 # Roles with context: same inherit the session model (settings are ignored).

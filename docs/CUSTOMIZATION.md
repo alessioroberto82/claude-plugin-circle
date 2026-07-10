@@ -173,6 +173,15 @@ agents:
 tdd:
   enabled: true           # Set to false to disable TDD workflow
   enforcement: hard       # hard = QA blocks on violation; soft = QA warns only
+
+# Handoff digest (Phase 2 — token reduction)
+# When true, each role writes a compact handoff-digest.md at handoff and
+# downstream roles read it as their primary input (escalating to the full
+# document on demand). guardrails builds its Traceability table from the
+# digest too. Default false = roles read full upstream docs as before.
+# Currently wired on the scope→arch hop only.
+handoff:
+  digest: false           # Set to true to enable digest handoff
 ```
 
 See `plugin/resources/templates/config-example.yaml` for a full example with all available options.

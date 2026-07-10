@@ -13,7 +13,7 @@ Before handoff, verify your output covers upstream requirements. This closes the
 
 | Your Role | Read This | Check For |
 |---|---|---|
-| arch | `scope/requirements.md` or `refine/PRD.md` | Each FR-*/work item addressed in architecture |
+| arch | `scope/requirements.md` or `refine/PRD.md` (or `scope/handoff-digest.md` if `handoff.digest` enabled) | Each FR-*/work item addressed in architecture |
 | impl | `arch/architecture.md` | Each component/module implemented |
 | qa | `scope/requirements.md` or `refine/PRD.md` | Each acceptance criterion has a test |
 | refine | `scope/requirements.md` | Each FR-* has a work item |
@@ -22,9 +22,11 @@ Before handoff, verify your output covers upstream requirements. This closes the
 
 Read the upstream artifact from `~/.claude/circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
 
+**Digest source (only if enabled)**: if `handoff.digest` is `true` in `config.yaml` AND the upstream role wrote a `handoff-digest.md`, take your checklist from that digest's `## Verifiable items` section instead of re-reading the full upstream doc. If the flag is off or no digest exists, use the full artifact as described above (default behavior). For PR-A this applies to the `arch` role reading `scope/handoff-digest.md`; other roles keep reading the full artifact.
+
 ### Protocol
 
-1. Extract the list of checkable items from the upstream artifact (FR-*, work items, components, acceptance criteria — depending on your role's "Check For" column above).
+1. Extract the list of checkable items (FR-*, work items, components, acceptance criteria — per your role's "Check For" column). Source them from the upstream `handoff-digest.md` `## Verifiable items` section when the digest path above applies; otherwise from the full upstream artifact.
 2. For each item, assess coverage in your output:
    - ✅ **Covered** — explicitly addressed
    - ⚠️ **Partial** — mentioned but incomplete

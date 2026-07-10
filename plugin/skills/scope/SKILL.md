@@ -109,13 +109,20 @@ Detect the project domain by analyzing files in the current directory:
 
 5. **Save output** to: `~/.claude/circle/projects/$PROJECT_NAME/output/scope/{filename}`
 
-6. **MCP Integration** (if available):
+6. **Write handoff digest** (only if enabled): Read `~/.claude/circle/projects/$PROJECT_NAME/config.yaml`. If `handoff.digest` is not `true`, skip this step entirely (default). Otherwise, read `${CLAUDE_PLUGIN_ROOT}/resources/handoff-digest-template.md` and write a filled digest to `~/.claude/circle/projects/$PROJECT_NAME/output/scope/handoff-digest.md`:
+   - **Verifiable items**: one row per FR-* and NFR in the requirements doc, each with a one-line essence.
+   - **Key decisions**: scope choices that constrain downstream (e.g. explicit Out-of-Scope items).
+   - **Interface for next role**: what the Architecture Owner needs to begin.
+   - **Escalation hints**: map topics to sections of the source doc (`{filename}`).
+   Keep it ~300–600 tokens. The full document from step 5 is always still written — the digest is additive.
+
+7. **MCP Integration** (if available):
    - **Linear**: Create or link requirements to Linear issues for traceability
    - **claude-mem**: Search for relevant past requirements work.
 
-7. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
+8. **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
 
-8. **Handoff**:
+9. **Handoff**:
    > **Scope Clarifier — Complete.**
    > Output saved to: `~/.claude/circle/projects/{project}/output/scope/{filename}`
    > Next suggested role: `/circle:refine` for product prioritization, or `/circle:arch` for architecture design.
