@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.6.0 — Implementer reuse gate (senior-engineer mindset)
+
+Reshapes the **Implementer** role so it reasons at the system level instead of copy-pasting. The complaint it addresses: `impl` behaved "like an intern" — it didn't survey what already existed, duplicated logic instead of extracting shared code, and edited files it hadn't read. The old skill was heavy on process (steps 1–13) but light on *how a senior thinks*, and its "Your Role" section was adjectives ("pragmatic, thorough, fast") that don't change model behavior. This release replaces adjectives with a forcing function.
+
+### Changed
+
+- **Rewrote `## Your Role`** in `plugin/skills/impl/SKILL.md` around three concrete instincts — *understand before writing*, *reuse before creating*, *think in systems, not lines* — plus a red-flag table that maps intern thoughts ("I'll copy this block and tweak it") to the senior move (extract a shared unit now).
+- **Turned step 4 (`Explore the codebase`, a one-liner) into a `Codebase Survey & Reuse Gate`** — a forcing function that produces an artifact: before any implementation code, the Implementer searches for existing implementations and records an explicit reuse decision per unit of work (`REUSE` / `EXTEND` / `EXTRACT` / `NEW — <reason>`), written to the implementation notes under a "Reuse Survey" heading. Copy-paste instinct is reclassified as `EXTRACT`, not `NEW`.
+- **Self-review (step 7)** now verifies reuse decisions were honored (no unjustified duplication).
+- **Added a Circle Principle**: "Reuse before creating: survey the codebase and factor out common code; duplication is a decision, not a default."
+
+### Notes
+
+- Scoped to the `impl` role only. If it holds up in dogfooding, the understand-first / DRY discipline is a candidate for promotion into `resources/soul.md` so all roles (notably `arch`) inherit it.
+
+---
+
 ## v2.5.0 — digest handoff (scope→arch pilot)
 
 Adds a compact **handoff digest** between roles, wired on the scope→arch hop only, behind config flag `handoff.digest` (default **`false`**). Targets the two real cost drivers behind Circle's fork token usage: full upstream-doc reloads and a second full-doc read inside `guardrails.md` self-verification. Complements v2.4.1's boilerplate compression (which addressed the static payload, not the dominant cost).
