@@ -220,6 +220,33 @@ If test code is detected, check for:
 
 If Swift Testing Expert skill is loaded, use its patterns to inform findings.
 
+#### Domain 5: Reuse & Architectural Consistency
+
+Driven by the Design & Reuse Survey (§3.5). Flag:
+- **Duplication**: logic re-implemented when an existing symbol does it — cite the existing `file:line` (Survey `DUPLICATES` verdict).
+- **Bypassed gate**: a centralized guard/availability check (e.g. an `isXAllowed()` gate) skipped by the new path — cite the gate `file:line` (Survey `BYPASSES-GATE`).
+- **Metadata/behavior incoherence**: config/metadata advertises a capability the implementation does not support (e.g. goal metadata declared but the save path returns `false`).
+- **Wrong-type reuse**: a builder/section/type reused for a case it filters incorrectly.
+
+Every finding here names a verified `file:line` (architectural-judgment gate, §4).
+
+#### Domain 6: Robustness & Silent Failures
+
+Flag defensive code that hides bugs rather than handling them:
+- `guard let … else { return nil/[] }` that swallows a real failure and hides data instead of surfacing it.
+- `catch` blocks that discard the error with no logging/propagation.
+- Default values (`?? 0`, `?? ""`) that mask an unexpected-nil bug.
+- Reintroduced deprecated/insecure APIs (verify deprecation via Apple docs MCP).
+
+Distinguish genuinely-safe fallbacks (provably-non-nil input) from silent wrong-result branches — flag only the latter, and say why the input is NOT provably safe.
+
+#### Domain 7: Accessibility & Project Standards
+
+- **Accessibility**: interactive controls (`Menu`, `Button`, custom tappables) in changed lines missing `accessibilityIdentifier` needed for UI-test automation.
+- **Project standards** (checked against CLAUDE.md / AGENTS.md, referenced by section — never quoted): forbidden inline/explanatory comments, Xcode boilerplate file headers, copy-pasted doc-comments referencing the wrong type, and any project-specific rule the standards files define.
+
+Cite the standards file + section for each standards finding (P2-2: name only, no raw quote).
+
 ### 5. Output
 
 For each finding, produce:
@@ -241,6 +268,10 @@ For each finding, produce:
 | SwiftUI | SwiftUI patterns: <pattern> | SwiftUI patterns: @ObservedObject used where @StateObject needed |
 | Concurrency | Swift Concurrency: <pattern> | Swift Concurrency: missing @MainActor on UI-updating method |
 | Testing | Swift Testing: <pattern> | Swift Testing: XCTAssertEqual should migrate to #expect |
+| Reuse & Consistency | Reuse: <verdict> — <existing file:line> | Reuse: DUPLICATES BodyCompositionMassCalculator:42 |
+| Robustness | Robustness: <pattern> | Robustness: guard-return-nil hides all weight data |
+| Accessibility | Accessibility: <pattern> | Accessibility: Menu trigger missing accessibilityIdentifier |
+| Standards | Standards: <file §section> | Standards: CLAUDE.md §Comments — inline comment forbidden |
 
 ### 6. Save & Post
 
