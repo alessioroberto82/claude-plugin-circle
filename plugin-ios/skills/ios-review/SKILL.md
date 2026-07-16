@@ -101,9 +101,26 @@ Apple docs MCP: Cupertino {✓/✗}, apple-docs-mcp {✓/✗}, Sosumi {✓/✗}
 Plugin skills: SwiftUI Expert {✓/✗}, Swift Concurrency {✓/✗}, Swift Testing {✓/✗}, Swift LSP {✓/✗}
 ```
 
+### 3.5 Design & Reuse Survey (mandatory — blocks findings if skipped)
+
+Before emitting ANY finding, produce and save this artifact. This is a forcing function: no Survey → no findings.
+
+```text
+## Design & Reuse Survey
+- What this change does (1 line):
+- Equivalent logic already in the codebase? Grep for calculators/providers/helpers/use-cases on the same concept (e.g. `grep -rn "Calculator\|Provider\|Mapper\|UseCase"` scoped to the touched feature dir).
+    → per-symbol verdict: REUSE-OK / DUPLICATES <file:line> / BYPASSES-GATE <gate-symbol>
+- Introduces metadata/config that promises behavior the code does not implement? (consistency)
+- Reuses a builder/section/type meant for a different case? (wrong filtering / wrong branch)
+```
+
+Rules:
+- Every `DUPLICATES` or `BYPASSES-GATE` verdict MUST name the existing symbol with a `file:line` you verified via Grep/Read. A verdict without a verified reference is not allowed — downgrade it to REUSE-OK or omit it.
+- Save the Survey into the review output file (§6), not into posted comments.
+
 ### 4. Review
 
-Analyze the diff across 4 domains. Only flag issues in **changed lines**. Every finding must cite a specific source.
+Analyze the diff across 7 domains. Only flag issues in **changed lines**. Every finding must cite a specific source.
 
 **Confidence scale** (same as code-review Agent A/B):
 - **0-25**: Uncertain, might be false positive
