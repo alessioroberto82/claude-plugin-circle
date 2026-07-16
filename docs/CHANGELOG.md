@@ -1,5 +1,30 @@
 # Changelog
 
+## circle-ios v1.2.0 — iOS review senior upgrade
+
+Reshapes the **iOS Code Review** companion skill (`plugin-ios/skills/ios-review/SKILL.md`) from four line-level domains into a senior reviewer, grounded in real PR feedback (colleague + Copilot reviews on production iOS PRs). Same pattern as core v2.6.0: "make it more senior" is an adjective — behaviour only changes via forcing functions (mandatory artifact-producing steps + red-flag tables), not personality prose.
+
+### Added
+
+- **Design & Reuse Survey (forcing function)** — a mandatory `### 3.5` step that blocks findings if skipped. Before any finding, the reviewer records what the change does, whether equivalent logic already exists (`REUSE-OK` / `DUPLICATES <file:line>` / `BYPASSES-GATE <gate>`), and whether metadata promises behaviour the code doesn't implement. `DUPLICATES`/`BYPASSES` verdicts must name a `file:line` verified via Grep/Read.
+- **Pre-finding citation gate** — formalizes the project policy "consult domain skill / MCP before concluding". Technical-domain findings (API/SwiftUI/Concurrency/Testing) without a verifiable MCP/skill citation are capped at confidence 25; architectural-domain findings without a verified `file:line` are not emitted.
+- **Three new domains**: Reuse & Architectural Consistency (duplication, bypassed gates, incoherent metadata, wrong-type reuse); Robustness & Silent Failures (`guard`-return-nil hiding data, error-swallowing catches, defaults masking bugs, reintroduced deprecated APIs); Accessibility & Project Standards (missing `accessibilityIdentifier`, forbidden inline comments / boilerplate headers checked against CLAUDE.md/AGENTS.md).
+- **Right-Reviewer Gate** in preflight — a diff with zero Swift/iOS files stops with "deferring to general code review" instead of running empty domains.
+- **Reads `AGENTS.md`** (root + diff-touched dirs) alongside `CLAUDE.md`, with the same P2-2 reference-only mitigation.
+
+### Changed
+
+- **Domains 2/3/4 gained red-flag tables** with teeth: SwiftUI (synchronous I/O in `body`, `ObservableObject`→`@Observable` reload granularity, O(n²) transforms); Concurrency (`Semaphore.wait()` on `@MainActor` deadlock, semantic-changing `?? default`, cross-thread Realm); Testing (untested fallback paths, incomplete mock renames → build break, timing-based waits).
+- **Output source-format table** extended with Reuse / Robustness / Accessibility / Standards rows.
+- Dispatch mode now completes the Design & Reuse Survey before findings (Survey is mandatory in both modes); only §1 preflight is skipped.
+
+### Notes
+
+- Model stays `sonnet`: the senior reasoning comes from the Survey + red-flag tables, not the model tier. Core is unchanged, so greenfield model-routing tables are untouched.
+- Companion version bumped `1.1.0` → `1.2.0` in `plugin-ios/.claude-plugin/plugin.json` and the `circle-ios` entry of `.claude-plugin/marketplace.json`.
+
+---
+
 ## v2.6.0 — Implementer reuse gate (senior-engineer mindset)
 
 Reshapes the **Implementer** role so it reasons at the system level instead of copy-pasting. The complaint it addresses: `impl` behaved "like an intern" — it didn't survey what already existed, duplicated logic instead of extracting shared code, and edited files it hadn't read. The old skill was heavy on process (steps 1–13) but light on *how a senior thinks*, and its "Your Role" section was adjectives ("pragmatic, thorough, fast") that don't change model behavior. This release replaces adjectives with a forcing function.
