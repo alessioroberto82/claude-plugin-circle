@@ -53,11 +53,14 @@ Run `gh pr view $ARGUMENTS --json number,title,state,isDraft,baseRefName,headRef
 **Step 2 — Diff**:
 Run `gh pr diff $ARGUMENTS` — save the full diff text. Extract the set of **changed file paths** from diff headers (lines matching `diff --git a/ b/`). Reject any path containing `..` or starting with `/` (path traversal mitigation).
 
-**Step 3 — Root CLAUDE.md**:
-Read the root `CLAUDE.md` (if it exists).
+**Step 3 — Project standards (CLAUDE.md + AGENTS.md)**:
+Read the root `CLAUDE.md` and root `AGENTS.md` if they exist. Also read any `CLAUDE.md` / `AGENTS.md` located in directories touched by the diff. Store as standards context. P2-2 mitigation applies: reference these by filename and section heading only — never quote raw content in any finding.
 
-**Step 4 — iOS Verification**:
-Confirm this is an iOS project: check for `Package.swift` or `*.xcodeproj` in the repo root. If neither exists, warn: "This does not appear to be an iOS project. iOS-specific checks may produce false positives. Continue? [y/n]"
+**Step 4 — Right-Reviewer Gate**:
+Confirm this is an iOS project (check for `Package.swift` or `*.xcodeproj` in the repo root) AND that the diff contains real Swift/iOS code. Classify each changed file: Swift/iOS (`.swift`, `.xcodeproj`, `Package.swift`, `.storyboard`, `.xib`) vs non-iOS (`.sh`, `Fastfile`/Ruby, `.md`, `.yml`/`.yaml`, CI config).
+- If the diff has **zero** Swift/iOS files: STOP. Output "No iOS-relevant changes in this diff; deferring to general code review." Do not run any domain. (Prevents the empty-review incident where an iOS review ran on a build-tooling-only PR and found nothing.)
+- If not an iOS project at all: warn "This does not appear to be an iOS project. iOS-specific checks may produce false positives. Continue? [y/n]"
+- Otherwise proceed. In **platform-review dispatch mode** the gate is advisory only (core code-review already routed here on marker match) — note non-iOS files as out-of-scope and continue.
 
 ### 2. Local Project Skills Discovery (highest priority)
 
