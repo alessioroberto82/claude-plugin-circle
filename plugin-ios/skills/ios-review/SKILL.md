@@ -169,6 +169,14 @@ If SwiftUI code is detected, check for:
 - **Deprecated patterns**: `@ObservedObject` + `@Published` in new code when `@Observable` (Observation framework) is available
 - **Environment misuse**: Reading `@Environment` values in `init()` instead of in `body`
 
+**Red-flag table (check each against changed lines):**
+
+| Red flag | Why it matters | Source to cite |
+|---|---|---|
+| Synchronous I/O / DB (e.g. full-history fetch) inside `body` or a computed property read by `body` | Main-thread hazard; jank/hang | Cupertino / swiftui-expert; prefer a `getLatest()`-style bounded query |
+| `ObservableObject` + many `@Published` where views observe a subset | Any change reloads all observers | swiftui-expert; suggest `@Observable` + `@State` for per-view observation |
+| O(n²) / O(slots×readings) transforms building chart/list data | Scales badly on long histories | flag with the concrete complexity and a single-pass alternative |
+
 If SwiftUI Expert skill is loaded, use its patterns to inform findings.
 
 #### Domain 3: Swift Concurrency
@@ -182,6 +190,14 @@ If concurrency code is detected, check for:
 - **Task cancellation not handled**: Long-running tasks that don't check `Task.isCancelled` or use `Task.checkCancellation()`
 - **Blocking calls in async context**: `DispatchQueue.sync`, `Thread.sleep`, or `semaphore.wait()` inside `async` functions
 
+**Red-flag table (check each against changed lines):**
+
+| Red flag | Why it matters | Source to cite |
+|---|---|---|
+| `DispatchSemaphore.wait()` / `DispatchQueue.sync` on `@MainActor` | Deadlock when the awaited work also needs the main actor | swift-concurrency skill |
+| Force-unwrap replaced by `?? <default>` that changes semantics | Silent wrong result instead of a safe, provably-non-nil value | flag the semantic change, not the syntax |
+| Realm/`@ManagedObject` accessed across threads / in `Task.detached` | Cross-thread crash risk | swift-concurrency skill |
+
 If Swift Concurrency skill is loaded, use its patterns to inform findings.
 
 #### Domain 4: Swift Testing
@@ -193,6 +209,14 @@ If test code is detected, check for:
 - **Missing parameterized tests**: Multiple test methods with identical structure but different inputs — should use `@Test(arguments:)`
 - **Missing @Test macro**: Test functions without `@Test` attribute (Swift Testing requires it)
 - **Test naming**: `test_` prefix in Swift Testing (not needed; `@Test` handles discovery)
+
+**Red-flag table (check each against changed lines):**
+
+| Red flag | Why it matters | Source to cite |
+|---|---|---|
+| New fallback / error / edge-case path with no accompanying test | Untested branch ships silently | flag the specific untested path |
+| Mock/protocol renamed in one file but referenced by old name elsewhere | Compilation break | name the stale reference `file:line` |
+| Timing-based waits (`Task.sleep`, fixed delays) used to synchronize tests | Flaky; violates no-arbitrary-delays standard | swift-testing-expert |
 
 If Swift Testing Expert skill is loaded, use its patterns to inform findings.
 
