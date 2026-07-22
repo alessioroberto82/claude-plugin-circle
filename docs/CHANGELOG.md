@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.6.1 — Code-review compound-rule gate
+
+Agent A (multi-agent code review) missed a blocking DI violation on Omron-Connect-iOS PR #10012: the rule "Use Dependency Injection" carries two independent bullets (services instantiated only in the FactoryKit container; `@Injected(\Container.service)` for all dependencies). The diff satisfied the first bullet — a container factory closure wired the new types via plain `init(...)` — and Agent A treated that as compliance with the whole rule, never checking the second bullet. A human reviewer (not this skill) caught it and requested changes. Zero signal reached even the Near Misses table.
+
+### Fixed
+
+- **New Agent A rules 12–13**: (12) COMPOUND RULES — when a heading carries multiple sub-requirements, check the diff against each one independently; satisfying one does not excuse violating another. (13) EXAMPLES ARE ILLUSTRATIVE, NOT EXHAUSTIVE — a ✅/❌ code sample shows one instance, not the rule's full boundary; not matching the ❌ sample verbatim is not evidence of compliance.
+
+---
+
 ## circle-ios v1.2.0 — iOS review senior upgrade
 
 Reshapes the **iOS Code Review** companion skill (`plugin-ios/skills/ios-review/SKILL.md`) from four line-level domains into a senior reviewer, grounded in real PR feedback (colleague + Copilot reviews on production iOS PRs). Same pattern as core v2.6.0: "make it more senior" is an adjective — behaviour only changes via forcing functions (mandatory artifact-producing steps + red-flag tables), not personality prose.
