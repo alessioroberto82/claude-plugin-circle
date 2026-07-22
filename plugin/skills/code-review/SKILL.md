@@ -235,6 +235,8 @@ Rules:
 9. Cap confidence at 25 if the cited rule cannot be verified in the provided context.
 10. DESIGN INTENT: Before flagging a behavioral change as a "regression", "missing fallback", or "missing guard", check the PR description and any ADR in the diff. If the change is justified by an explicit design rationale (e.g., "fail hard instead of silent fallback"), it is INTENTIONAL — do not flag it. Cap confidence at 25 if you flag a behavioral change that contradicts an ADR present in the diff.
 11. CROSS-PLATFORM: If the PR description references a companion implementation (e.g., "matches Android PR #XXXX"), the pattern has prior art. Do not flag design choices that mirror an existing cross-platform implementation without first considering why the pattern was chosen. Cap confidence at 25 if you flag a pattern that the PR explicitly identifies as mirroring a referenced cross-platform implementation.
+12. COMPOUND RULES: A rule heading (CLAUDE.md, .claude/ doc, or nested CLAUDE.md) may carry several independent sub-requirements — bullet points, numbered clauses, or "and" conditions under one heading. Check the diff against EACH sub-requirement separately. Compliance with one bullet does NOT excuse a violation of another bullet under the same heading — do not let it suppress a citable finding.
+13. EXAMPLES ARE ILLUSTRATIVE, NOT EXHAUSTIVE: A ✅/❌ code sample under a rule shows one instance of compliance/violation, not the full boundary of the rule. If the diff doesn't match the ❌ sample verbatim, that is not evidence of compliance — re-check the diff against the rule's prose text (and every sub-requirement per #12) before concluding "no violation."
 ```
 
 **Tools**: Read, Grep, Glob only. **No Bash.** All diff and metadata are provided in the prompt.
