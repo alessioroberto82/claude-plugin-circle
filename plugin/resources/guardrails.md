@@ -41,3 +41,42 @@ Read the upstream artifact from `~/.claude/circle/projects/{project}/output/`. I
    - If all ✅: no change needed
    - If any ⚠️: append `Note: {N} items partially covered. See Traceability section.`
    - If any ❌: append `⚠️ {N} upstream items not covered. See Traceability section.`
+
+## Standards Compliance Protocol
+
+Project coding standards are LAW — they are the primary baseline for design and implementation and override Circle defaults, skills, and existing (legacy) patterns. This protocol makes standards ingestion and compliance MANDATORY for the fork-context roles that design or write code (`arch`, `impl`). It is DISTINCT from the Self-Verification Protocol above: that one checks upstream *requirement* coverage; this one checks *coding-standard* compliance.
+
+### When to Run
+- **Mandatory** for `arch` and `impl`. Recommended for `qa` and `triage` fixes.
+- **Skip if**: project config has `guardrails.standards_check: false`.
+- **Graceful degradation**: if NO standards sources are found (see Step 1), say so explicitly in the handoff — do not silently skip the protocol.
+
+### Step 1 — Standards Ingestion (MANDATORY)
+Read the following, in order, and treat them as the authoritative baseline:
+1. Root `CLAUDE.md`. If it is only an import shim (e.g. a line like `@AGENTS.md`), follow the import and read the target file.
+2. Root `AGENTS.md` (if present).
+3. `Glob(".claude/rules/*.md")` — load every rule file whose YAML frontmatter `paths:` globs match the files in scope (for `impl`: the files being changed; for `arch`: the feature's target area). When in doubt, load them all.
+4. Nested `CLAUDE.md` / `AGENTS.md` in any directory touched by the work, tagged with their scope.
+5. Any other `.claude/**/*.md` project-standards docs.
+
+A standard may carry a scope tag — `Overall codebase` (applies to all touched code) vs `New code` (applies only to added/modified lines). Respect the tag. If the project defines `global_rules` in `config.yaml`, treat each entry as a MANDATORY rule with absolute precedence (see the role's Input Prerequisites).
+
+### Step 2 — Compliance Table (MANDATORY output)
+Append a `## Standards Compliance` section to your output document (`architecture.md` for `arch`; the implementation notes for `impl`):
+
+| Standard (source § heading) | Status | Evidence |
+|---|---|---|
+| `.claude/rules/architecture.md` § Use Dependency Injection | ✅/⚠️/❌ | `file:line` — how it complies, or where/how it violates |
+
+- ✅ **Compliant** — explicitly satisfied, with `file:line` evidence.
+- ⚠️ **Partial / at-risk** — satisfied loosely, or not verifiable.
+- ❌ **Violated** — cite the exact rule text and the offending `file:line`.
+
+Every row MUST cite a specific source (rule file + heading). A claim without a citation is not evidence of compliance. A compiling build or a passing test is NOT sufficient evidence that a standard is met.
+
+### Step 3 — Compound Rules
+A single standard heading may carry several independent sub-requirements — bullet points, numbered clauses, or "and" conditions. Check the work against EACH sub-requirement separately. Compliance with one bullet does NOT excuse a violation of another bullet under the same heading. Examples (✅/❌ samples) are ILLUSTRATIVE — they show one instance, not the full boundary of the rule.
+
+### Step 4 — Gate
+- All ✅: proceed to handoff.
+- Any ⚠️ or ❌: surface it as an explicit tension at your role's checkpoint — state the violated standard, the preferred-layer alternative, and its cost. Do NOT declare the work "done" or hand off while an undisclosed ⚠️/❌ remains. This is bounded: raise the tension and propose the next action; do not unilaterally rewrite beyond the task.

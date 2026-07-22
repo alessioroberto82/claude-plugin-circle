@@ -43,7 +43,8 @@ Read requirements from `~/.claude/circle/projects/{project}/output/`:
 - If none found: "Requirements missing. Run `/circle:scope` first to gather requirements."
 
 Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
-- If `extra_instructions` for arch exists, incorporate them
+- If `global_rules` exists, treat EACH entry as a MANDATORY rule with absolute precedence over Circle defaults, skills, and existing patterns — apply them throughout the design.
+- If `extra_instructions` for arch exists, treat each entry as a MANDATORY rule for this session; these take precedence over default behavior.
 - If `context_files` defined, read those files for additional architectural context
 - **Upstream for self-verification**: `scope/handoff-digest.md` when `handoff.digest` is `true` and it exists (see guardrails.md "Digest source"); otherwise `scope/requirements.md` or `refine/PRD.md` (loaded before handoff if guardrails enabled)
 
@@ -63,6 +64,7 @@ Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
 - Error Handling strategy
 - Performance & Scalability considerations
 - Security considerations
+- Standards Compliance (conformance of the design to applicable project standards, with per-rule citations — see Process step 7)
 
 **Domain Skill Suggestions**:
 
@@ -100,7 +102,22 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 1. **Initialize output directory**:
    ```bash
-   PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
+   # Worktree-safe project resolution: prefer matching the repo identity to a
+   # config.yaml `project.repo`; then the MAIN worktree's root name; then a
+   # plain basename. `basename "$PWD"` ALONE is WRONG inside a git worktree
+   # (it yields the worktree folder name, so the project config never loads).
+   REPO_ID=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)
+   PROJECT_NAME=""
+   if [ -n "$REPO_ID" ]; then
+     for c in ~/.claude/circle/projects/*/config.yaml; do
+       grep -qi "repo:.*$REPO_ID" "$c" 2>/dev/null && { PROJECT_NAME=$(basename "$(dirname "$c")"); break; }
+     done
+   fi
+   if [ -z "$PROJECT_NAME" ]; then
+     COMMON_GIT=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+     [ -n "$COMMON_GIT" ] && PROJECT_NAME=$(basename "$(dirname "$COMMON_GIT")" | tr '[:upper:]' '[:lower:]')
+   fi
+   PROJECT_NAME=${PROJECT_NAME:-$(basename "$PWD" | tr '[:upper:]' '[:lower:]')}
    mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/arch
    ```
 
@@ -110,6 +127,8 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    - Identify existing patterns, conventions, architecture style
    - Map dependencies (internal and external)
    - Understand the current state before proposing changes
+
+3b. **Standards Baseline (MANDATORY)**: Run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Read the project's coding standards — root `CLAUDE.md`/`AGENTS.md`, the `.claude/rules/*.md` whose `paths` frontmatter matches the feature's target area, nested standards, and `global_rules` — and treat them as the authoritative baseline. Your design MUST conform: where a standard forces a choice (DI container, MV vs screen-level ViewModel, protocol dependencies, no singletons, design tokens, localization, persistence/migration, test framework), the standard wins over convenience or nearby legacy code. Proximity to legacy is not a licence to extend it.
 
 4. **Evaluate alternatives**: For each significant decision, consider 2-3 options with trade-offs
 
@@ -136,7 +155,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 6. **Generate architecture document**: Write to `~/.claude/circle/projects/$PROJECT_NAME/output/arch/{filename}`
 
-7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/handoff-digest.md` if `handoff.digest` is `true` and it exists (see guardrails.md "Digest source"); otherwise `scope/requirements.md` or `refine/PRD.md`.
+7. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `scope/handoff-digest.md` if `handoff.digest` is `true` and it exists (see guardrails.md "Digest source"); otherwise `scope/requirements.md` or `refine/PRD.md`. **Additionally, run the Standards Compliance Protocol** in the same file and append the `## Standards Compliance` section to `architecture.md` — each applicable standard marked ✅/⚠️/❌ with a per-rule citation. This is MANDATORY and gates handoff: any undisclosed ⚠️/❌ must be surfaced as a tension, not hidden.
 
 8. **MCP Integration** (if available):
    - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
