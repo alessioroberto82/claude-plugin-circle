@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.7.0 — Mandatory standards for Architecture Owner & Implementer
+
+`arch` and `impl` had no forcing function on project coding standards. `arch` never read `CLAUDE.md`/`AGENTS.md`/`.claude/`; `impl` had a single soft line ("verify … follows its standards", root `CLAUDE.md` only). The rigorous mechanism (ingest standards → cite-source-or-discard → compound-rule check → "standards are law") lived only in `code-review`/`ios-review`, i.e. downstream of where violations are introduced. Two secondary defects compounded this: project config resolved via `basename "$PWD"`, so the per-project `config.yaml` silently failed to load inside git worktrees; and `global_rules` was a dead config key read by no skill.
+
+### Added
+
+- **Standards Compliance Protocol** (`resources/guardrails.md`) — a centralized, reusable forcing function distinct from the existing requirement-traceability self-check. Mandatory Ingestion (root `CLAUDE.md`/`AGENTS.md` incl. import shims, `paths`-matched `.claude/rules/*.md`, nested standards, `.claude/**/*.md`, `global_rules`), a `## Standards Compliance` table (✅/⚠️/❌ with per-rule citation + `file:line` evidence), a Compound-Rules clause, and a handoff gate that forbids declaring "done" while an undisclosed ⚠️/❌ remains. Opt-out via `guardrails.standards_check: false`.
+- **`arch`**: new mandatory "Standards Baseline" step (3b) before design; `architecture.md` must carry a `## Standards Compliance` section; self-verification now runs the protocol.
+- **`impl`**: new mandatory "Standards Baseline" step (4d) before code; step 8 changed from a soft CLAUDE.md check into the full mandatory gate; implementation notes must include the compliance table.
+
+### Fixed
+
+- **Worktree-safe project resolution** in `arch`/`impl`: resolve the project by matching the repo identity (`gh repo view`) to a `config.yaml` `project.repo`, then fall back to the main worktree's root (`git rev-parse --git-common-dir`), then `basename`. `basename "$PWD"` alone yielded the worktree folder name, so `config.yaml` never loaded in worktrees.
+- **`global_rules` activated**: `arch`/`impl` now read `global_rules` from `config.yaml` and treat each entry as a mandatory rule with absolute precedence (previously a dead key).
+- **`extra_instructions.<role>` promoted** from "incorporate them" to "treat each entry as a MANDATORY rule … precedence over default behavior" (aligned with `triage`).
+- **marketplace.json** `circle` entry realigned to the plugin version (was lagging at 2.6.0).
+
+---
+
 ## v2.6.1 — Code-review compound-rule gate
 
 Agent A (multi-agent code review) missed a blocking DI violation on Omron-Connect-iOS PR #10012: the rule "Use Dependency Injection" carries two independent bullets (services instantiated only in the FactoryKit container; `@Injected(\Container.service)` for all dependencies). The diff satisfied the first bullet — a container factory closure wired the new types via plain `init(...)` — and Agent A treated that as compliance with the whole rule, never checking the second bullet. A human reviewer (not this skill) caught it and requested changes. Zero signal reached even the Near Misses table.

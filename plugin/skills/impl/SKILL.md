@@ -58,8 +58,9 @@ Read design from `~/.claude/circle/projects/{project}/output/`:
 - If architecture missing: "Design missing. Run `/circle:arch` first."
 
 Also check for project config: `~/.claude/circle/projects/{project}/config.yaml`
+- If `global_rules` exists, treat EACH entry as a MANDATORY rule with absolute precedence over Circle defaults, skills, and existing patterns — apply them to all code you write.
+- If `extra_instructions` for impl exists, treat each entry as a MANDATORY rule for this session; these take precedence over default behavior.
 - If `context_files` defined, read those for additional context
-- If `extra_instructions` for impl exists, incorporate them
 - **Upstream for self-verification**: `arch/architecture.md` (loaded before handoff if guardrails enabled)
 
 ## Progressive Disclosure (Context Sharding)
@@ -92,7 +93,22 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 1. **Initialize output directory**:
    ```bash
-   PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
+   # Worktree-safe project resolution: prefer matching the repo identity to a
+   # config.yaml `project.repo`; then the MAIN worktree's root name; then a
+   # plain basename. `basename "$PWD"` ALONE is WRONG inside a git worktree
+   # (it yields the worktree folder name, so the project config never loads).
+   REPO_ID=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)
+   PROJECT_NAME=""
+   if [ -n "$REPO_ID" ]; then
+     for c in ~/.claude/circle/projects/*/config.yaml; do
+       grep -qi "repo:.*$REPO_ID" "$c" 2>/dev/null && { PROJECT_NAME=$(basename "$(dirname "$c")"); break; }
+     done
+   fi
+   if [ -z "$PROJECT_NAME" ]; then
+     COMMON_GIT=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+     [ -n "$COMMON_GIT" ] && PROJECT_NAME=$(basename "$(dirname "$COMMON_GIT")" | tr '[:upper:]' '[:lower:]')
+   fi
+   PROJECT_NAME=${PROJECT_NAME:-$(basename "$PWD" | tr '[:upper:]' '[:lower:]')}
    mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/impl
    ```
 
@@ -127,6 +143,8 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
    **c) Record it** in the implementation notes (step 10) under a "Reuse Survey" heading. No new code before this exists.
 
+   **d) Standards Baseline (MANDATORY)**: Before writing code, run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`: read root `CLAUDE.md`/`AGENTS.md`, the `.claude/rules/*.md` whose `paths` frontmatter matches the files you will touch, nested standards, and `global_rules`. These are the authoritative baseline — they override Circle defaults and nearby legacy patterns. Record which rule files you loaded in the implementation notes (step 10). No new code before this exists.
+
 5. **Check TDD configuration**:
    Read `~/.claude/circle/projects/{project}/config.yaml` for `tdd` settings.
    - If `tdd.enabled: false`: skip to step 6 (test as you go).
@@ -151,11 +169,11 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    - No obvious issues or regressions
    - Reuse decisions from step 4 were honored — no unjustified duplication introduced
 
-8. **CLAUDE.md compliance**: If a `CLAUDE.md` exists in the repo root, verify your implementation follows its standards before handoff.
+8. **Standards Compliance (MANDATORY gate)**: Before handoff, run the full **Standards Compliance Protocol** in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md` against your diff. Produce the `## Standards Compliance` table (each applicable standard → ✅/⚠️/❌ with `file:line` evidence and a per-rule citation), applying the Compound-Rules clause (check each sub-requirement under a heading separately). Do NOT declare the work done or hand off while any ⚠️/❌ is undisclosed — surface it as a tension with the preferred alternative and its cost. A compiling build or a passing test is NOT evidence of standards compliance.
 
-9. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `arch/architecture.md`.
+9. **Self-Verification**: Read and follow the self-verification protocol in `${CLAUDE_PLUGIN_ROOT}/resources/guardrails.md`. Upstream artifact: `arch/architecture.md`. (This is the requirement-traceability check; the coding-standards check is step 8.)
 
-10. **Save implementation notes** to: `~/.claude/circle/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md`
+10. **Save implementation notes** to: `~/.claude/circle/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md` — include the `## Standards Compliance` table from step 8 and the loaded rule files from step 4d.
 
 11. **MCP Integration** (if available):
     - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
