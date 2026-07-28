@@ -39,7 +39,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │   │   └── templates/     — Output templates (docs/, software/, business/, personal/)
 │   └── skills/            — 19 skills (one SKILL.md per directory)
 │       ├── arch/          — Architecture Owner
-│       ├── code-review/   — Multi-agent PR review with platform-review dispatch
+│       ├── pr-review/     — Multi-agent PR review with platform-review dispatch
 │       ├── cycle/         — Cycle planning ceremony
 │       ├── docs/          — Documentation Steward
 │       ├── facilitate/    — Facilitator
@@ -80,7 +80,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 - **Domain-agnostic core**: Skills never name-drop domain-specific tools in SKILL.md body; domain deps live only in `deps-manifest.yaml`
 - **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — any dep change must update both scripts AND the manifest
 - **Version bump**: For core, three places must match — `plugin/.claude-plugin/plugin.json`, the `circle` entry in `.claude-plugin/marketplace.json`, and `Luscii/claude-marketplace`. The companion adds a fourth — `plugin-ios/.claude-plugin/plugin.json` — and must stay in sync with its `marketplace.json` entry
-- **Workflow order**: arch → security → impl → qa → commit → push → PR → code-review
+- **Workflow order**: arch → security → impl → qa → commit → push → PR → pr-review
 - **Model routing**: Fork-context skills specify default model in frontmatter `metadata.model`; overridable per-project in `config.yaml`
 - **Effort routing**: Fork-context skills declare `metadata.effort` (low/medium/high/max); overridable per-project
 - **Holacracy**: Roles have purposes, not personas. Reference roles, not names. External comms use team voice

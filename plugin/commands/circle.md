@@ -51,7 +51,7 @@ Workflows:
   /circle:cycle      — Cycle planning session (Shape Up)
 
 Review:
-  /circle:code-review — PR code review
+  /circle:pr-review — PR code review
   /circle:triage      — Handle review feedback
 
 Utilities:
@@ -78,7 +78,7 @@ Generated artifacts:
   ux/          <list of files or empty>
   refine/      <list of files or empty>
   facilitate/  <list of files or empty>
-  code-review/ <list of files or empty>
+  pr-review/  <list of files or empty>
   triage/      <list of files or empty>
   docs/        <list of files or empty>
 

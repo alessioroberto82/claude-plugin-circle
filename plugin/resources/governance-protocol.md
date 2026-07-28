@@ -23,7 +23,7 @@ Domain: software | business | personal | general
 
 Before proposing a new role, verify the gap is real. These roles already exist:
 - **arch**: Architecture design, ADRs, system design
-- **code-review**: Multi-agent PR review with context
+- **pr-review**: Multi-agent PR review with context
 - **cycle**: Cycle planning ceremony (Shape Up)
 - **docs**: Documentation generation from templates
 - **facilitate**: Cycle planning, coordination, blockers

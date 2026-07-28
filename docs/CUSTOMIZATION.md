@@ -24,7 +24,7 @@ If you just want to tweak how Circle works for your project, here are the most c
 | **Role behavior** | Role definitions | `plugin/skills/<name>/SKILL.md` | Edit SKILL.md |
 | **Templates** | Document templates | `plugin/resources/templates/` | Drop .md file |
 | **New role** | Add a circle member | `plugin/skills/<name>/SKILL.md` | Create directory + file |
-| **Code review** | PR review with CLAUDE.md compliance | `/circle:code-review <PR>` | Invoke on any open PR |
+| **PR review** | PR review with CLAUDE.md compliance | `/circle:pr-review <PR>` | Invoke on any open PR |
 
 ---
 
@@ -104,7 +104,7 @@ agents:
       - docs/circle/architecture.md
       - docs/circle/build.md
 
-  code-review:
+  pr-review:
     context_files:
       - docs/circle/project.md
       - docs/circle/architecture.md
@@ -287,7 +287,7 @@ As of v2.1.0, defaults are pinned to specific Claude model IDs (not family alias
 | PRD Validator | claude-sonnet-4-6 | low | Checklist-based validation |
 | Quality Guardian | claude-sonnet-4-6 | medium | Criteria-based validation |
 
-Code review agents (spawned by `code-review` via Task tool) default to: agent_a → `claude-sonnet-4-6`, agent_b → `claude-haiku-4-5-20251001`, platform_review → `claude-sonnet-4-6`. Configure via `code_review.agent_a.model` / `code_review.agent_b.model` in config.yaml (the legacy flat keys `code_review.agent_a_model` and `code_review.agent_b_model` are still honoured as fallback). Note: `code-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
+PR review agents (spawned by `pr-review` via Task tool) default to: agent_a → `claude-sonnet-4-6`, agent_b → `claude-haiku-4-5-20251001`, platform_review → `claude-sonnet-4-6`. Configure via `pr_review.agent_a.model` / `pr_review.agent_b.model` in config.yaml (the legacy `code_review.*` namespace and the older flat keys `code_review.agent_a_model` / `code_review.agent_b_model` are still honoured as fallback). Note: `pr-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
 
 ### Override via config.yaml
 
@@ -305,8 +305,8 @@ agents:
     model: claude-haiku-4-5-20251001
     effort: low
 
-# Code review agent models (use nested keys; legacy flat keys still accepted)
-code_review:
+# PR review agent models (use nested keys; legacy code_review.* namespace and flat keys still accepted)
+pr_review:
   agent_a:
     model: claude-sonnet-4-6
     effort: medium

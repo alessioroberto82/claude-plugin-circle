@@ -1,6 +1,6 @@
 {
   "name": "circle",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Holacracy-based development workflow with distributed roles, quality gates, Shape Up planning, multi-perspective decision council, and extensibility contract for platform-review companion plugins",
   "author": {
     "name": "Alessio Roberto",
@@ -16,6 +16,6 @@
     "quality-gates",
     "cycle-planning",
     "shape-up",
-    "code-review"
+    "pr-review"
   ]
 }

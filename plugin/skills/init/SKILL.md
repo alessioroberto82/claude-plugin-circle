@@ -130,7 +130,7 @@ Zero footprint — all in home directory:
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
 BASE=~/.claude/circle/projects/$PROJECT_NAME
 
-mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,refine,facilitate,docs,code-review,triage}
+mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,refine,facilitate,docs,pr-review,triage}
 mkdir -p $BASE/output/sessions
 mkdir -p $BASE/shards/{requirements,architecture,tasks}
 mkdir -p $BASE/shards/sessions
@@ -207,7 +207,7 @@ Available roles:
   /circle:docs        - Documentation Steward (doc generation)
 
 Review:
-  /circle:code-review - Multi-agent PR code review with CLAUDE.md compliance
+  /circle:pr-review - Multi-agent PR code review with CLAUDE.md compliance
   /circle:triage      - Triage PR review comments
 
 Orchestrators:

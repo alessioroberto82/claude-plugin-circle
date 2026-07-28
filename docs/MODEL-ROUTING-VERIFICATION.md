@@ -69,14 +69,14 @@ Record result: `Test C: <pass|fail> — observed <model id>`
 
 ---
 
-## Test D — code-review multi-agent pin verification
+## Test D — pr-review multi-agent pin verification
 
-**Skill under test**: `/circle:code-review` — dispatches three sub-agents, each with a different pinned model:
+**Skill under test**: `/circle:pr-review` — dispatches three sub-agents, each with a different pinned model:
 - `agent_a` → `claude-sonnet-4-6`
 - `agent_b` → `claude-haiku-4-5-20251001`
 - `platform_review` → `claude-sonnet-4-6`
 
-1. On any open PR (or use a tiny test PR), run `/circle:code-review`.
+1. On any open PR (or use a tiny test PR), run `/circle:pr-review`.
 2. Run `/cost`.
 3. **Pass criterion**: BOTH `claude-sonnet-4-6` AND `claude-haiku-4-5-20251001` rows appear with non-zero usage. (`platform_review` runs only if a platform-review skill matches the diff — its absence is not a failure.)
 4. **Fail criterion**: only one of the two models appears, or the parent model dominates with no Sonnet/Haiku rows → multi-agent routing is broken.
@@ -116,7 +116,7 @@ If any test **fails** → do NOT tag v2.1.0. Apply the appropriate fallback:
 
 When Anthropic announces deprecation of `claude-opus-4-6`, `claude-sonnet-4-6`, or `claude-haiku-4-5-20251001`:
 
-1. Bump the relevant pin in 12 sites (9 fork-skill frontmatters + 3 entries in `plugin/skills/code-review/SKILL.md`).
+1. Bump the relevant pin in 12 sites (9 fork-skill frontmatters + 3 entries in `plugin/skills/pr-review/SKILL.md`).
 2. Update `plugin/skills/greenfield/SKILL.md` (3 tables) and `CLAUDE.md` "Pinned models — current".
 3. Re-run **this entire protocol** before tagging the new minor.
 4. Record the new verification line in CHANGELOG under the new release.

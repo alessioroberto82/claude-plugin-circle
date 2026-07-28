@@ -121,12 +121,12 @@ parallel:
   enabled: true           # Enable parallel impl (default: true)
   max_agents: 3           # Max concurrent worktree agents (default: 3)
 
-# Code review agent models (code-review spawns 2 parallel agents).
+# PR review agent models (pr-review spawns 2 parallel agents).
 # As of v2.1.0, the plugin pins these to specific Claude model IDs.
 # The values below mirror the v2.1.0 defaults; only modify what you want to override.
 # Prefer the nested form (agent_a.model / agent_a.effort); the flat form
-# (agent_a_model) is still honoured as legacy fallback.
-code_review:
+# (agent_a_model) and the legacy `code_review` namespace are still honoured as fallback.
+pr_review:
   agent_a:
     model: claude-sonnet-4-6        # Standards & Bugs
     effort: medium

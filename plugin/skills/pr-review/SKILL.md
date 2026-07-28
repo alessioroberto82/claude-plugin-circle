@@ -1,6 +1,6 @@
 ---
-name: code-review
-description: "Code Review — Multi-agent PR review with CLAUDE.md compliance, project context, and language best practices. Use on any open pull request."
+name: pr-review
+description: "PR Review — Multi-agent PR review with CLAUDE.md compliance, project context, and language best practices. Use on any open pull request."
 allowed-tools: Read, Grep, Glob, Task, Skill, Bash(gh pr comment:*), Bash(gh pr diff:*), Bash(gh pr view:*), Bash(mkdir -p ~/.claude/circle/*), Bash(realpath:*), Bash(wc -c:*), Bash(stat:*)
 metadata:
   context: same
@@ -18,9 +18,9 @@ metadata:
       effort: medium
 ---
 
-# Code Review
+# PR Review
 
-You are the **Code Review** agent of the Circle team. You perform thorough, multi-agent code reviews on pull requests, grounded in project standards, documentation, and language best practices.
+You are the **PR Review** agent of the Circle team. You perform thorough, multi-agent code reviews on pull requests, grounded in project standards, documentation, and language best practices.
 
 ## Soul
 
@@ -110,12 +110,12 @@ Concatenate into `language_context`. If no language detected or no skills found,
 
 Discover installed platform-review skills via the harness's available-skills list — no domain knowledge lives in this skill.
 
-1. **Legacy config check** (v2.0 migration): if the user's `config.yaml` contains any `code_review.agent_c.*` key, emit a one-line warning in the review output: `⚠️ Legacy config key 'code_review.agent_c.*' detected — ignored in v2.0. Rename to 'code_review.platform_review.*' to restore control.` Do not auto-migrate.
-2. **Enable gate**: read `code_review.platform_review.enabled` (default `true`). If `false`, set `platform_review_target = null` and skip to step 6.
+1. **Legacy config check**: if the user's `config.yaml` contains a top-level `code_review.*` block (pre-v2.8 namespace, including the ancient `code_review.agent_c.*` key), emit a one-line warning in the review output: `⚠️ Legacy config key 'code_review.*' detected — ignored in v2.8. Rename to 'pr_review.*' to restore control.` Do not auto-migrate.
+2. **Enable gate**: read `pr_review.platform_review.enabled` (falls back to legacy `code_review.platform_review.enabled` if present; default `true`). If `false`, set `platform_review_target = null` and skip to step 6.
 3. **Scan available skills**: from the harness-provided skill list, collect skills whose frontmatter declares `metadata.platform_review: true`. Wrap the frontmatter parse for each candidate in a try/catch; on parse error, skip that skill and log `⚠️ Skipped '{skill}' — malformed frontmatter`.
 4. **Match markers against the diff**: for each candidate, read `metadata.platform_markers` (list of glob patterns). Match each glob against the paths from Step 2 using **pure glob matching** — treat patterns as literal match expressions, never pass them to a shell or `eval`. A candidate matches if any of its markers hits any diff path.
 5. **Resolve target**: if one candidate matches, `platform_review_target = <skill-id>`. If multiple match, pick the alphabetically-first by skill id and log `⚠️ Multiple platform-review skills matched: [list]. Using '<chosen>' (alphabetical). Uninstall the one you don't want to silence this.` If none match, `platform_review_target = null`.
-6. **Resolve model/effort** (only when `platform_review_target != null`): dispatched skill's own frontmatter model/effort wins. Fall back to `code_review.platform_review.model` / `.effort`. Final fallback to skill default (`claude-sonnet-4-6` / `medium`).
+6. **Resolve model/effort** (only when `platform_review_target != null`): dispatched skill's own frontmatter model/effort wins. Fall back to `pr_review.platform_review.model` / `.effort` (or legacy `code_review.platform_review.*`). Final fallback to skill default (`claude-sonnet-4-6` / `medium`).
 
 **Step 6 — Summary**:
 Summarize: what changed, why, risk areas (2-3 sentences max — internal context, not output). If the PR diff modifies `.claude/` files, flag this as a heightened-attention area.
@@ -149,14 +149,16 @@ A and B **always run regardless** of dispatch success or failure — a dispatche
 Read `~/.claude/circle/projects/{project}/config.yaml` (if it exists). Resolve model and effort for each agent independently, in this precedence:
 
 Agent A (standards, bugs, language best practices):
-1. `code_review.agent_a.model` / `code_review.agent_a.effort` (new nested keys)
-2. `code_review.agent_a_model` (old flat key, backward-compat fallback)
-3. Skill default: `claude-sonnet-4-6` / `medium`
+1. `pr_review.agent_a.model` / `pr_review.agent_a.effort` (current nested keys)
+2. `code_review.agent_a.model` / `code_review.agent_a.effort` (legacy namespace, backward-compat fallback)
+3. `code_review.agent_a_model` (old flat key, backward-compat fallback)
+4. Skill default: `claude-sonnet-4-6` / `medium`
 
 Agent B (security):
-1. `code_review.agent_b.model` / `code_review.agent_b.effort` (new nested keys)
-2. `code_review.agent_b_model` (old flat key, backward-compat fallback)
-3. Skill default: `claude-haiku-4-5-20251001` / `medium`
+1. `pr_review.agent_b.model` / `pr_review.agent_b.effort` (current nested keys)
+2. `code_review.agent_b.model` / `code_review.agent_b.effort` (legacy namespace, backward-compat fallback)
+3. `code_review.agent_b_model` (old flat key, backward-compat fallback)
+4. Skill default: `claude-haiku-4-5-20251001` / `medium`
 
 Pass `model` **alias** to each Task tool invocation (map: contains "opus"→`"opus"`, "sonnet"→`"sonnet"`, "haiku"→`"haiku"`; precedence: opus > sonnet > haiku). Do **NOT** pass `effort` — the Task tool does not support this parameter ([upstream: anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Platform-review model resolves separately in step 5c.6 above; same alias mapping applies.
 
@@ -337,7 +339,7 @@ Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platf
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 {truncation_warning if applicable}
 
-Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
+Generated with [Claude Code](https://claude.ai/code) | Circle PR Review
 
 <sub>If this review was useful, react with +1. Otherwise, react with -1.</sub>
 ```
@@ -353,7 +355,7 @@ No issues found. Checked for bugs, security, CLAUDE.md compliance{if platform_re
 Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr}  | Threshold: 90/100 (75 for foundational files)
 Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 
-Generated with [Claude Code](https://claude.ai/code) | Circle Code Review
+Generated with [Claude Code](https://claude.ai/code) | Circle PR Review
 ```
 
 **Source formatting by category**:
@@ -378,10 +380,10 @@ When citing `.claude/` documents, reference the filename and section heading onl
 
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/code-review
+mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/pr-review
 ```
 
-Save summary to `~/.claude/circle/projects/$PROJECT_NAME/output/code-review/pr-{number}-{date}.md`.
+Save summary to `~/.claude/circle/projects/$PROJECT_NAME/output/pr-review/pr-{number}-{date}.md`.
 
 The saved summary must include a **Near Misses** section for findings that were filtered but scored close to the threshold. This section is **never posted** to GitHub — it exists only in the local summary.
 
@@ -403,7 +405,7 @@ Include findings where `confidence >= 75` but below the applicable threshold (90
 
 **Work Summary**: Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by claude-mem for assessment tracking. If the template file is not found, skip this step silently.
 
-> **Code Review — Complete.**
+> **PR Review — Complete.**
 > PR #{number} reviewed. {N} issues found (threshold: 90/100, 75 for foundational files).
 > Context: root CLAUDE.md{, .claude/ ({N} files)}{, {N} nested CLAUDE.md}{, {N} language skills}
 > Agents: A={model_a}, B={model_b}{if platform_review_target: ", " + platform_review_target + "=" + model_pr}

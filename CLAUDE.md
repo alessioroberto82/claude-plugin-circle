@@ -36,7 +36,7 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match for core (`plugin/.claude-plugin/plugin.json`, `circle` entry in `marketplace.json`, Luscii); four when the companion is touched (`plugin-ios/.claude-plugin/plugin.json` mirrors its `marketplace.json` entry).
 
-**Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → code-review. Never suggest `/circle:code-review` before a PR exists.
+**Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → pr-review. Never suggest `/circle:pr-review` before a PR exists.
 
 **TDD**: On by default. `impl` uses `/circle:tdd` for red-green-refactor. `qa` verifies via commit history. Disable: `tdd.enabled: false` in config.yaml. Enforcement: `hard` (blocks) or `soft` (warns).
 
@@ -46,10 +46,10 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Default models** (as of v2.2.0):
 - Opus (`claude-opus-4-6`): arch, security, impl
-- Sonnet (`claude-sonnet-4-6`): scope, refine, ux, qa, validate-prd, code-review.agent_a, code-review.platform_review
-- Haiku (`claude-haiku-4-5-20251001`): facilitate, code-review.agent_b
+- Sonnet (`claude-sonnet-4-6`): scope, refine, ux, qa, validate-prd, pr-review.agent_a, pr-review.platform_review
+- Haiku (`claude-haiku-4-5-20251001`): facilitate, pr-review.agent_b
 
-Maintainers: monitor [Anthropic deprecation page](https://docs.claude.com/en/docs/about-claude/model-deprecations) and bump alias defaults when a model is retired. The 12 alias sites are: 9 fork-skill frontmatters + 3 entries in `plugin/skills/code-review/SKILL.md` `metadata.model_routing`. Both `plugin/skills/greenfield/SKILL.md` routing tables (Role table + Role Sequence Detail + the JSON `model_routing` example) must stay in sync — see Gotchas.
+Maintainers: monitor [Anthropic deprecation page](https://docs.claude.com/en/docs/about-claude/model-deprecations) and bump alias defaults when a model is retired. The 12 alias sites are: 9 fork-skill frontmatters + 3 entries in `plugin/skills/pr-review/SKILL.md` `metadata.model_routing`. Both `plugin/skills/greenfield/SKILL.md` routing tables (Role table + Role Sequence Detail + the JSON `model_routing` example) must stay in sync — see Gotchas.
 
 **Holacracy**: Roles have purposes, not personas. Reference roles, not names. External comms use team voice.
 

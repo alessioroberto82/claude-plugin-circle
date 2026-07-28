@@ -264,7 +264,7 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 
 *Optional steps
 
-**Post-workflow** (after PR is created): Run `/circle:code-review <PR>` for multi-agent review with CLAUDE.md compliance.
+**Post-workflow** (after PR is created): Run `/circle:pr-review <PR>` for multi-agent review with CLAUDE.md compliance.
 
 ### User Command Handling
 
@@ -455,7 +455,7 @@ When all steps are completed:
    - [ ] Commit changes
    - [ ] Push: if `no-mistakes` is installed (check with `command -v no-mistakes`), push via `git push no-mistakes <branch>` to run the pre-PR validation gate (review/test/lint/docs); otherwise `git push origin <branch>`
    - [ ] Create a pull request (with `no-mistakes`, the gate opens a clean PR for you once every check is green)
-   - [ ] Run `/circle:code-review <PR>` for multi-agent review with CLAUDE.md compliance
+   - [ ] Run `/circle:pr-review <PR>` for multi-agent review with CLAUDE.md compliance
    - [ ] Merge to main branch
    - [ ] Update Linear cycle
    ```

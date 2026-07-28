@@ -51,7 +51,7 @@ The team principles live in [`plugin/resources/soul.md`](plugin/resources/soul.m
 
 | Command | What it does |
 |---|---|
-| `/circle:code-review` | Reviews a pull request using 2 parallel agents with confidence scoring, checking against your project's CLAUDE.md conventions |
+| `/circle:pr-review` | Reviews a pull request using 2 parallel agents with confidence scoring, checking against your project's CLAUDE.md conventions |
 | `/circle:triage` | Triages incoming PR review comments — decides which to accept, reject, or clarify, then implements fixes |
 
 ## Orchestrators
@@ -104,7 +104,7 @@ Then in any project:
 
 ## iOS Companion
 
-`circle-ios` is a companion plugin that adds iOS/Swift expertise to `/circle:code-review`. It ships in the same marketplace as core Circle.
+`circle-ios` is a companion plugin that adds iOS/Swift expertise to `/circle:pr-review`. It ships in the same marketplace as core Circle.
 
 ### Install
 
@@ -115,7 +115,7 @@ claude plugin install circle-ios@circle
 
 ### How to use it
 
-- **Automatic (recommended)** — run `/circle:code-review <PR>` as usual. When the PR diff contains iOS markers (`Package.swift`, `*.xcodeproj`, `*.swift`), core dispatches `circle-ios:ios-review` in parallel with the generic reviewers and merges its findings into the same report.
+- **Automatic (recommended)** — run `/circle:pr-review <PR>` as usual. When the PR diff contains iOS markers (`Package.swift`, `*.xcodeproj`, `*.swift`), core dispatches `circle-ios:ios-review` in parallel with the generic reviewers and merges its findings into the same report.
 - **Standalone** — run `/circle-ios:ios-review <PR>` to review a PR using only the iOS lens, without the generic reviewers.
 
 ### Dependencies
@@ -195,7 +195,7 @@ Not every role needs every file. The config maps knowledge by concern:
 | Architecture Owner | project + domain + architecture + integrations |
 | Implementer | project + domain + architecture + build + integrations |
 | Quality Guardian | project + domain + architecture + build |
-| Code Review | project + architecture + build |
+| PR Review | project + architecture + build |
 | Security Guardian | project + architecture + integrations |
 
 ### Getting started
@@ -221,7 +221,7 @@ Circle never adds files to your project repository. All outputs are stored in a 
 │   ├── scope/        # Requirements
 │   ├── arch/         # Architecture, ADRs
 │   ├── impl/         # Implementation notes
-│   ├── code-review/  # PR review reports
+│   ├── pr-review/    # PR review reports
 │   ├── triage/       # Triage learnings
 │   ├── qa/           # Test plans, reports
 │   ├── security/     # Security audits
@@ -317,9 +317,9 @@ Steps in brackets are optional.
 Implementer (analyze) → Architecture Owner (review) → Implementer (fix) → Quality Guardian (verify)
 ```
 
-### Code Review
+### PR Review
 ```
-Implementer (implement) → Quality Guardian (test) → Code Review (multi-agent PR review) → Triage (handle feedback) → merge
+Implementer (implement) → Quality Guardian (test) → PR Review (multi-agent PR review) → Triage (handle feedback) → merge
 ```
 
 ## Changelog
