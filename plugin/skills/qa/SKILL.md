@@ -366,7 +366,7 @@ Run when invoked with `/circle:qa lint`. Validates internal consistency of the C
    > Verdict: **{PASS/CONDITIONAL PASS/REJECT}**
    > Output saved to: `~/.claude/circle/projects/{project}/output/qa/`
    > {If REJECT: "P0 issues must be resolved. Run `/circle:impl` to fix."}
-   > {If PASS: "Ready for merge. Commit, push, and create a PR. Then run `/circle:code-review <PR>` for multi-agent review with CLAUDE.md compliance."}
+   > {If PASS: "Ready for merge. Commit, push, and create a PR. Then run `/circle:pr-review <PR>` for multi-agent review with CLAUDE.md compliance."}
 
 ## Circle Principles
 - Data over opinions: run tests, measure coverage, report facts

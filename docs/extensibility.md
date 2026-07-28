@@ -1,7 +1,7 @@
 # Platform-Review Extensibility Contract
 
 Any Claude Code plugin may register as a platform-review target for Circle's
-`code-review` skill by adding this frontmatter to a SKILL.md:
+`pr-review` skill by adding this frontmatter to a SKILL.md:
 
 ```yaml
 ---
@@ -14,7 +14,7 @@ metadata:
 ---
 ```
 
-When a user runs `/circle:code-review <PR>`, the core `code-review` skill:
+When a user runs `/circle:pr-review <PR>`, the core `pr-review` skill:
 
 1. Scans the available-skills list surfaced by the harness for skills with
    `metadata.platform_review: true`.
@@ -53,7 +53,7 @@ Field notes:
 
 - `lines` is a range string (e.g., `"148-156"`), not an int — covers single-line
   findings too (`"150-150"`).
-- `confidence` is the 0-100 scale used across Circle code review. Core applies
+- `confidence` is the 0-100 scale used across Circle PR review. Core applies
   the same confidence threshold to dispatched findings as to its own agents
   (90 normally, 75 for foundational files).
 - `description` is the short human-readable finding text — core quotes it
@@ -84,7 +84,7 @@ That is the entire contract. No core changes needed to add new platforms.
 ## Trust model
 
 > ⚠️ Platform-review plugins receive your PR diff and `CLAUDE.md` on every
-> `/circle:code-review` invocation. Install only platform-review plugins you
+> `/circle:pr-review` invocation. Install only platform-review plugins you
 > trust, the same way you'd evaluate any MCP server or Claude Code plugin.
 >
 > A malicious plugin with `metadata.platform_review: true` could exfiltrate

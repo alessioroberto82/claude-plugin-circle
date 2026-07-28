@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "circle",
-      "version": "2.7.0",
+      "version": "2.8.0",
       "source": "./plugin",
       "description": "19 skills (9 holacracy roles + 10 utilities) — domain-agnostic core with extensibility contract for platform-review companion plugins; structured workflows, quality gates, multi-perspective decision council, self-verification guardrails, anti-overcomplication checks, TDD enforcement, and security audits"
     },
@@ -17,7 +17,7 @@
       "name": "circle-ios",
       "version": "1.2.0",
       "source": "./plugin-ios",
-      "description": "iOS platform-review companion for Circle — auto-activates under /circle:code-review on iOS PRs (Package.swift, *.xcodeproj, *.swift markers), or runs standalone via /circle-ios:ios-review"
+      "description": "iOS platform-review companion for Circle — auto-activates under /circle:pr-review on iOS PRs (Package.swift, *.xcodeproj, *.swift markers), or runs standalone via /circle-ios:ios-review"
     }
   ]
 }

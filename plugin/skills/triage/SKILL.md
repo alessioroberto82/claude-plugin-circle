@@ -301,7 +301,7 @@ Before the handoff message, read `${CLAUDE_PLUGIN_ROOT}/resources/work-summary-t
 
 After completing the triage:
 
-> Triage complete. If the PR needs another review cycle after fixes, run `/circle:code-review` to verify.
+> Triage complete. If the PR needs another review cycle after fixes, run `/circle:pr-review` to verify.
 >
 > If there were unclear comments, re-run `/circle:triage` after reviewers respond to process the clarifications.
 

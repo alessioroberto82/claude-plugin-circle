@@ -117,7 +117,7 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:docs` | Generate documentation |
 | `/circle:greenfield` | Run the full workflow start to finish |
 | `/circle:cycle` | Run a cycle planning session (Shape Up) |
-| `/circle:code-review` | Review a pull request |
+| `/circle:pr-review` | Review a pull request |
 | `/circle:triage` | Handle review feedback on a pull request |
 | `/circle:validate-prd` | Validate PRD quality before architecture design |
 | `/circle:tdd` | Enforce test-driven development (red-green-refactor cycle) |

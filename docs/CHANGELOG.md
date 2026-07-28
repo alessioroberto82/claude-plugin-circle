@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.8.0 — Rename `code-review` skill to `pr-review`
+
+### Changed
+
+- **Skill renamed**: `plugin/skills/code-review/` → `plugin/skills/pr-review/`. Frontmatter `name`, the invocation command (`/circle:code-review` → `/circle:pr-review`), the output directory (`output/code-review/` → `output/pr-review/`), and all cross-references across the core plugin, the `circle-ios` companion, and docs were updated to match.
+- **Config namespace renamed**: `code_review.*` → `pr_review.*` (covers `agent_a`, `agent_b`, `platform_review`). The legacy `code_review.*` namespace (including the older flat `agent_a_model`/`agent_b_model` keys) is still honoured as a backward-compat fallback; `pr-review` emits a one-line warning when it detects the legacy namespace in `config.yaml`.
+
+### Breaking Changes
+
+- Any script, alias, or muscle-memory invoking `/circle:code-review` must switch to `/circle:pr-review`. The old command no longer exists.
+- If you had `code_review.*` overrides in your project `config.yaml`, they still work (legacy fallback) but you'll see a deprecation warning — rename to `pr_review.*` to silence it and to restore full control (the fallback resolves after `pr_review.*`, not before).
+
+---
+
 ## v2.7.0 — Mandatory standards for Architecture Owner & Implementer
 
 `arch` and `impl` had no forcing function on project coding standards. `arch` never read `CLAUDE.md`/`AGENTS.md`/`.claude/`; `impl` had a single soft line ("verify … follows its standards", root `CLAUDE.md` only). The rigorous mechanism (ingest standards → cite-source-or-discard → compound-rule check → "standards are law") lived only in `code-review`/`ios-review`, i.e. downstream of where violations are introduced. Two secondary defects compounded this: project config resolved via `basename "$PWD"`, so the per-project `config.yaml` silently failed to load inside git worktrees; and `global_rules` was a dead config key read by no skill.

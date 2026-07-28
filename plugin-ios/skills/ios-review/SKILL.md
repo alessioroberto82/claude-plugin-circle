@@ -1,6 +1,6 @@
 ---
 name: ios-review
-description: "iOS Code Review — Platform-specific review using Apple documentation, SwiftUI, Swift Concurrency, and Swift Testing best practices. Auto-activated by /circle:code-review when iOS markers are detected."
+description: "iOS Code Review — Platform-specific review using Apple documentation, SwiftUI, Swift Concurrency, and Swift Testing best practices. Auto-activated by /circle:pr-review when iOS markers are detected."
 allowed-tools: Read, Grep, Glob, Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr comment:*), Bash(mkdir -p ~/.claude/circle/*), mcp__cupertino__search, mcp__cupertino__read_document, mcp__cupertino__search_symbols, mcp__cupertino__search_concurrency, mcp__cupertino__search_conformances, mcp__cupertino__search_property_wrappers, mcp__cupertino__list_frameworks
 metadata:
   context: fork
@@ -39,9 +39,9 @@ If no argument is provided, ask the user which PR to review.
 This skill operates in two modes:
 
 1. **Standalone** (`/circle-ios:ios-review 42`): Runs its own preflight, produces findings, optionally posts to GitHub.
-2. **Platform-review dispatch** (via `/circle:code-review`): Receives preflight context inline from core code-review, dispatched via the Skill tool when the PR diff matches this skill's `platform_markers`. Does NOT run preflight. Produces findings that feed into code-review's filtering pipeline.
+2. **Platform-review dispatch** (via `/circle:pr-review`): Receives preflight context inline from core pr-review, dispatched via the Skill tool when the PR diff matches this skill's `platform_markers`. Does NOT run preflight. Produces findings that feed into pr-review's filtering pipeline.
 
-When dispatched by core code-review, all preflight data (§1) is provided in the prompt — skip §1 only. Still complete the Design & Reuse Survey (§3.5) before emitting findings; the Survey is mandatory in both modes.
+When dispatched by core pr-review, all preflight data (§1) is provided in the prompt — skip §1 only. Still complete the Design & Reuse Survey (§3.5) before emitting findings; the Survey is mandatory in both modes.
 
 ## Process
 
@@ -62,7 +62,7 @@ Read the root `CLAUDE.md` and root `AGENTS.md` if they exist. Also read any `CLA
 Confirm this is an iOS project (check for `Package.swift` or `*.xcodeproj` in the repo root) AND that the diff contains real Swift/iOS code. Classify each changed file: Swift/iOS (`.swift`, `.xcodeproj`, `Package.swift`, `.storyboard`, `.xib`) vs non-iOS (`.sh`, `Fastfile`/Ruby, `.md`, `.yml`/`.yaml`, CI config).
 - If the diff has **zero** Swift/iOS files: STOP. Output "No iOS-relevant changes in this diff; deferring to general code review." Do not run any domain. (Prevents the empty-review incident where an iOS review ran on a build-tooling-only PR and found nothing.)
 - If not an iOS project at all: warn "This does not appear to be an iOS project. iOS-specific checks may produce false positives. Continue? [y/n]"
-- Otherwise proceed. In **platform-review dispatch mode** the gate is advisory only (core code-review already routed here on marker match) — note non-iOS files as out-of-scope and continue.
+- Otherwise proceed. In **platform-review dispatch mode** the gate is advisory only (core pr-review already routed here on marker match) — note non-iOS files as out-of-scope and continue.
 
 ### 2. Local Project Skills Discovery (highest priority)
 
@@ -124,7 +124,7 @@ Rules:
 
 Analyze the diff across 7 domains. Only flag issues in **changed lines**. Every finding must cite a specific source.
 
-**Confidence scale** (same as code-review Agent A/B):
+**Confidence scale** (same as pr-review Agent A/B):
 - **0-25**: Uncertain, might be false positive
 - **50**: Real but minor
 - **75**: Very likely real, impacts functionality
@@ -320,7 +320,7 @@ If no findings: post "No iOS-specific issues found."
 > Domains checked: {list of domains that ran}
 
 **Platform-review dispatch mode**:
-Return findings list to the caller (core code-review). Do not post to GitHub — code-review handles posting.
+Return findings list to the caller (core pr-review). Do not post to GitHub — pr-review handles posting.
 
 ## Rules
 
@@ -345,9 +345,9 @@ agents:
     effort: medium   # default
 ```
 
-When dispatched by core code-review (platform-review mode — configured in core's `code_review` block, not here):
+When dispatched by core pr-review (platform-review mode — configured in core's `pr_review` block, not here):
 ```yaml
-code_review:
+pr_review:
   platform_review:
     model: sonnet    # default when the dispatched skill's frontmatter is silent
     effort: medium   # default when the dispatched skill's frontmatter is silent
