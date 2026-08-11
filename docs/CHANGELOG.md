@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.8.1 — `triage` publish gate
+
+`triage` used to reply to/resolve GitHub review threads and push commits automatically as soon as the user approved the verdict table or commit plan — there was no separate confirmation for the act of publishing itself.
+
+### Changed
+
+- **`triage`**: added a Publishing Gate that defaults to **off**. Verdict approval (Step 3) and commit-plan approval (Step 5) now only authorize analysis and local implementation/commits — replying to, resolving, or pushing anything to GitHub (Steps 3a, 3b, 5a) requires a separate, explicit confirmation from the user each run. If the user declines, `triage` reports what was prepared locally but withheld instead of publishing it.
+
 ## v2.8.0 — Rename `code-review` skill to `pr-review`
 
 ### Changed
