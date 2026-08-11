@@ -151,9 +151,23 @@ Present a verdict table and **wait for user approval** before making any changes
 
 The user may approve all verdicts, override specific ones, or ask for more detail.
 
+**Scope of this approval**: approving the verdict table authorizes analysis and local implementation only (Step 4, local commits in Step 5). It does **not** authorize publishing anything — replying to or resolving GitHub threads (Step 3a/3b), or pushing (Step 5a). Publishing is gated separately and defaults to **off** — see the Publishing Gate below.
+
+### Publishing Gate (default: do not publish)
+
+By default, do **not** reply to, resolve, or push anything without the user's explicit, separate consent for that specific action. Verdict approval and commit-plan approval are not publish consent.
+
+Before Step 3a, Step 3b, or Step 5a, stop and ask explicitly, e.g.:
+
+> "Ready to post replies and resolve N thread(s) on GitHub, and push M commit(s)? (yes / no / which ones)"
+
+Proceed with publishing only if the user says yes (fully or for a subset). If the user declines or doesn't answer, skip publishing entirely and report what was prepared but not sent (see Step 7). This gate applies every run — do not remember a prior "yes" as standing consent for future runs.
+
+Exception: if the user's original request already explicitly asked for publishing (e.g. "triage and push", "resolve the accepted ones and push"), that stated intent counts as consent for the actions named — skip the extra prompt for those, but still confirm before amend-equivalent or force operations if any is being considered (should not normally arise here).
+
 ### Step 3a: Reply and Resolve Rejected Comments
 
-After user approval, for **rejected** comments (only when fetched from PR):
+After user approval **and explicit publish consent** (see Publishing Gate), for **rejected** comments (only when fetched from PR):
 
 Batch all replies using GraphQL aliases, then batch all resolves — two API calls total:
 
@@ -183,7 +197,7 @@ Reply bodies should concisely explain the rejection rationale. Escape double quo
 
 ### Step 3b: Post Clarification Questions for Unclear Comments
 
-For **unclear** comments (only when fetched from PR):
+After explicit publish consent (see Publishing Gate), for **unclear** comments (only when fetched from PR):
 
 Batch reply to all unclear threads (tag the author, list questions). **Do NOT resolve** — threads stay open for response.
 
@@ -245,7 +259,7 @@ Use conventional commit types: `fix:` (bug), `refactor:` (improvement), `test:` 
 
 ### Step 5a: Push and Resolve Accepted Comments
 
-After all commits:
+After all commits, and only after explicit publish consent (see Publishing Gate):
 
 1. **Push**: `git push` — if it fails, report the error and stop (never force-push)
 2. **Reply and resolve** all accepted threads using batched GraphQL (reply first, then resolve):
@@ -275,12 +289,14 @@ Extract actionable learnings from the review:
 
 ### Step 7: Summary
 
+If the user gave publish consent (fully or partially), report what was actually published:
+
 ```
 ## Review Complete
 
 **Comments**: N total — X accepted, Y rejected, Z unclear
-**Commits**: M created
-**Threads resolved**: R (X accepted + Y rejected)
+**Commits**: M created (local)
+**Published**: pushed=<yes/no>, threads resolved=R (X accepted + Y rejected), replies posted=P
 
 | Commit | Description | Comments Addressed |
 |--------|-------------|--------------------|
@@ -291,6 +307,18 @@ Extract actionable learnings from the review:
 
 **Unclear comments** (questions posted, awaiting response):
 - #Z: @author — [summary of what was asked]
+```
+
+If the user declined or did not give publish consent, report instead what is ready but withheld:
+
+```
+## Review Complete (not published)
+
+**Comments**: N total — X accepted, Y rejected, Z unclear
+**Commits**: M created locally, NOT pushed
+**Pending publish**: R reply/resolve action(s) on GitHub prepared but not sent
+
+Run `/circle:triage` again and confirm publishing, or push/reply manually, when ready.
 ```
 
 ## Work Summary
@@ -310,7 +338,7 @@ After completing the triage:
 - **Always** read the actual code before judging a comment — never assume
 - **Always** present the analysis and wait for approval before implementing
 - **Always** present the commit plan and wait for approval before committing
-- **Always** push after committing when processing PR review threads
+- **Never** publish anything (push, reply, resolve) by default — always get explicit, separate consent for the publishing action itself before Step 3a/3b/5a; verdict or commit-plan approval does not count as publish consent
 - **Never** use `git add -A` or `git add .`
 - **Never** amend existing commits unless explicitly asked
 - **Never** skip hooks (no `--no-verify`)
