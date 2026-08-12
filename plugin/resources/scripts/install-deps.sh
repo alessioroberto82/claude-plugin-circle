@@ -32,8 +32,8 @@ PLUGINS_JSON="$HOME/.claude/plugins/installed_plugins.json"
 
 # Remote-script installers (curl | sh) are opt-in only — never run without this flag.
 install_no_mistakes() {
-  if [ "${CIRCLE_ALLOW_REMOTE_INSTALL:-}" != "1" ]; then
-    echo "  Skipped: runs a remote script (curl | sh). Set CIRCLE_ALLOW_REMOTE_INSTALL=1 to allow." >&2
+  if [ "${CIRCLE_ALLOW_REMOTE_UPDATE:-}" != "1" ]; then
+    echo "  Skipped: runs a remote script (curl | sh). Set CIRCLE_ALLOW_REMOTE_UPDATE=1 to allow." >&2
     return 1
   fi
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)"
