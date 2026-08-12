@@ -37,9 +37,13 @@ echo ""
 # 3b. Binaries (curl-installed tools) — update only if already installed
 echo "→ Updating binaries..."
 if command -v no-mistakes >/dev/null 2>&1; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)" \
-        && echo "  no-mistakes: updated" \
-        || echo "  ⚠ no-mistakes: update failed"
+    if [ "${CIRCLE_ALLOW_REMOTE_INSTALL:-}" = "1" ]; then
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)" \
+            && echo "  no-mistakes: updated" \
+            || echo "  ⚠ no-mistakes: update failed"
+    else
+        echo "  no-mistakes: update skipped (runs curl | sh — set CIRCLE_ALLOW_REMOTE_INSTALL=1 to allow)"
+    fi
 else
     echo "  no-mistakes: not installed (skipped)"
 fi

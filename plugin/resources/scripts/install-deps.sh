@@ -30,12 +30,21 @@ fi
 
 PLUGINS_JSON="$HOME/.claude/plugins/installed_plugins.json"
 
+# Remote-script installers (curl | sh) are opt-in only — never run without this flag.
+install_no_mistakes() {
+  if [ "${CIRCLE_ALLOW_REMOTE_INSTALL:-}" != "1" ]; then
+    echo "  Skipped: runs a remote script (curl | sh). Set CIRCLE_ALLOW_REMOTE_INSTALL=1 to allow." >&2
+    return 1
+  fi
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)"
+}
+
 DEPS=(
   "linear|core|mcp-cloud|Linear|Issue tracking and project management|||all agents||Enable in Claude Code settings > MCP Servers > Linear"
   "claude-mem|core|plugin|claude-mem|Cross-session semantic memory|grep -q claude-mem $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add thedotmack && claude plugin install claude-mem@thedotmack|all agents||"
   "notion|extras|plugin|Notion|Notion workspace integration|grep -q Notion $PLUGINS_JSON 2>/dev/null|claude plugin marketplace add claude-plugins-official && claude plugin install Notion@claude-plugins-official|docs||"
   "bmad-mcp|extras|npm|bmad-mcp|Circle MCP server for workflow orchestration|npm list -g bmad-mcp 2>/dev/null \| grep -q bmad-mcp|npm install -g bmad-mcp|greenfield||"
-  "no-mistakes|extras|binary|no-mistakes|Pre-push AI validation gate (review/test/lint/docs)|command -v no-mistakes >/dev/null 2>&1|sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh)\"|impl, greenfield||"
+  "no-mistakes|extras|binary|no-mistakes|Pre-push AI validation gate (review/test/lint/docs)|command -v no-mistakes >/dev/null 2>&1|install_no_mistakes|impl, greenfield||"
 )
 
 # iOS / Swift development deps have moved to the companion plugin `circle-ios`
