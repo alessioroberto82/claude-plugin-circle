@@ -1,6 +1,6 @@
 # Circle
 
-A circle of AI roles that helps you build software — from initial idea through to working code. Each role has a clear purpose, domain, and accountability. You talk to them in plain language, and they handle the rest.
+A circle of AI roles that helps you build software — from initial idea through to working code. Each role has a clear purpose, domain, and accountability. You talk to them in plain language, and they handle the rest. Circle supports Claude Code and Codex.
 
 Every role in this circle operates under the same set of principles — written by our founder Joris to capture the Luscii soul. Growth over ego. Iteration over perfection. Impact over activity. No gold-plating. No fear-driven engineering. These aren't slogans — they shape how every role thinks, prioritizes, and communicates with you.
 
@@ -18,6 +18,7 @@ Circle works for everyone on the team: product people, designers, analysts, deve
 - [Orchestrators](#orchestrators) — multi-step workflows
 - [Utilities](#utilities) — init, validate, shard, etc.
 - [Setup](#setup) — install Circle
+- [Codex](#codex) — install and maintain the Codex plugin
 - [iOS Companion](#ios-companion) — how to use `circle-ios` for Swift/iOS PRs
 - [Dependencies](#dependencies) — optional MCPs and tools
 - [Project Knowledge Packs](#project-knowledge-packs) — make Circle understand your project
@@ -101,6 +102,10 @@ Then in any project:
 /circle:scope             # Start by defining requirements
 /circle:greenfield        # Or run the full workflow
 ```
+
+## Codex
+
+The Codex implementation is versioned in [`plugins/circle`](plugins/circle). See [Codex setup and maintenance](docs/CODEX.md) to install it from this checkout and update it after Circle changes.
 
 ## iOS Companion
 

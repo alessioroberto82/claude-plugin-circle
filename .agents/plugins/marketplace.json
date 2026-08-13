@@ -1,0 +1,20 @@
+{
+  "name": "circle",
+  "interface": {
+    "displayName": "Circle"
+  },
+  "plugins": [
+    {
+      "name": "circle",
+      "source": {
+        "source": "local",
+        "path": "./plugins/circle"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

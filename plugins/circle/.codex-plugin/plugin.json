@@ -1,0 +1,23 @@
+{
+  "name": "circle",
+  "version": "2.8.1",
+  "description": "Holacracy-based development workflow with distributed roles and quality gates.",
+  "author": {
+    "name": "Alessio Roberto",
+    "url": "https://github.com/alessioroberto82"
+  },
+  "repository": "https://github.com/alessioroberto82/claude-plugin-circle",
+  "license": "MIT",
+  "keywords": ["circle", "workflow", "development", "quality-gates", "shape-up", "pr-review"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Circle",
+    "shortDescription": "Structured development workflows and quality gates.",
+    "longDescription": "Circle brings holacracy-based roles, planning, implementation, review, and quality workflows to Codex.",
+    "developerName": "Alessio Roberto",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/alessioroberto82/claude-plugin-circle",
+    "defaultPrompt": ["Plan a feature with the Circle workflow.", "Run a Circle PR review for the current branch.", "Show the Circle status for this project."]
+  }
+}
