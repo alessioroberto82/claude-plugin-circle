@@ -1,0 +1,45 @@
+# Circle — Per-Project Configuration
+# Copy this file to: ~/.codex/circle/projects/<project-name>/config.yaml
+# All fields are optional.
+
+# Domain override (software, business, personal, or general)
+# domain: software
+
+# Optional phases enabled by default for greenfield workflow
+greenfield_defaults:
+  ux: true
+  facilitate: false
+  validate_prd: true
+
+# Guardrails
+guardrails:
+  self_check: true
+  standards_check: true
+
+# TDD enforcement
+tdd:
+  enabled: true
+  enforcement: hard
+
+# Compact handoffs reduce context carried between roles.
+handoff:
+  digest: false
+
+# Per-role context and instructions. Codex uses the current session configuration.
+agents:
+  arch:
+    context_files:
+      - docs/ARCHITECTURE.md
+      - docs/ADR/
+    extra_instructions: |
+      Follow the project's established architecture and coding standards.
+  impl:
+    context_files:
+      - src/
+    extra_instructions: |
+      Follow project coding standards and existing conventions.
+
+# Parallel implementation of independent sharded tasks
+parallel:
+  enabled: true
+  max_agents: 3

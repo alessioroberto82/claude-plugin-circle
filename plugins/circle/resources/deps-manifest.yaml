@@ -1,0 +1,31 @@
+# Circle — Optional Integrations
+# All integrations are optional. Suggest them only when they materially help.
+# Never install or connect one without explicit user confirmation.
+
+groups:
+  core:
+    label: "Core integrations"
+    deps:
+      - id: linear
+        type: plugin
+        name: Linear
+        description: "Issue tracking and project management"
+        install_note: "Add and connect the Linear plugin through Codex Plugins when needed."
+        used_by: "scope, arch, impl, qa, ux, refine, facilitate, docs, pr-review, cycle"
+
+  extras:
+    label: "Optional integrations"
+    deps:
+      - id: notion
+        type: plugin
+        name: Notion
+        description: "Workspace documentation and knowledge management"
+        install_note: "Add and connect the Notion plugin through Codex Plugins when needed."
+        used_by: "docs"
+
+      - id: no-mistakes
+        type: binary
+        name: no-mistakes
+        description: "Optional pre-push AI validation gate"
+        check_command: "command -v no-mistakes >/dev/null 2>&1"
+        used_by: "impl, greenfield"
