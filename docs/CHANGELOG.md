@@ -7,6 +7,8 @@
 ### Changed
 
 - **`triage`**: added a Publishing Gate that defaults to **off**. Verdict approval (Step 3) and commit-plan approval (Step 5) now only authorize analysis and local implementation/commits — replying to, resolving, or pushing anything to GitHub (Steps 3a, 3b, 5a) requires a separate, explicit confirmation from the user each run. If the user declines, `triage` reports what was prepared locally but withheld instead of publishing it.
+- **Codex support**: added a versioned Codex implementation under `plugins/circle`, with local marketplace metadata and setup/maintenance documentation in `docs/CODEX.md`.
+- **Dependency safety**: `no-mistakes` remote install and update now require the explicit `CIRCLE_ALLOW_REMOTE_UPDATE=1` opt-in before executing the fetched installer script.
 
 ## v2.8.0 — Rename `code-review` skill to `pr-review`
 
