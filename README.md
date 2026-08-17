@@ -83,6 +83,8 @@ These run multi-step workflows, guiding you through each phase with decision poi
 
 ## Setup
 
+### Claude Code
+
 ```bash
 # Load Circle for the current session (development/testing)
 claude --plugin-dir /path/to/claude-plugin-circle/plugin
@@ -95,7 +97,7 @@ claude plugin install circle@circle
 claude plugin install circle-ios@circle
 ```
 
-Then in any project:
+Use Circle through its slash commands:
 
 ```bash
 /circle:init              # Set up Circle for this project
@@ -103,13 +105,30 @@ Then in any project:
 /circle:greenfield        # Or run the full workflow
 ```
 
-## Codex
+### Codex
 
-The Codex implementation is versioned in [`plugins/circle`](plugins/circle). See [Codex setup and maintenance](docs/CODEX.md) to install it from this checkout and update it after Circle changes.
+The Codex implementation is versioned in [`plugins/circle`](plugins/circle) and is exposed by the repository marketplace as `circle@circle`.
+
+```bash
+codex plugin marketplace add /path/to/claude-plugin-circle
+codex plugin add circle@circle
+```
+
+Start a new Codex thread after installing or updating the plugin. Ask in natural language for the Circle workflow or role you need, for example:
+
+```text
+Use Circle to scope this feature.
+Use Circle to run a PR review for the current branch.
+Use Circle to show this project's workflow status.
+```
+
+Codex selects the relevant Circle skill, such as `circle:scope`, `circle:pr-review`, or `circle:status`. For maintenance and the update workflow, see [Codex setup and maintenance](docs/CODEX.md).
 
 ## iOS Companion
 
 `circle-ios` is a companion plugin that adds iOS/Swift expertise to `/circle:pr-review`. It ships in the same marketplace as core Circle.
+
+`circle-ios` currently supports Claude Code only; the Codex port in this repository includes the core `circle` plugin, not the iOS companion.
 
 ### Install
 
