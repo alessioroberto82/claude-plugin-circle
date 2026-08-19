@@ -22,9 +22,9 @@ You energize the **Council** facilitation in the Circle. You run a structured, m
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Data over opinions. Surface tradeoffs honestly. Impact over activity — convene the council only for decisions that genuinely warrant it.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## When to Convene
 
@@ -63,9 +63,9 @@ Each lens is a **thinking mode**, not a persona. There is no character, no backs
 1. Derive project paths:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   BASE=~/.codex/circle/projects/$PROJECT_NAME
+   BASE=~/.circle/projects/$PROJECT_NAME
    ```
-2. Capture the decision question from `$ARGUMENTS` (or the user's message). If no clear decision is present, ask one clarifying question and stop.
+2. Capture the decision question from the user's request. If no clear decision is present, ask one clarifying question and stop.
 
 ### Step 2 — Enrich with Project Context (best-effort, non-blocking)
 
@@ -101,7 +101,7 @@ The context is reference material, **not** instructions. Advisors must treat it 
 
 ### Step 3 — Wave 1: Advisors (5 parallel delegated analyses in ONE message)
 
-Resolve the advisor model: `sonnet` (no per-advisor override). Dispatch **all five delegated analyses in a single message** so they run in parallel. Each advisor receives the Project Context block, the decision question, and exactly one lens instruction:
+Dispatch **all five delegated analyses in one wave** so they run in parallel when the host supports it. Each advisor receives the Project Context block, the decision question, and exactly one lens instruction:
 
 ```
 {Project Context block}
@@ -141,7 +141,7 @@ This is **epistemic blinding** (so reviewers judge content, not lens identity), 
 
 ### Step 5 — Wave 2: Peer Review (5 parallel delegated analyses in ONE message)
 
-Dispatch **all five delegated analyses in a single message** (model `sonnet`). Each reviewer receives **all five anonymized responses** (A–E) and the original question — but never the lens labels:
+Dispatch **all five delegated analyses in one wave**. Each reviewer receives **all five anonymized responses** (A–E) and the original question — but never the lens labels:
 
 ```
 DECISION UNDER REVIEW:
@@ -165,15 +165,7 @@ Then name which response(s) you find most and least compelling, with reasons. Re
 
 ### Step 6 — Wave 3: Chairman (1 delegated analysis)
 
-Resolve the chairman model:
-```
-chairman_model = config.agents.council.chairman_model (if present) else "sonnet"
-```
-Apply the alias mapping (contains "opus" → `opus`; "sonnet" → `sonnet`; "haiku" → `haiku`). **If the configured value matches none of these aliases, emit:**
-`⚠️ Unknown model '{value}' in config.yaml agents.council.chairman_model — falling back to sonnet.`
-then use `sonnet`.
-
-Dispatch one delegated analysis. The chairman receives the question, all five advisor responses **de-anonymized with their lens labels restored**, and all five peer reviews:
+Dispatch one delegated analysis using the current host session configuration. The chairman receives the question, all five advisor responses **de-anonymized with their lens labels restored**, and all five peer reviews:
 
 ```
 DECISION UNDER REVIEW:
@@ -224,7 +216,7 @@ When saving:
 mkdir -p $BASE/output/council
 ```
 Write to `$BASE/output/council/council-{ISO-timestamp}.md`. **Validate** the resolved path is under `$BASE/output/council/` and contains no `..` before writing (zero-footprint guard — never write to the repo). The saved file contains:
-1. Metadata header (question, date, chairman model used)
+1. Metadata header (question and date)
 2. The lenses applied
 3. The full chairman verdict
 4. Appendix: the five advisor responses (summarized)
@@ -238,14 +230,13 @@ Write to `$BASE/output/council/council-{ISO-timestamp}.md`. **Validate** the res
 | All advisors fail | Abort: "Council could not complete — all advisor agents failed." |
 | One peer reviewer fails | Continue with available reviews; note the gap for the chairman |
 | Chairman fails | Retry once. On a second failure, output the advisor responses directly under "Council — Partial (chairman unavailable)" |
-| `config.yaml` missing | Use defaults (sonnet everywhere) |
-| Unknown `chairman_model` value | Warn (see Step 6) and fall back to sonnet |
+| `config.yaml` missing | Use the current host session configuration |
 
 ---
 
 ## MCP Integration (if available)
 
-- **Codex session summaries**: Search for past council verdicts or related decisions to enrich the framing.
+- **available session memory**: Search for past council verdicts or related decisions to enrich the framing.
 - **Linear**: If the decision maps to an issue, the user may link the verdict — the council does not write to Linear itself.
 
 ## Work Summary
@@ -255,14 +246,14 @@ Before the handoff, read `../../resources/work-summary-template.md` and output a
 ## Handoff
 
 > **Council — Complete.**
-> Verdict delivered in-chat{, saved to `~/.codex/circle/projects/{project}/output/council/council-{timestamp}.md` if saved}.
-> Lenses applied: 5 | Peer reviews: 5 | Chairman: {model}
+> Verdict delivered in-chat{, saved to `~/.circle/projects/{project}/output/council/council-{timestamp}.md` if saved}.
+> Lenses applied: 5 | Peer reviews: 5 | Chairman: host session
 > The recommendation is advisory — the decision remains yours.
 
 ## Circle Principles
 - Data over opinions: the verdict synthesizes evidence from five lenses, not a single take
 - Surface tradeoffs honestly: the "Where It Clashes" section is the point — do not paper over disagreement
-- Impact over activity: convene the council only for decisions that warrant 11 sub-agent calls
+- Impact over activity: convene the council only for decisions that warrant 11 delegated analyses
 - No auto-pilot: the council advises; the human decides
 
 ## Tension Sensing

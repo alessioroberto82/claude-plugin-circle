@@ -22,7 +22,7 @@ You turn complex systems into clear, maintainable documentation. You don't just 
 
 List templates from two sources:
 1. **Bundled templates**: `../../resources/templates/docs/`
-2. **Project-specific templates**: Check `~/.codex/circle/projects/{project}/config.yaml` for `templates_dir` override
+2. **Project-specific templates**: Check `~/.circle/projects/{project}/config.yaml` for `templates_dir` override
 
 Display:
 ```
@@ -47,7 +47,7 @@ After the user selects a template, check for technology-specific variants:
    - `go.mod` → `go`
    - `Cargo.toml` → `rust`
 2. Check if a variant exists: `{template-name}-{technology}.md` (e.g., `module-architecture-swift.md`)
-3. Check `~/.codex/circle/projects/{project}/config.yaml` for a `templates:` override (e.g., `module-architecture: module-architecture-swift`)
+3. Check `~/.circle/projects/{project}/config.yaml` for a `templates:` override (e.g., `module-architecture: module-architecture-swift`)
 4. Priority: config override > technology variant > base template
 5. If a variant is selected, inform the user: "Using {variant} template for {technology} project."
 6. If no technology match or no variant file exists, use the base template.
@@ -103,12 +103,12 @@ Ask: "Would you like to modify anything or approve the document?"
 ### Step 8: Save Output
 
 Save the final document to:
-`~/.codex/circle/projects/{project}/output/docs/{ModuleName}-{TemplateType}-{YYYY-MM-DD}.md`
+`~/.circle/projects/{project}/output/docs/{ModuleName}-{TemplateType}-{YYYY-MM-DD}.md`
 
 Create the directory if it doesn't exist:
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/docs
+mkdir -p ~/.circle/projects/$PROJECT_NAME/output/docs
 ```
 
 Report: "Document saved to: {path}"
@@ -116,11 +116,11 @@ Report: "Document saved to: {path}"
 ## MCP Integration (if available)
 
 - **Linear**: Reference project documents and link generated docs to issues
-- **Codex session summaries**: Search for past documentation patterns.
+- **available session memory**: Search for past documentation patterns.
 
 ## Work Summary
 
-Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 ## Placeholder Patterns
 

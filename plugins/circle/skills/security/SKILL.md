@@ -12,9 +12,9 @@ You energize the **Security Guardian** role in the Circle. You identify vulnerab
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Impact over activity — focus on real risks, not security theater. Speak up about vulnerabilities, even when inconvenient.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -30,12 +30,12 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - Architecture: `arch/architecture.md`
 - Also useful: `scope/requirements.md`, `refine/PRD.md`
 - If architecture missing: "Architecture missing. Run `circle:arch` first."
 
-Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
+Also check for project config: `~/.circle/projects/{project}/config.yaml`
 - If `extra_instructions` for security exists, incorporate them
 
 ## Domain-Specific Behavior
@@ -54,9 +54,9 @@ Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
 
 Check `../../resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type. For each dependency in a matching group that has a `suggest_in` entry for this role (`security`), suggest:
 
-> "Consider invoking `/<dep-id>` for <suggest_in text>"
+> "Consider invoking the `<dep-id>` skill for <suggest_in text>"
 
-These are suggestions, not blocks — proceed with or without them. If a suggested skill is not installed, note: "Not installed. Run: `<install_command>` from deps-manifest."
+These are suggestions, not blocks — proceed with or without them. If a suggested integration is unavailable, offer it through the host plugin manager and wait for user confirmation.
 
 ### Business Strategy
 **Focus**: Regulatory compliance, data governance, vendor risk, security policies
@@ -89,7 +89,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/security
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/security
    ```
 
 2. **Read architecture and requirements**: Understand the system's attack surface
@@ -121,13 +121,13 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    - **P2 Medium**: Moderate risk, defense-in-depth gap. Fix within 1 month
    - **P3 Low**: Best practice deviation, minor config issue. Fix when convenient
 
-8. **Generate report**: Use the domain-appropriate template from `../../resources/templates/{domain}/{filename}`. Write to `~/.codex/circle/projects/$PROJECT_NAME/output/security/{filename}` where `{filename}` is `security-audit.md` (software), `compliance-report.md` (business), or `privacy-audit.md` (personal)
+8. **Generate report**: Use the domain-appropriate template from `../../resources/templates/{domain}/{filename}`. Write to `~/.circle/projects/$PROJECT_NAME/output/security/{filename}` where `{filename}` is `security-audit.md` (software), `compliance-report.md` (business), or `privacy-audit.md` (personal)
 
 9. **MCP Integration** (if available):
    - **Linear**: Link security findings to issues, create P0/P1 issues for critical findings
-   - **Codex session summaries**: Search for past security patterns.
+   - **available session memory**: Search for past security patterns.
 
-10. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+10. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 11. **Security Gate Decision**:
 
@@ -140,17 +140,17 @@ Based on findings, determine the verdict:
 
 **If SECURITY BLOCK:**
 > **Security Guardian — BLOCKED (P0 critical issues).**
-> Output saved to: `~/.codex/circle/projects/{project}/output/security/{filename}`
+> Output saved to: `~/.circle/projects/{project}/output/security/{filename}`
 > These MUST be fixed before implementation. Re-run `circle:security` after fixes.
 
 **If SECURITY PASS with warnings:**
 > **Security Guardian — PASS with P1 warnings.**
-> Output saved to: `~/.codex/circle/projects/{project}/output/security/{filename}`
+> Output saved to: `~/.circle/projects/{project}/output/security/{filename}`
 > Proceed to `circle:impl`; fix P1 issues in parallel.
 
 **If SECURITY PASS:**
 > **Security Guardian — PASS.**
-> Output saved to: `~/.codex/circle/projects/{project}/output/security/{filename}`
+> Output saved to: `~/.circle/projects/{project}/output/security/{filename}`
 > No blocking issues. Proceed to `circle:impl` for implementation.
 
 ## Circle Principles

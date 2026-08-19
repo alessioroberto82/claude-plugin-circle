@@ -1,11 +1,12 @@
 # Platform-Review Extensibility Contract
 
-Any Claude Code plugin may register as a platform-review target for Circle's
+Any Agent Skills plugin may register as a platform-review target for Circle's
 `pr-review` skill by adding this frontmatter to a SKILL.md:
 
 ```yaml
 ---
 name: <platform>-review
+description: Review pull requests for <platform>-specific issues.
 metadata:
   platform_review: true          # marks this skill as a platform dispatch target
   platform_markers:              # globs that indicate this skill applies to the diff
@@ -14,7 +15,7 @@ metadata:
 ---
 ```
 
-When a user runs `/circle:pr-review <PR>`, the core `pr-review` skill:
+When a user invokes `circle:pr-review` for a pull request, the core skill:
 
 1. Scans the available-skills list surfaced by the harness for skills with
    `metadata.platform_review: true`.
@@ -24,8 +25,9 @@ When a user runs `/circle:pr-review <PR>`, the core `pr-review` skill:
    skills match, the tie is broken alphabetically by the **surfaced skill id**
    (e.g., `circle-ios:ios-review`), not by the SKILL frontmatter `name`. The
    report logs the collision using that id.
-5. The target is invoked via the Skill tool in parallel with Agents A and B,
-   receiving: PR number, diff content, repo-root `CLAUDE.md`.
+5. The target is invoked through the host's available skill mechanism in parallel
+   with Agents A and B, receiving the PR number, diff content, and repo-root
+   `AGENTS.md` or `CLAUDE.md` instructions.
 
 If no platform skill matches, the core runs Agents A + B only — no regression
 on non-platform projects.
@@ -68,14 +70,12 @@ dispatched skill's name so reviewers can see who contributed what.
 ---
 name: android-review
 description: Android/Kotlin platform review
-allowed-tools: Read, Grep, Glob, Bash(gh pr diff:*), Bash(gh pr view:*)
 metadata:
   platform_review: true
   platform_markers:
     - "**/build.gradle"
     - "**/build.gradle.kts"
     - "**/*.kt"
-  context: fork
 ---
 ```
 
@@ -84,8 +84,8 @@ That is the entire contract. No core changes needed to add new platforms.
 ## Trust model
 
 > ⚠️ Platform-review plugins receive your PR diff and `CLAUDE.md` on every
-> `/circle:pr-review` invocation. Install only platform-review plugins you
-> trust, the same way you'd evaluate any MCP server or Claude Code plugin.
+> `circle:pr-review` invocation. Install only platform-review plugins you
+> trust, the same way you'd evaluate any MCP server or Agent Skills plugin.
 >
 > A malicious plugin with `metadata.platform_review: true` could exfiltrate
 > code through any network-capable tool it declares. This is the same trust
@@ -106,12 +106,11 @@ That is the entire contract. No core changes needed to add new platforms.
 
 ## Privacy and data handling
 
-The dispatched skill runs with its own `allowed-tools` — core does not pass
-its tool surface through. The dispatched skill cannot read or write files
-outside what its own frontmatter allows.
+The dispatched skill runs with the permissions and capabilities granted by the
+current host. Core does not expand that surface.
 
 ## Follow-ups (not in v2.0)
 
 - A `metadata.platform_review_priority` integer key for deterministic tie-breaking.
-- A `/circle:qa lint` check (Check 10) to validate platform plugins' frontmatter.
+- A `circle:qa lint` check (Check 10) to validate platform plugins' frontmatter.
 - A `retain_diff: false` declaration for privacy-conscious skills.

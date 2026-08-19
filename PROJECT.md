@@ -1,43 +1,43 @@
 # circle
 
-Holacracy-based development workflow plugin for Claude Code with distributed roles, quality gates, and Shape Up planning.
+Holacracy-based Agent Skills plugin for Claude Code and Codex with distributed roles, quality gates, and Shape Up planning.
 
 ## Overview
 
-Circle is a pure Markdown plugin for Claude Code that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin `circle` ships 19 skills: 9 holacracy roles (Scope Clarifier, Architecture Owner, Implementer, Quality Guardian, Experience Designer, Refiner, Facilitator, Security Guardian, Documentation Steward) and 10 utilities (init, greenfield orchestrator, cycle planning, TDD, context sharding, code review, triage, PRD validation, skills discovery, decision council).
+Circle is a pure Markdown plugin that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin ships 20 shared Agent Skills: 9 holacracy roles and 11 utilities, including the status dashboard.
 
-The core is domain-agnostic: platform-specific review capabilities are packaged as companion plugins that register via a frontmatter extensibility contract. The companion plugin `circle-ios` ships alongside core in this repository and supplies iOS/Swift review via the same monorepo marketplace listing. See [`docs/extensibility.md`](docs/extensibility.md) for the contract.
+The core is domain-agnostic: platform-specific review capabilities are packaged as companion plugins that register via a frontmatter extensibility contract. The companion plugin `circle-ios` ships alongside core in this repository and supplies iOS/Swift review via the same monorepo marketplace listing. See [`plugins/circle/resources/extensibility.md`](plugins/circle/resources/extensibility.md) for the contract.
 
 Each role has a clear purpose, domain, and accountability following holacracy principles — authority is distributed and roles act within their domain without asking permission. Circle works for product people, designers, analysts, developers, and documentation writers. No programming knowledge is required to get started.
 
-The plugin follows a zero-footprint principle: it never adds files to the user's project repository. All outputs are stored in `~/.claude/circle/projects/<project>/`.
+The plugin follows a zero-footprint principle: it never adds files to the user's project repository. All outputs are stored in `~/.circle/projects/<project>/`.
 
 ## Stack & Infrastructure
 
 | Layer | Technology | Details |
 |---|---|---|
 | Format | Pure Markdown | Skills are SKILL.md files with YAML frontmatter |
-| Shell scripts | Bash | `install-deps.sh`, `update-deps.sh` for dependency management |
-| Plugin system | Claude Code Plugin | Manifest in `plugin/.claude-plugin/plugin.json` |
-| Marketplace | Claude Marketplace | Listing in `.claude-plugin/marketplace.json` |
+| Plugin system | Claude Code and Codex | Manifests in `plugins/circle/.claude-plugin/` and `plugins/circle/.codex-plugin/` |
+| Marketplace | Claude and Codex | Listings in `.claude-plugin/` and `.agents/plugins/` |
 | Version control | Git | GitHub-hosted at `alessioroberto82/claude-plugin-circle` |
 | CI/CD | None | No build step, no tests, no CI pipeline |
 
 ## Structure
 
 ```
-├── .claude-plugin/        — Marketplace listing for both plugins (marketplace.json)
-├── plugin/                — Core plugin source (namespace: circle)
-│   ├── .claude-plugin/    — Plugin manifest (plugin.json)
-│   ├── commands/          — /circle dashboard command
+├── .claude-plugin/        — Claude marketplace
+├── .agents/plugins/       — Codex marketplace
+├── plugins/circle/                — Core plugin source (namespace: circle)
+│   ├── .claude-plugin/    — Claude manifest
+│   ├── .codex-plugin/     — Codex manifest
+│   ├── commands/          — Claude-only /circle alias
 │   ├── resources/         — Shared resources
 │   │   ├── soul.md        — Team principles (loaded by every role)
 │   │   ├── guardrails.md  — Guardrail definitions
 │   │   ├── deps-manifest.yaml — Core dependency registry (source of truth)
 │   │   ├── work-summary-template.md — Assessment-aware work summary
-│   │   ├── scripts/       — install-deps.sh, update-deps.sh
 │   │   └── templates/     — Output templates (docs/, software/, business/, personal/)
-│   └── skills/            — 19 skills (one SKILL.md per directory)
+│   └── skills/            — 20 shared Agent Skills
 │       ├── arch/          — Architecture Owner
 │       ├── pr-review/     — Multi-agent PR review with platform-review dispatch
 │       ├── cycle/         — Cycle planning ceremony
@@ -52,6 +52,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │       ├── security/      — Security Guardian
 │       ├── shard/         — Context sharding
 │       ├── skills-discovery/ — Third-party skill install with security gate
+│       ├── status/        — Project status dashboard
 │       ├── tdd/           — TDD Guardian
 │       ├── triage/        — PR comment triage
 │       ├── ux/            — Experience Designer
@@ -75,14 +76,13 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 ## Conventions
 
 - **Naming**: Lowercase for skill names — directories, frontmatter, output paths. `circle` as plugin namespace
-- **Context model**: `context: fork` for roles (isolated execution), `context: same` for orchestrators/interactive
-- **Zero footprint**: All outputs written to `~/.claude/circle/projects/<project>/`, never to the repo
+- **Agent Skills standard**: Shared skills use only `name` and `description` frontmatter and host-neutral instructions
+- **Single source**: Both plugin manifests use `plugins/circle/`; no provider-specific skill copy
+- **Zero footprint**: All outputs written to `~/.circle/projects/<project>/`, never to the repo
 - **Domain-agnostic core**: Skills never name-drop domain-specific tools in SKILL.md body; domain deps live only in `deps-manifest.yaml`
-- **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — any dep change must update both scripts AND the manifest
-- **Version bump**: For core, three places must match — `plugin/.claude-plugin/plugin.json`, the `circle` entry in `.claude-plugin/marketplace.json`, and `Luscii/claude-marketplace`. The companion adds a fourth — `plugin-ios/.claude-plugin/plugin.json` — and must stay in sync with its `marketplace.json` entry
+- **Version bump**: Both core manifests and the versioned Claude marketplace entry must match; the Codex marketplace must point to `./plugins/circle`
 - **Workflow order**: arch → security → impl → qa → commit → push → PR → pr-review
-- **Model routing**: Fork-context skills specify default model in frontmatter `metadata.model`; overridable per-project in `config.yaml`
-- **Effort routing**: Fork-context skills declare `metadata.effort` (low/medium/high/max); overridable per-project
+- **Host execution**: Skills use the current host model, permissions, tools, and delegation mechanism
 - **Holacracy**: Roles have purposes, not personas. Reference roles, not names. External comms use team voice
 
 ## Direction
@@ -95,9 +95,9 @@ What would you explicitly not change about the current approach?
 
 - **Pure Markdown, no build**: The plugin is entirely Markdown files with YAML frontmatter. No compilation, no tests, no CI. [USER]: Why was this approach chosen over a code-based plugin?
 - **Holacracy model**: Roles follow holacracy principles — distributed authority, clear accountabilities, no job titles. [USER]: What drove the choice of holacracy over other team models?
-- **Zero repo footprint**: All outputs go to `~/.claude/circle/projects/` — the plugin never writes to the user's repository. [USER]: What motivated this constraint?
+- **Zero repo footprint**: All outputs go to `~/.circle/projects/` — the plugin never writes to the user's repository. [USER]: What motivated this constraint?
 - **Shape Up planning**: Appetite-based sizing (cappuccino/sandwich/hutspot) and cycle-based planning instead of sprints and story points. [USER]: Why Shape Up over Scrum or Kanban?
-- **Fork context for roles**: Each work role runs in isolated context to prevent cross-phase confusion. [USER]: What problems did shared context cause that led to this?
+- **Host-neutral skills**: Workflow semantics are shared; execution details belong to the current host rather than duplicated skill trees.
 - **Domain-agnostic core with conditional deps**: Core skills are domain-free; domain-specific tools are declared in `deps-manifest.yaml` and auto-detected at init. [USER]: What drove the separation?
 
 [USER]: What other key architectural decisions have been made? Consider: the choice of Claude Code plugin system, the dependency management approach, the Knowledge Pack pattern.

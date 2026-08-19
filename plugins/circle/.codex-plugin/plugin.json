@@ -1,7 +1,7 @@
 {
   "name": "circle",
-  "version": "2.8.1",
-  "description": "Holacracy-based development workflow with distributed roles and quality gates.",
+  "version": "3.0.0",
+  "description": "Universal Agent Skills workflow for Claude Code and Codex with distributed roles and quality gates.",
   "author": {
     "name": "Alessio Roberto",
     "url": "https://github.com/alessioroberto82"

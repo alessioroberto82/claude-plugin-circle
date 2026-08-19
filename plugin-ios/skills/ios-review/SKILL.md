@@ -1,7 +1,7 @@
 ---
 name: ios-review
 description: "iOS Code Review — Platform-specific review using Apple documentation, SwiftUI, Swift Concurrency, and Swift Testing best practices. Auto-activated by /circle:pr-review when iOS markers are detected."
-allowed-tools: Read, Grep, Glob, Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr comment:*), Bash(mkdir -p ~/.claude/circle/*), mcp__cupertino__search, mcp__cupertino__read_document, mcp__cupertino__search_symbols, mcp__cupertino__search_concurrency, mcp__cupertino__search_conformances, mcp__cupertino__search_property_wrappers, mcp__cupertino__list_frameworks
+allowed-tools: Read, Grep, Glob, Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr comment:*), Bash(mkdir -p ~/.circle/*), mcp__cupertino__search, mcp__cupertino__read_document, mcp__cupertino__search_symbols, mcp__cupertino__search_concurrency, mcp__cupertino__search_conformances, mcp__cupertino__search_property_wrappers, mcp__cupertino__list_frameworks
 metadata:
   context: fork
   agent: general-purpose
@@ -280,9 +280,9 @@ For each finding, produce:
 **Save** (always):
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-mkdir -p ~/.claude/circle/projects/$PROJECT_NAME/output/ios-review
+mkdir -p ~/.circle/projects/$PROJECT_NAME/output/ios-review
 ```
-Save to `~/.claude/circle/projects/$PROJECT_NAME/output/ios-review/pr-{number}-{date}.md`.
+Save to `~/.circle/projects/$PROJECT_NAME/output/ios-review/pr-{number}-{date}.md`.
 
 Include the **tools-active summary** in the saved file (not in posted comments — P3-1 security mitigation).
 
@@ -338,7 +338,7 @@ Return findings list to the caller (core pr-review). Do not post to GitHub — p
 Model and effort overridable per-project:
 
 ```yaml
-# ~/.claude/circle/projects/{project}/config.yaml
+# ~/.circle/projects/{project}/config.yaml
 agents:
   ios-review:
     model: sonnet    # default

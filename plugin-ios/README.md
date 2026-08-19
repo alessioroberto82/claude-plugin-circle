@@ -9,7 +9,7 @@ claude plugin marketplace add alessioroberto82/claude-plugin-circle
 claude plugin install circle-ios@circle
 ```
 
-Core `/circle:init` does **not** scan this companion's `deps-manifest.yaml`, so it will not prompt for the dependencies below automatically. Install them directly with the commands listed for each dep, or adapt the core plugin's `resources/scripts/install-deps.sh` against this companion plugin's `resources/deps-manifest.yaml` (resolvable via `${CLAUDE_PLUGIN_ROOT}/resources/deps-manifest.yaml` once the plugin is installed).
+Core `/circle:init` does **not** scan this companion's `deps-manifest.yaml`, so install the optional dependencies directly with the commands listed below.
 
 ## Dependencies
 
@@ -25,7 +25,7 @@ See `resources/deps-manifest.yaml` for full install commands.
 
 ## How dispatch works
 
-The core `circle` plugin's `/circle:pr-review` skill scans installed plugins for `metadata.platform_review: true` in their frontmatter. This skill declares it, along with `platform_markers` (Swift file globs). When any of those globs match a file in the PR diff, this skill is invoked in parallel with the core reviewers. See `docs/extensibility.md` in the core repo for the full contract.
+The core `circle` plugin's `/circle:pr-review` skill scans installed plugins for `metadata.platform_review: true` in their frontmatter. This skill declares it, along with `platform_markers` (Swift file globs). When any of those globs match a file in the PR diff, this skill is invoked in parallel with the core reviewers. See `plugins/circle/resources/extensibility.md` in the core repo for the full contract.
 
 ## License
 

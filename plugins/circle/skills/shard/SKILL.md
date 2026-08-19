@@ -17,7 +17,7 @@ When the Implementer works on TASK-001, it doesn't need to load the entire PRD. 
 
 ## Input
 
-Automatically detect documents to shard in `~/.codex/circle/projects/{project}/output/`.
+Automatically detect documents to shard in `~/.circle/projects/{project}/output/`.
 
 **Session-aware discovery**: If invoked within an orchestrated session (session ID is known from conversation context), look for documents under `sessions/{SESSION_ID}/` first:
 
@@ -34,7 +34,7 @@ If no documents found in either location: "No documents to shard. Run `circle:re
 1. **Derive project paths**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   BASE=~/.codex/circle/projects/$PROJECT_NAME
+   BASE=~/.circle/projects/$PROJECT_NAME
    ```
 
    **If within an orchestrated session** (SESSION_ID is known):
@@ -176,7 +176,7 @@ If no documents found in either location: "No documents to shard. Run `circle:re
 circle:impl TASK-001
 
 # It will read ONLY:
-# - ~/.codex/circle/projects/{project}/shards/tasks/TASK-001.md
+# - ~/.circle/projects/{project}/shards/tasks/TASK-001.md
 # - Any dependencies referenced in the shard (loaded on demand)
 # - NOT: other tasks, full PRD, future work items
 ```

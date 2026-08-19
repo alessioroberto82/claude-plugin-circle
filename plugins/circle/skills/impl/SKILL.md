@@ -12,9 +12,9 @@ You energize the **Implementer** role in the Circle. You implement the solutions
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Follow the design. Iteration over perfection. No gold-plating.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -46,12 +46,12 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read design from `~/.codex/circle/projects/{project}/output/`:
+Read design from `~/.circle/projects/{project}/output/`:
 - Check for: `arch/architecture.md`
 - Also useful: `scope/requirements.md`, `refine/PRD.md`
 - If architecture missing: "Design missing. Run `circle:arch` first."
 
-Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
+Also check for project config: `~/.circle/projects/{project}/config.yaml`
 - If `global_rules` exists, treat EACH entry as a MANDATORY rule with absolute precedence over Circle defaults, skills, and existing patterns — apply them to all code you write.
 - If `extra_instructions` for impl exists, treat each entry as a MANDATORY rule for this session; these take precedence over default behavior.
 - If `context_files` defined, read those for additional context
@@ -59,12 +59,12 @@ Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
 
 ## Progressive Disclosure (Context Sharding)
 
-If directory `~/.codex/circle/projects/{project}/shards/tasks/` exists:
-- Accept parameter: `$ARGUMENTS` (e.g.: TASK-001)
-- Load ONLY the file: `~/.codex/circle/projects/{project}/shards/tasks/$ARGUMENTS.md`
+If directory `~/.circle/projects/{project}/shards/tasks/` exists:
+- Read the task ID from the user's request (e.g. `TASK-001`).
+- Load ONLY the file: `~/.circle/projects/{project}/shards/tasks/{task-id}.md`
 - Do NOT load: other tasks, full PRD, future work items
 - **Benefit**: 90% token reduction, absolute focus on current task
-- **Parallel execution**: When implementing independent tasks in parallel, the orchestrator may pass `isolation: "worktree"` to the subagent mechanism for branch isolation.
+- **Parallel execution**: When implementing independent tasks in parallel, request worktree isolation only if the current host supports it.
 
 ## Domain-Specific Behavior
 
@@ -79,9 +79,9 @@ If directory `~/.codex/circle/projects/{project}/shards/tasks/` exists:
 
 Check `../../resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type. (Core currently has no domain-specific groups; companion plugins — e.g., `circle-ios` — carry their own `deps-manifest.yaml` with platform groups.) For each dependency in a matching group that has a `suggest_in` entry for this role (`impl`), suggest:
 
-> "Consider invoking `/<dep-id>` for <suggest_in text>"
+> "Consider invoking the `<dep-id>` skill for <suggest_in text>"
 
-These are suggestions, not blocks — proceed with or without them. If a suggested skill is not installed, note: "Not installed. Run: `<install_command>` from deps-manifest."
+These are suggestions, not blocks — proceed with or without them. If a suggested integration is unavailable, offer it through the host plugin manager and wait for user confirmation.
 
 ## Process
 
@@ -94,7 +94,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    REPO_ID=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)
    PROJECT_NAME=""
    if [ -n "$REPO_ID" ]; then
-     for c in ~/.codex/circle/projects/*/config.yaml; do
+     for c in ~/.circle/projects/*/config.yaml; do
        grep -qi "repo:.*$REPO_ID" "$c" 2>/dev/null && { PROJECT_NAME=$(basename "$(dirname "$c")"); break; }
      done
    fi
@@ -103,7 +103,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
      [ -n "$COMMON_GIT" ] && PROJECT_NAME=$(basename "$(dirname "$COMMON_GIT")" | tr '[:upper:]' '[:lower:]')
    fi
    PROJECT_NAME=${PROJECT_NAME:-$(basename "$PWD" | tr '[:upper:]' '[:lower:]')}
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/impl
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/impl
    ```
 
 2. **Read architecture and requirements**: Understand what to build and how
@@ -125,7 +125,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 4. **Codebase Survey & Reuse Gate**: Before writing any implementation code, map the ground and decide reuse explicitly. Not optional, not a formality.
 
-   **a) Survey**: For what you're about to build, search (Grep/Glob) for existing implementations, similar logic, and the conventions already in use. Read the files you'll touch — fully, not skimmed.
+   **a) Survey**: For what you're about to build, search for existing implementations, similar logic, and the conventions already in use. Read the files you'll touch — fully, not skimmed.
 
    **b) Reuse decision** — for each significant unit of work, record one:
    - `REUSE <symbol>` — already exists; call it.
@@ -140,7 +140,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    **d) Standards Baseline (MANDATORY)**: Before writing code, run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`: read root `AGENTS.md` and `CLAUDE.md`, matching rules under `.agents/` and `.claude/rules/`, nested standards, and `global_rules`. These are the authoritative baseline — they override Circle defaults and nearby legacy patterns. Record which rule files you loaded in the implementation notes (step 10). No new code before this exists.
 
 5. **Check TDD configuration**:
-   Read `~/.codex/circle/projects/{project}/config.yaml` for `tdd` settings.
+   Read `~/.circle/projects/{project}/config.yaml` for `tdd` settings.
    - If `tdd.enabled: false`: skip to step 6 (test as you go).
    - Otherwise (TDD is enabled by default): check if TDD applies:
      - If non-software domain (general): prompt the user:
@@ -167,18 +167,18 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 9. **Self-Verification**: Read and follow the self-verification protocol in `../../resources/guardrails.md`. Upstream artifact: `arch/architecture.md`. (This is the requirement-traceability check; the coding-standards check is step 8.)
 
-10. **Save implementation notes** to: `~/.codex/circle/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md` — include the `## Standards Compliance` table from step 8 and the loaded rule files from step 4d.
+10. **Save implementation notes** to: `~/.circle/projects/$PROJECT_NAME/output/impl/implementation-notes-{date}.md` — include the `## Standards Compliance` table from step 8 and the loaded rule files from step 4d.
 
 11. **MCP Integration** (if available):
     - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
     - **Linear**: Update issue status, comment on implementation progress
-    - **Codex session summaries**: Search for past implementation patterns.
+    - **available session memory**: Search for past implementation patterns.
 
-12. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+12. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 13. **Handoff**:
    > **Implementer — Complete.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/impl/`
+   > Output saved to: `~/.circle/projects/{project}/output/impl/`
    > Next suggested role: `circle:qa` for testing and validation.
 
 ## Circle Principles

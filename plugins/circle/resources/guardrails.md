@@ -5,7 +5,7 @@
 Before handoff, verify your output covers upstream requirements. This closes the feedback loop between roles and catches gaps before they compound downstream.
 
 ### When to Run
-- **Default**: enabled for all fork-context roles
+- **Default**: enabled for all work roles
 - **Skip if**: project config has `guardrails.self_check: false`
 - **Skip if**: upstream artifact does not exist (graceful degradation — do not block the role)
 
@@ -20,7 +20,7 @@ Before handoff, verify your output covers upstream requirements. This closes the
 | ux | `refine/PRD.md` | Each work item has UX coverage |
 | security | `arch/architecture.md` | Each component has threat analysis |
 
-Read the upstream artifact from `~/.codex/circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
+Read the upstream artifact from `~/.circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
 
 **Digest source (only if enabled)**: if `handoff.digest` is `true` in `config.yaml` AND the upstream role wrote a `handoff-digest.md`, take your checklist from that digest's `## Verifiable items` section instead of re-reading the full upstream doc. If the flag is off or no digest exists, use the full artifact as described above (default behavior). For PR-A this applies to the `arch` role reading `scope/handoff-digest.md`; other roles keep reading the full artifact.
 
@@ -44,7 +44,7 @@ Read the upstream artifact from `~/.codex/circle/projects/{project}/output/`. If
 
 ## Standards Compliance Protocol
 
-Project coding standards are LAW — they are the primary baseline for design and implementation and override Circle defaults, skills, and existing (legacy) patterns. This protocol makes standards ingestion and compliance MANDATORY for the fork-context roles that design or write code (`arch`, `impl`). It is DISTINCT from the Self-Verification Protocol above: that one checks upstream *requirement* coverage; this one checks *coding-standard* compliance.
+Project coding standards are LAW — they are the primary baseline for design and implementation and override Circle defaults, skills, and existing (legacy) patterns. This protocol makes standards ingestion and compliance MANDATORY for roles that design or write code (`arch`, `impl`). It is DISTINCT from the Self-Verification Protocol above: that one checks upstream *requirement* coverage; this one checks *coding-standard* compliance.
 
 ### When to Run
 - **Mandatory** for `arch` and `impl`. Recommended for `qa` and `triage` fixes.

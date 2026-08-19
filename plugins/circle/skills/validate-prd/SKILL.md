@@ -12,9 +12,9 @@ You energize a quality gate in the Circle. Your accountability is to validate PR
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Data over opinions. Measure before claiming success. No gold-plating — validate what matters.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -30,10 +30,10 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - **Required**: resolve the PRD from `refine/` as follows:
-  - If `$ARGUMENTS` is **not** provided: select the most recent `PRD-*.md` file (by modification time). If none exist, fall back to `PRD.md` if present.
-  - If `$ARGUMENTS` **is** provided: use only its basename component as the PRD filename (strip any path separators and `..` segments). Do not allow path traversal — only filenames under `refine/` are allowed.
+  - If the user provides no filename: select the most recent `PRD-*.md` file (by modification time). If none exist, fall back to `PRD.md` if present.
+  - If the user provides a filename: use only its basename component (strip any path separators and `..` segments). Do not allow path traversal — only filenames under `refine/` are allowed.
 - **Optional**: `scope/requirements.md` — enables requirements coverage check
 - **Reference**: `../../resources/templates/software/PRD.md` — template for completeness check
 
@@ -44,7 +44,7 @@ If PRD is missing after applying the discovery rules above: "PRD not found. Run 
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/"$PROJECT_NAME"/output/qa
+   mkdir -p ~/.circle/projects/"$PROJECT_NAME"/output/qa
    ```
 
 2. **Load inputs**: Read the PRD, requirements (if available), and PRD template.
@@ -128,23 +128,23 @@ If PRD is missing after applying the discovery rules above: "PRD not found. Run 
    {If PASS}: Proceed to `circle:arch` for architecture design.
    ```
 
-5. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/qa/prd-validation-report.md`
+5. **Save** to `~/.circle/projects/$PROJECT_NAME/output/qa/prd-validation-report.md`
 
 6. **Handoff**:
 
    **If NEEDS REVISION:**
    > **PRD Validator — NEEDS REVISION.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/qa/prd-validation-report.md`
+   > Output saved to: `~/.circle/projects/{project}/output/qa/prd-validation-report.md`
    > {count} blocker(s) found. Fix and re-run `circle:validate-prd`, or revise with `circle:refine`.
 
    **If PASS with notes:**
    > **PRD Validator — PASS with notes.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/qa/prd-validation-report.md`
+   > Output saved to: `~/.circle/projects/{project}/output/qa/prd-validation-report.md`
    > No blockers. {count} suggestion(s) noted. Proceed to `circle:arch`.
 
    **If PASS:**
    > **PRD Validator — PASS.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/qa/prd-validation-report.md`
+   > Output saved to: `~/.circle/projects/{project}/output/qa/prd-validation-report.md`
    > All checks passed. Proceed to `circle:arch` for architecture design.
 
 ## Circle Principles

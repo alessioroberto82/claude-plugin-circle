@@ -1,5 +1,5 @@
 # Circle — Per-Project Configuration
-# Copy this file to: ~/.codex/circle/projects/<project-name>/config.yaml
+# Copy this file to: ~/.circle/projects/<project-name>/config.yaml
 # All fields are optional.
 
 # Domain override (software, business, personal, or general)
@@ -25,7 +25,7 @@ tdd:
 handoff:
   digest: false
 
-# Per-role context and instructions. Codex uses the current session configuration.
+# Per-role context and instructions. Circle uses the current host session configuration.
 agents:
   arch:
     context_files:

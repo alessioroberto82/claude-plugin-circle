@@ -10,7 +10,7 @@ groups:
         type: plugin
         name: Linear
         description: "Issue tracking and project management"
-        install_note: "Add and connect the Linear plugin through Codex Plugins when needed."
+        install_note: "Add and connect the Linear plugin through the host plugin manager when needed."
         used_by: "scope, arch, impl, qa, ux, refine, facilitate, docs, pr-review, cycle"
 
   extras:
@@ -20,7 +20,7 @@ groups:
         type: plugin
         name: Notion
         description: "Workspace documentation and knowledge management"
-        install_note: "Add and connect the Notion plugin through Codex Plugins when needed."
+        install_note: "Add and connect the Notion plugin through the host plugin manager when needed."
         used_by: "docs"
 
       - id: no-mistakes

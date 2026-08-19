@@ -18,8 +18,8 @@ You are precise, fair, and efficient. You catch real bugs and standard violation
 
 ## Input
 
-Accept parameter: `$ARGUMENTS` — a pull request number, URL, or branch name.
-If no argument is provided, ask the user which PR to review.
+Read the pull request number, URL, or branch name from the user's request and call it `<PR_TARGET>`.
+If no target is provided, ask the user which PR to review.
 
 ## Process
 
@@ -30,10 +30,10 @@ If no argument is provided, ask the user which PR to review.
 Gather all context directly (no subagent needed):
 
 **Step 1 — PR Metadata**:
-Run `gh pr view $ARGUMENTS --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,url` — if closed/draft/merged, stop and explain why. Save `headRefOid` (full SHA), `number`, owner/repo from URL. Save `body` as `pr_body` (the PR description often contains design rationale, linked ADRs, and cross-platform references).
+Run `gh pr view <PR_TARGET> --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,url` — if closed/draft/merged, stop and explain why. Save `headRefOid` (full SHA), `number`, owner/repo from URL. Save `body` as `pr_body` (the PR description often contains design rationale, linked ADRs, and cross-platform references).
 
 **Step 2 — Diff**:
-Run `gh pr diff $ARGUMENTS` — save the full diff text. Extract the set of **changed file paths** from diff headers (lines matching `diff --git a/ b/`). Reject any path containing `..` or starting with `/` (P2-1 path traversal mitigation).
+Run `gh pr diff <PR_TARGET>` — save the full diff text. Extract the set of **changed file paths** from diff headers (lines matching `diff --git a/ b/`). Reject any path containing `..` or starting with `/` (P2-1 path traversal mitigation).
 
 **Step 3 — Root AGENTS.md and CLAUDE.md**:
 Read root `AGENTS.md` and `CLAUDE.md` when present — extract all standards, conventions, and forbidden patterns.
@@ -66,7 +66,7 @@ From the changed file paths (step 2), identify files matching `Docs/Architecture
 **Step 5 — Language Detection & Skill Discovery**:
 
 **5a. Detect project language**:
-Use `Glob` to check for file markers in the repo root:
+Search for these file markers in the repository root:
 
 | Marker | Language/Framework |
 |--------|--------------------|
@@ -100,7 +100,7 @@ Discover installed platform-review skills via the harness's available-skills lis
 3. **Scan available skills**: from the harness-provided skill list, collect skills whose frontmatter declares `metadata.platform_review: true`. Wrap the frontmatter parse for each candidate in a try/catch; on parse error, skip that skill and log `⚠️ Skipped '{skill}' — malformed frontmatter`.
 4. **Match markers against the diff**: for each candidate, read `metadata.platform_markers` (list of glob patterns). Match each glob against the paths from Step 2 using **pure glob matching** — treat patterns as literal match expressions, never pass them to a shell or `eval`. A candidate matches if any of its markers hits any diff path.
 5. **Resolve target**: if one candidate matches, `platform_review_target = <skill-id>`. If multiple match, pick the alphabetically-first by skill id and log `⚠️ Multiple platform-review skills matched: [list]. Using '<chosen>' (alphabetical). Uninstall the one you don't want to silence this.` If none match, `platform_review_target = null`.
-6. **Resolve model/effort** (only when `platform_review_target != null`): dispatched skill's own frontmatter model/effort wins. Fall back to `pr_review.platform_review.model` / `.effort` (or legacy `code_review.platform_review.*`). Final fallback to skill default (`current session` / `medium`).
+6. **Execution settings** (only when `platform_review_target != null`): use the current host session configuration. Do not assume the target skill can select its own model or reasoning level.
 
 **Step 6 — Summary**:
 Summarize: what changed, why, risk areas (2-3 sentences max — internal context, not output). If the PR diff modifies `.agents/` or `.claude/` files, flag this as a heightened-attention area.
@@ -126,26 +126,11 @@ After preflight, you must hold these text blocks:
 
 Agents A and B **always run in parallel** in a single message. Each receives its context as inline text in the prompt — agents must NOT run any bash commands.
 
-If `platform_review_target != null`, dispatch the target skill **in the same message** via the relevant installed skill, passing: PR number, `diff_text`, and `root_claude_md`. The dispatched skill runs with its own `tool availability` — this skill does not hand its tool surface through. The dispatched skill returns findings JSON (see `docs/extensibility.md` for the contract) which is merged into the unified report.
+If `platform_review_target != null`, dispatch the target skill **in the same message** via the relevant installed skill, passing: PR number, `diff_text`, and `root_claude_md`. The dispatched skill runs with its own host-granted capabilities. It returns findings JSON (see `../../resources/extensibility.md` for the contract) which is merged into the unified report.
 
 A and B **always run regardless** of dispatch success or failure — a dispatched skill cannot suppress or replace them. If the relevant installed skill dispatch errors, log `⚠️ Platform dispatch failed: <error>. Running A + B only.` and continue.
 
-**Model & Effort Routing**:
-Read `~/.codex/circle/projects/{project}/config.yaml` (if it exists). Resolve model and effort for each agent independently, in this precedence:
-
-Agent A (standards, bugs, language best practices):
-1. `pr_review.agent_a.model` / `pr_review.agent_a.effort` (current nested keys)
-2. `code_review.agent_a.model` / `code_review.agent_a.effort` (legacy namespace, backward-compat fallback)
-3. `code_review.agent_a_model` (old flat key, backward-compat fallback)
-4. Skill default: `current session` / `medium`
-
-Agent B (security):
-1. `pr_review.agent_b.model` / `pr_review.agent_b.effort` (current nested keys)
-2. `code_review.agent_b.model` / `code_review.agent_b.effort` (legacy namespace, backward-compat fallback)
-3. `code_review.agent_b_model` (old flat key, backward-compat fallback)
-4. Skill default: `current session` / `medium`
-
-Pass `model` **alias** to each subagent mechanism invocation (map: contains "opus"→`"opus"`, "sonnet"→`"sonnet"`, "haiku"→`"haiku"`; precedence: opus > sonnet > haiku). Do **NOT** pass `effort` — the subagent mechanism does not support this parameter ([upstream: anthropics/claude-code#14321](https://github.com/anthropics/claude-code/issues/14321)). Platform-review model resolves separately in step 5c.6 above; same alias mapping applies.
+Use the current host session configuration for Agents A and B. Dispatch them through the host's available delegation mechanism without assuming support for per-agent model or reasoning-level selection.
 
 **Confidence scale** (each agent scores its own findings):
 - **0-25**: Uncertain, might be false positive or pre-existing
@@ -226,7 +211,7 @@ Rules:
 13. EXAMPLES ARE ILLUSTRATIVE, NOT EXHAUSTIVE: A ✅/❌ code sample under a rule shows one instance of compliance/violation, not the full boundary of the rule. If the diff doesn't match the ❌ sample verbatim, that is not evidence of compliance — re-check the diff against the rule's prose text (and every sub-requirement per #12) before concluding "no violation."
 ```
 
-**Tools**: Read, Grep, Glob only. **No Bash.** All diff and metadata are provided in the prompt.
+**Capabilities**: Read and search files only. **Do not run shell commands.** All diff and metadata are provided in the prompt.
 
 ---
 
@@ -268,7 +253,7 @@ Rules:
 3. If unsure, score low — do not inflate confidence.
 ```
 
-**Tools**: Read, Grep, Glob only. **No Bash.** All diff and metadata are provided in the prompt.
+**Capabilities**: Read and search files only. **Do not run shell commands.** All diff and metadata are provided in the prompt.
 
 ---
 
@@ -280,7 +265,7 @@ Invoke the discovered platform skill via the relevant installed skill with the f
 - `diff_text` — full PR diff
 - `root_claude_md` — repo-root AGENTS.md and CLAUDE.md content
 
-The contract the dispatched skill follows is documented in `docs/extensibility.md` — it must return a JSON array of findings with `{category, file, lines, description, source, confidence}` (the same shape Agents A and B produce, so they flow through the same confidence filter). The dispatched skill runs with its own `tool availability` (declared in its own frontmatter); this skill does not extend its tool surface.
+The contract the dispatched skill follows is documented in `../../resources/extensibility.md` — it must return a JSON array of findings with `{category, file, lines, description, source, confidence}` (the same shape Agents A and B produce, so they flow through the same confidence filter). The dispatched skill runs with its own host-granted capabilities; this skill does not extend them.
 
 ### 3. Filter
 
@@ -320,11 +305,11 @@ Found {N} issues:
 2. ...
 
 ---
-Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr}  | Threshold: 90/100 (75 for foundational files)
+Reviewers: Agent A | Agent B{if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
 Context: root AGENTS.md and CLAUDE.md{, .agents/ and .claude/ ({N} files)}{, {N} nested AGENTS.md and CLAUDE.md files}{, {N} language skills}
 {truncation_warning if applicable}
 
-Generated with [Codex](https://openai.com/codex/) | Circle PR Review
+Generated with Circle | Circle PR Review
 
 <sub>If this review was useful, react with +1. Otherwise, react with -1.</sub>
 ```
@@ -337,10 +322,10 @@ Generated with [Codex](https://openai.com/codex/) | Circle PR Review
 No issues found. Checked for bugs, security, AGENTS.md or CLAUDE.md compliance{if platform_review_target: ", and platform best practices via " + platform_review_target}.
 
 ---
-Agent A: {model_a} | Agent B: {model_b}{if platform_review_target: " | " + platform_review_target + ": " + model_pr}  | Threshold: 90/100 (75 for foundational files)
+Reviewers: Agent A | Agent B{if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
 Context: root AGENTS.md and CLAUDE.md{, .agents/ and .claude/ ({N} files)}{, {N} nested AGENTS.md and CLAUDE.md files}{, {N} language skills}
 
-Generated with [Codex](https://openai.com/codex/) | Circle PR Review
+Generated with Circle | Circle PR Review
 ```
 
 **Source formatting by category**:
@@ -365,10 +350,10 @@ When citing `.agents/` or `.claude/` documents, reference the filename and secti
 
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/pr-review
+mkdir -p ~/.circle/projects/$PROJECT_NAME/output/pr-review
 ```
 
-Save summary to `~/.codex/circle/projects/$PROJECT_NAME/output/pr-review/pr-{number}-{date}.md`.
+Save summary to `~/.circle/projects/$PROJECT_NAME/output/pr-review/pr-{number}-{date}.md`.
 
 The saved summary must include a **Near Misses** section for findings that were filtered but scored close to the threshold. This section is **never posted** to GitHub — it exists only in the local summary.
 
@@ -386,14 +371,14 @@ Include findings where `confidence >= 75` but below the applicable threshold (90
 
 **MCP Integration** (if available):
 - **Linear**: Comment review summary on linked issues
-- **Codex session summaries**: Search for past review patterns.
+- **available session memory**: Search for past review patterns.
 
-**Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+**Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 > **PR Review — Complete.**
 > PR #{number} reviewed. {N} issues found (threshold: 90/100, 75 for foundational files).
 > Context: root AGENTS.md and CLAUDE.md{, .agents/ and .claude/ ({N} files)}{, {N} nested AGENTS.md and CLAUDE.md files}{, {N} language skills}
-> Agents: A={model_a}, B={model_b}{if platform_review_target: ", " + platform_review_target + "=" + model_pr}
+> Reviewers: Agent A, Agent B{if platform_review_target: ", " + platform_review_target}
 
 ## False Positive Guide
 

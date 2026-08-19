@@ -45,9 +45,9 @@ Detect the project domain by analyzing files in the current directory:
 - **personal**: if `goals.md`, `journal.md`, or `habits/` folder exists
 - **general**: default if no domain indicator found
 
-## Codex delegation
+## Host delegation
 
-All Circle roles use the current Codex session configuration. Delegate only independent, bounded work using the available subagent mechanism. Preserve the sequence, quality gates, and human checkpoints; do not select a model or reasoning level per role.
+All Circle roles use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism. Preserve the sequence, quality gates, and human checkpoints; do not select a model or reasoning level per role.
 
 ---
 
@@ -58,10 +58,10 @@ All Circle roles use the current Codex session configuration. Delegate only inde
 **Derive project name**:
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-BASE=~/.codex/circle/projects/$PROJECT_NAME
+BASE=~/.circle/projects/$PROJECT_NAME
 ```
 
-**Defensive v1 migration**: Read `$BASE/output/session-state.json` if it exists. If the `version` field is absent or `1`, run the v1 → v2 migration algorithm (see `init/SKILL.md` step 4). This covers upgrades where the user did not re-run `circle:init`.
+**Defensive v1 migration**: Read `$BASE/output/session-state.json` if it exists. If the `version` field is absent or `1`, run the v1 → v2 migration algorithm (see `../init/SKILL.md` step 4). This covers upgrades where the user did not re-run `circle:init`.
 
 **Check existing sessions**:
 - Read `$BASE/output/session-state.json`
@@ -186,7 +186,7 @@ Output: sessions/{SESSION_ID}/{role}/{filename}
 
 Please invoke the role:
 → circle:{name}
-Tell the role to write output to: ~/.codex/circle/projects/{project}/output/sessions/{SESSION_ID}/{role}/
+Tell the role to write output to: ~/.circle/projects/{project}/output/sessions/{SESSION_ID}/{role}/
 
 After completion, type one of:
   next  — proceed to next step
@@ -243,7 +243,7 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 
 ### Resume Logic
 
-When `$ARGUMENTS` contains "resume":
+When the user asks to resume:
 1. Read `$BASE/output/session-state.json`
 2. Filter `sessions` for entries where `type == "greenfield"` (exclude completed/cleaned-up sessions)
 3. If 0 matches: "No active greenfield sessions. Start with `circle:greenfield`"
@@ -261,10 +261,10 @@ When `$ARGUMENTS` contains "resume":
 
 ### Status Logic
 
-When `$ARGUMENTS` contains "status":
+When the user asks for status:
 1. Read `$BASE/output/session-state.json`
 2. Filter `sessions` for entries where `type == "greenfield"`
-3. If `$ARGUMENTS` contains a session ID after "status" (e.g., `status ENG-42`): show detailed view for that session
+3. If the request includes a session ID after "status" (e.g., `status ENG-42`): show detailed view for that session
 4. Otherwise, display summary table of all active greenfield sessions:
 
 ```
@@ -315,7 +315,7 @@ After the validate-prd step:
    PRD VALIDATION GATE FAILED
    The PRD Validator found blocking issues.
 
-   Review: ~/.codex/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/prd-validation-report.md
+   Review: ~/.circle/projects/{project}/output/sessions/{SESSION_ID}/qa/prd-validation-report.md
 
    Fix the issues with circle:refine, then re-run circle:validate-prd.
    ```
@@ -331,7 +331,7 @@ After the security review step:
    - `personal` → `privacy-audit.md`
    - any other / unknown → `security-audit.md` (fallback)
 
-   This must match the filename written by the `security` skill (see `security/SKILL.md` Domain-Specific Behavior).
+   This must match the filename written by the `security` skill (see `../security/SKILL.md` Domain-Specific Behavior).
 2. Read `$BASE/output/sessions/{SESSION_ID}/security/{filename}`
 3. If the document contains "P0" severity issues:
    ```
@@ -339,7 +339,7 @@ After the security review step:
    P0 critical issues found in security audit.
    These MUST be resolved before implementation.
 
-   Review: ~/.codex/circle/projects/{project}/output/sessions/{SESSION_ID}/security/{filename}
+   Review: ~/.circle/projects/{project}/output/sessions/{SESSION_ID}/security/{filename}
 
    Resolve the issues, then type 'next' to re-run security review.
    ```
@@ -354,14 +354,14 @@ After the Quality Guardian's final verification:
    - `personal` → `progress-report`
    - any other / unknown → `test-report` (fallback)
 
-   This must match the prefix written by the `qa` skill (see `qa/SKILL.md` Domain-Specific Behavior). The skill writes `{prefix}-{date}.md`.
+   This must match the prefix written by the `qa` skill (see `../qa/SKILL.md` Domain-Specific Behavior). The skill writes `{prefix}-{date}.md`.
 2. Locate the most recent report under `$BASE/output/sessions/{SESSION_ID}/qa/{prefix}-*.md` (highest mtime, or fall back to lexicographic sort on `{date}` since the skill uses ISO-style date stamps).
 3. If verdict is "REJECT":
    ```
    QA GATE FAILED
    The Quality Guardian has rejected the implementation.
 
-   Review: ~/.codex/circle/projects/{project}/output/sessions/{SESSION_ID}/qa/{report-filename}
+   Review: ~/.circle/projects/{project}/output/sessions/{SESSION_ID}/qa/{report-filename}
 
    Fix the issues with circle:impl, then re-run QA.
    ```
@@ -428,7 +428,7 @@ When all steps are completed:
    Session: {SESSION_ID}
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    All phases completed successfully.
-   Summary: ~/.codex/circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md
+   Summary: ~/.circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md
    Session artifacts cleaned up.
 
    Only code changes need to be committed to Git.
@@ -468,6 +468,7 @@ When shards exist and the impl step is reached, the orchestrator can launch inde
 Parallel impl activates only when ALL of these are true:
 1. `shards/sessions/{SESSION_ID}/tasks/` directory exists with ≥2 task files
 2. `parallel.enabled` is not `false` in config.yaml (default: true)
+3. The current host supports isolated worktree delegation
 
 When either condition fails, fall back to sequential impl (current behavior, no warning).
 
@@ -494,10 +495,10 @@ When either condition fails, fall back to sequential impl (current behavior, no 
    ```
 
 2. For each wave:
-   a. Launch `min(wave_size, parallel.max_agents)` subagents in a single message:
-      - Each with `isolation: "worktree"`
+   a. Launch `min(wave_size, parallel.max_agents)` delegates in one wave:
+      - Request worktree isolation through the host's supported mechanism
       - Each with prompt: `circle:impl TASK-xxx`
-      - Each uses the current Codex session configuration.
+      - Each uses the current host session configuration.
    b. Wait for all agents in the wave to complete
    c. For each completed agent, merge into the feature branch:
       ```

@@ -65,7 +65,7 @@ ships in the same release as companion v1.0.0.
 - LLM-level discovery is a fragile surface — mitigated by graceful fallback to
   Agents A + B on any dispatch failure.
 - Companion plugin authors must follow the frontmatter contract — mitigated by
-  documenting it in `docs/extensibility.md` and adding a lint check as follow-up.
+  documenting it in `plugin/resources/extensibility.md` and adding a lint check as follow-up.
 
 ## Migration (v1.8.x / v1.9.x → v2.0.0)
 
@@ -83,5 +83,5 @@ See `docs/CHANGELOG.md` → v2.0.0 → `### BREAKING` for the full list.
 
 ## Extensibility contract
 
-See `docs/extensibility.md`. Summary: one frontmatter key, one glob list, one
+See `plugin/resources/extensibility.md`. Summary: one frontmatter key, one glob list, one
 SKILL.md — no core changes needed.
