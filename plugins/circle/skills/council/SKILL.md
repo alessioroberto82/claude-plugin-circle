@@ -73,7 +73,7 @@ Read available project context to ground the advisors. **Stop reading once cumul
 
 Read in this order, skipping anything missing:
 
-1. **`AGENTS.md or CLAUDE.md`** at the project root (use the `Read` tool). Extract hard constraints, conventions, and forbidden patterns.
+1. **`AGENTS.md` and `CLAUDE.md`** at the project root, when present. Extract hard constraints, conventions, and forbidden patterns.
 2. **Active session artifacts** — if a greenfield session is active, glob for:
    - `$BASE/output/sessions/*/scope/requirements.md`
    - `$BASE/output/sessions/*/refine/PRD-*.md` (most recent by name)

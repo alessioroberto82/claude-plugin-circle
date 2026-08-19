@@ -53,11 +53,11 @@ Project coding standards are LAW — they are the primary baseline for design an
 
 ### Step 1 — Standards Ingestion (MANDATORY)
 Read the following, in order, and treat them as the authoritative baseline:
-1. Root `CLAUDE.md`. If it is only an import shim (e.g. a line like `@AGENTS.md`), follow the import and read the target file.
-2. Root `AGENTS.md` (if present).
-3. `Glob(".claude/rules/*.md")` — load every rule file whose YAML frontmatter `paths:` globs match the files in scope (for `impl`: the files being changed; for `arch`: the feature's target area). When in doubt, load them all.
+1. Root `AGENTS.md` (if present).
+2. Root `CLAUDE.md` (if present). If it is only an import shim (e.g. a line like `@AGENTS.md`), follow the import without loading the same content twice.
+3. Rules under `.agents/` and `.claude/rules/` whose YAML frontmatter `paths:` globs match the files in scope (for `impl`: the files being changed; for `arch`: the feature's target area). When in doubt, load them all.
 4. Nested `CLAUDE.md` / `AGENTS.md` in any directory touched by the work, tagged with their scope.
-5. Any other `.claude/**/*.md` project-standards docs.
+5. Any other Markdown project-standards docs under `.agents/` or `.claude/`.
 
 A standard may carry a scope tag — `Overall codebase` (applies to all touched code) vs `New code` (applies only to added/modified lines). Respect the tag. If the project defines `global_rules` in `config.yaml`, treat each entry as a MANDATORY rule with absolute precedence (see the role's Input Prerequisites).
 
@@ -66,7 +66,7 @@ Append a `## Standards Compliance` section to your output document (`architectur
 
 | Standard (source § heading) | Status | Evidence |
 |---|---|---|
-| `.claude/rules/architecture.md` § Use Dependency Injection | ✅/⚠️/❌ | `file:line` — how it complies, or where/how it violates |
+| `.agents/rules/architecture.md` § Use Dependency Injection | ✅/⚠️/❌ | `file:line` — how it complies, or where/how it violates |
 
 - ✅ **Compliant** — explicitly satisfied, with `file:line` evidence.
 - ⚠️ **Partial / at-risk** — satisfied loosely, or not verifiable.

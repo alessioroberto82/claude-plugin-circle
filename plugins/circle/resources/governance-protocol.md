@@ -84,7 +84,7 @@ When the count reaches **2 or more uses**:
    - Create directory: `~/.codex/circle/projects/{project}/skills/<name>/`
    - Write `~/.codex/circle/projects/{project}/skills/<name>/SKILL.md` with all standard blocks (frontmatter, soul.md, domain detection, config, process, tension sensing)
    - Use `../../` for all resource paths (never hardcode absolute paths)
-   - Instruct the user to copy the file to `plugin/skills/<name>/` in the repo if they want to persist it in version control
+   - Instruct the user to copy the file to `plugins/circle/skills/<name>/` in the repo if they want to persist it in version control
    - Set `promoted: true` in the session state entry for this role
 3. **If rejected**: Do not suggest again in this session
 

@@ -1,3 +1,8 @@
+---
+description: Show the Circle workflow status for the current project.
+allowed-tools: Read, Glob, Bash
+---
+
 # Circle — Status Dashboard
 
 Show the status of the Circle framework for the current project.

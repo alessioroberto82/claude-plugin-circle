@@ -137,7 +137,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
    **c) Record it** in the implementation notes (step 10) under a "Reuse Survey" heading. No new code before this exists.
 
-   **d) Standards Baseline (MANDATORY)**: Before writing code, run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`: read root `AGENTS.md or CLAUDE.md`/`AGENTS.md`, the `.agents or .claude/rules/*.md` whose `paths` frontmatter matches the files you will touch, nested standards, and `global_rules`. These are the authoritative baseline — they override Circle defaults and nearby legacy patterns. Record which rule files you loaded in the implementation notes (step 10). No new code before this exists.
+   **d) Standards Baseline (MANDATORY)**: Before writing code, run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`: read root `AGENTS.md` and `CLAUDE.md`, matching rules under `.agents/` and `.claude/rules/`, nested standards, and `global_rules`. These are the authoritative baseline — they override Circle defaults and nearby legacy patterns. Record which rule files you loaded in the implementation notes (step 10). No new code before this exists.
 
 5. **Check TDD configuration**:
    Read `~/.codex/circle/projects/{project}/config.yaml` for `tdd` settings.

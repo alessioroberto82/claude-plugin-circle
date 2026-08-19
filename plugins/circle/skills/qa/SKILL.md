@@ -99,16 +99,16 @@ Run when invoked with `circle:qa lint`. Validates internal consistency of the Ci
    mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/qa
    ```
 
-2. **Discover skill inventory**: Glob `plugin/skills/*/SKILL.md` to get the authoritative list of skills. This is the source of truth for all checks.
+2. **Discover skill inventory**: Find `plugins/circle/skills/*/SKILL.md` to get the authoritative list of Codex skills. This is the source of truth for all checks.
 
 3. **Run checks** (parallelize where possible):
 
    **Check 1 — Skill Registry Sync**
    Verify every skill appears in all hub files:
    - `README.md` (The Circle + Review + Orchestrators + Utilities tables)
-   - `plugin/commands/circle.md` (dashboard)
-   - `plugin/skills/init/SKILL.md` (confirmation output)
-   - `plugin/skills/greenfield/SKILL.md` (role sequence table)
+   - `plugins/circle/skills/status/SKILL.md` (dashboard)
+   - `plugins/circle/skills/init/SKILL.md` (confirmation output)
+   - `plugins/circle/skills/greenfield/SKILL.md` (role sequence table)
    - `docs/GETTING-STARTED.md` (circle table + commands table)
    Flag: missing entries = P1, extra/stale entries = P1
 
@@ -139,12 +139,13 @@ Flag: missing or malformed required frontmatter = P1
    Verify docs reflect current state:
    - `docs/GETTING-STARTED.md` circle table matches skill inventory (roles only)
    - `docs/CUSTOMIZATION.md` domain values are the canonical set: `software`, `business`, `personal`, `general`
-   - The dashboard command (`plugin/commands/circle.md`) uses the same 4-domain detection block as the role skills
+   - The dashboard skill (`plugins/circle/skills/status/SKILL.md`) uses the same 4-domain detection block as the role skills
    - `README.md` output directory tree matches `init` mkdir list
+   - `python3 scripts/sync_shared_resources.py --check` passes
    Flag: stale doc = P1
 
    **Check 6 — Version Alignment**
-   - ``.codex-plugin/plugin.json` version is valid semver` version
+   - `.codex-plugin/plugin.json` has a valid semver version
    Flag: mismatch = P1
 
    **Check 7 — Domain-Agnostic Core**

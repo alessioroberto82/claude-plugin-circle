@@ -34,6 +34,8 @@ docs/                                  # CHANGELOG.md, CUSTOMIZATION.md, GETTING
 
 **Scripts mirror manifest**: `install-deps.sh` and `update-deps.sh` have hardcoded arrays — they do NOT parse `deps-manifest.yaml`. Any dep change must update both scripts AND the manifest.
 
+**Shared resources**: The files listed in `scripts/sync_shared_resources.py` are canonical in `plugin/resources/`. Run the script after editing them and run it with `--check` before release. Skills and provider-specific resources remain separate.
+
 **Version bump**: After feature work, update version in `plugin.json` and add a release entry to `docs/CHANGELOG.md`. After merge, sync `marketplace.json` AND Luscii/claude-marketplace. Three places must match for core (`plugin/.claude-plugin/plugin.json`, `circle` entry in `marketplace.json`, Luscii); four when the companion is touched (`plugin-ios/.claude-plugin/plugin.json` mirrors its `marketplace.json` entry).
 
 **Workflow order**: arch → security (P0 blocks impl) → impl (simplicity assessment first) → qa (coherence check + REJECT loops to impl) → commit → push → PR → pr-review. Never suggest `/circle:pr-review` before a PR exists.

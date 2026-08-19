@@ -122,7 +122,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    - Map dependencies (internal and external)
    - Understand the current state before proposing changes
 
-3b. **Standards Baseline (MANDATORY)**: Run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`. Read the project's coding standards — root `AGENTS.md or CLAUDE.md`/`AGENTS.md`, the `.agents or .claude/rules/*.md` whose `paths` frontmatter matches the feature's target area, nested standards, and `global_rules` — and treat them as the authoritative baseline. Your design MUST conform: where a standard forces a choice (DI container, MV vs screen-level ViewModel, protocol dependencies, no singletons, design tokens, localization, persistence/migration, test framework), the standard wins over convenience or nearby legacy code. Proximity to legacy is not a licence to extend it.
+3b. **Standards Baseline (MANDATORY)**: Run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`. Read the project's coding standards — root `AGENTS.md` and `CLAUDE.md`, matching rules under `.agents/` and `.claude/rules/`, nested standards, and `global_rules` — and treat them as the authoritative baseline. Your design MUST conform: where a standard forces a choice (DI container, MV vs screen-level ViewModel, protocol dependencies, no singletons, design tokens, localization, persistence/migration, test framework), the standard wins over convenience or nearby legacy code. Proximity to legacy is not a licence to extend it.
 
 4. **Evaluate alternatives**: For each significant decision, consider 2-3 options with trade-offs
 
