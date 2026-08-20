@@ -12,9 +12,9 @@ You energize the **Quality Guardian** role in the Circle. You ensure quality thr
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Data over opinions. Measure before claiming success. Speak up about risks.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -30,7 +30,7 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - Requirements: `scope/requirements.md` or `refine/PRD.md`
 - Architecture: `arch/architecture.md`
 - Implementation notes: `impl/implementation-notes-*.md`
@@ -53,9 +53,9 @@ Read from `~/.codex/circle/projects/{project}/output/`:
 
 Check `../../resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type. (Core currently has no domain-specific groups; companion plugins — e.g., `circle-ios` — carry their own `deps-manifest.yaml` with platform groups.) For each dependency in a matching group that has a `suggest_in` entry for this role (`qa`), suggest:
 
-> "Consider invoking `/<dep-id>` for <suggest_in text>"
+> "Consider invoking the `<dep-id>` skill for <suggest_in text>"
 
-These are suggestions, not blocks — proceed with or without them. If a suggested skill is not installed, note: "Not installed. Run: `<install_command>` from deps-manifest."
+These are suggestions, not blocks — proceed with or without them. If a suggested integration is unavailable, offer it through the host plugin manager and wait for user confirmation.
 
 ### Business Strategy
 **Focus**: Initiative validation, success criteria verification, risk scenario testing
@@ -85,7 +85,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
 
 ### Mode Selection
 
-- If `$ARGUMENTS` contains "lint": run **Plugin Lint Mode**
+- If the user asks for "lint": run **Plugin Lint Mode**
 - If implementation exists and needs verification: run **Verification Mode**
 - Otherwise: run **Test Planning Mode**
 
@@ -96,20 +96,20 @@ Run when invoked with `circle:qa lint`. Validates internal consistency of the Ci
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/qa
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/qa
    ```
 
-2. **Discover skill inventory**: Glob `plugin/skills/*/SKILL.md` to get the authoritative list of skills. This is the source of truth for all checks.
+2. **Discover skill inventory**: Find `plugins/circle/skills/*/SKILL.md` to get the authoritative list of Circle skills. This is the source of truth for all checks.
 
 3. **Run checks** (parallelize where possible):
 
    **Check 1 — Skill Registry Sync**
-   Verify every skill appears in all hub files:
+   Verify every skill appears in the complete inventories:
    - `README.md` (The Circle + Review + Orchestrators + Utilities tables)
-   - `plugin/commands/circle.md` (dashboard)
-   - `plugin/skills/init/SKILL.md` (confirmation output)
-   - `plugin/skills/greenfield/SKILL.md` (role sequence table)
+   - `plugins/circle/skills/status/SKILL.md` (dashboard)
+   - `plugins/circle/skills/init/SKILL.md` (confirmation output)
    - `docs/GETTING-STARTED.md` (circle table + commands table)
+   Verify only workflow roles and phases against `plugins/circle/skills/greenfield/SKILL.md`.
    Flag: missing entries = P1, extra/stale entries = P1
 
    **Check 2 — Frontmatter Validation**
@@ -117,13 +117,13 @@ Run when invoked with `circle:qa lint`. Validates internal consistency of the Ci
    - Starts and ends its YAML frontmatter with `---`
    - Has `name:` matching the directory name
    - Has a clear `description:`
-   - Does not depend on Claude-specific frontmatter, model routing, or tool allowlists
+   - Uses only the Agent Skills `name` and `description` frontmatter fields
 Flag: missing or malformed required frontmatter = P1
 
    **Check 3 — Command Prefix**
-   Grep all `.md` files for bare command references that should use `circle:<name>`:
+   Search all `.md` files for bare command references that should use `circle:<name>`:
    - In user-facing text (handoff messages, error messages, post-workflow instructions)
-   - Exception: inside `the Circle plugin root` paths, dependency script paths, and config key names (e.g., `arch:` in YAML)
+   - Exception: inside Circle plugin paths and config key names (e.g., `arch:` in YAML)
    - Exception: prose references in skill body where the skill is providing a Circle invocation example (e.g., "Run `circle:scope` first")
    Flag: bare command in user-facing output = P2
 
@@ -139,23 +139,23 @@ Flag: missing or malformed required frontmatter = P1
    Verify docs reflect current state:
    - `docs/GETTING-STARTED.md` circle table matches skill inventory (roles only)
    - `docs/CUSTOMIZATION.md` domain values are the canonical set: `software`, `business`, `personal`, `general`
-   - The dashboard command (`plugin/commands/circle.md`) uses the same 4-domain detection block as the role skills
+   - The dashboard skill (`plugins/circle/skills/status/SKILL.md`) uses the same 4-domain detection block as the role skills
    - `README.md` output directory tree matches `init` mkdir list
    Flag: stale doc = P1
 
    **Check 6 — Version Alignment**
-   - ``.codex-plugin/plugin.json` version is valid semver` version
+   - `plugins/circle/.claude-plugin/plugin.json` and `plugins/circle/.codex-plugin/plugin.json` have the same valid semver version
    Flag: mismatch = P1
 
    **Check 7 — Domain-Agnostic Core**
-   Grep SKILL.md files for domain-specific tool names (e.g., "Cupertino", "SwiftUI Expert", "Swift LSP") outside allowed sections:
+   Search SKILL.md files for domain-specific tool names (e.g., "Cupertino", "SwiftUI Expert", "Swift LSP") outside allowed sections:
    - Allowed: `## MCP Integration` sections, `deps-manifest.yaml`, `init`, `triage`
    - Forbidden: anywhere else in SKILL.md body
    Flag: domain leak = P1
 
    **Check 8 — Deps Manifest Sync**
-   Verify every suggested integration is optional, expressed in Codex terms, and never has an automatic install command.
-Flag: an automatic or Claude-specific install instruction = P1
+   Verify every suggested integration is optional, host-neutral, and never has an automatic install command.
+Flag: an automatic or host-specific install instruction = P1
 
 4. **Generate lint report**:
    ```markdown
@@ -193,13 +193,13 @@ Flag: an automatic or Claude-specific install instruction = P1
    - P1 but no P0 → **PASS with warnings**
    - Only P2 or clean → **PASS**
 
-6. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/qa/plugin-lint-{date}.md`
+6. **Save** to `~/.circle/projects/$PROJECT_NAME/output/qa/plugin-lint-{date}.md`
 
 7. **Handoff**:
    > **Quality Guardian — Plugin Lint Complete.**
    > Verdict: **{PASS/PASS with warnings/FAIL}**
    > Issues: {P0 count} critical, {P1 count} important, {P2 count} cosmetic
-   > Output saved to: `~/.codex/circle/projects/{project}/output/qa/plugin-lint-{date}.md`
+   > Output saved to: `~/.circle/projects/{project}/output/qa/plugin-lint-{date}.md`
    > {If FAIL: "P0 issues must be resolved before release."}
 
 ---
@@ -209,7 +209,7 @@ Flag: an automatic or Claude-specific install instruction = P1
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/qa
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/qa
    ```
 
 2. **Analyze requirements**: Map each requirement to test scenarios
@@ -240,7 +240,7 @@ Flag: an automatic or Claude-specific install instruction = P1
    {Minimum coverage targets}
    ```
 
-4. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/qa/{plan-filename}-{date}.md` where `{plan-filename}` is `test-plan` (software), `validation-plan` (business), or `progress-plan` (personal)
+4. **Save** to `~/.circle/projects/$PROJECT_NAME/output/qa/{plan-filename}-{date}.md` where `{plan-filename}` is `test-plan` (software), `validation-plan` (business), or `progress-plan` (personal)
 
 ### Verification Mode (after implementation)
 
@@ -276,7 +276,7 @@ Flag: an automatic or Claude-specific install instruction = P1
    - If only P2/P3: verdict is **PASS**
 
 5. **TDD Compliance Check**:
-   Read `~/.codex/circle/projects/{project}/config.yaml` for `tdd` settings.
+   Read `~/.circle/projects/{project}/config.yaml` for `tdd` settings.
    TDD is enabled by default — only skip this check if `tdd.enabled: false`.
 
    When TDD is enabled:
@@ -344,18 +344,18 @@ Flag: an automatic or Claude-specific install instruction = P1
 
 7. **Self-Verification**: Read and follow the self-verification protocol in `../../resources/guardrails.md`. Upstream artifact: `scope/requirements.md` or `refine/PRD.md`.
 
-8. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/qa/{report-filename}-{date}.md` where `{report-filename}` is `test-report` (software), `validation-report` (business), or `progress-report` (personal)
+8. **Save** to `~/.circle/projects/$PROJECT_NAME/output/qa/{report-filename}-{date}.md` where `{report-filename}` is `test-report` (software), `validation-report` (business), or `progress-report` (personal)
 
 9. **MCP Integration** (if available):
    - **Linear**: Link test results to issues, comment on verification outcomes
-   - **Codex session summaries**: Search for past test patterns.
+   - **available session memory**: Search for past test patterns.
 
-10. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+10. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 11. **Handoff**:
    > **Quality Guardian — Complete.**
    > Verdict: **{PASS/CONDITIONAL PASS/REJECT}**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/qa/`
+   > Output saved to: `~/.circle/projects/{project}/output/qa/`
    > {If REJECT: "P0 issues must be resolved. Run `circle:impl` to fix."}
    > {If PASS: "Ready for merge. Commit, push, and create a PR. Then run `circle:pr-review <PR>` for multi-agent review with AGENTS.md or CLAUDE.md compliance."}
 

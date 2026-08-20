@@ -1,11 +1,9 @@
 # circle-ios — Dependency Manifest
 # Single source of truth for iOS platform-review dependencies.
 # Reference for: ios-review skill.
-# NOTE: Shell scripts (install-deps.sh, update-deps.sh) in the core `circle`
-# plugin do not parse this file. The core `circle` plugin no longer carries
-# iOS deps; this companion plugin owns them.
+# The core plugin does not parse this file; this companion owns its iOS deps.
 #
-# Override per-project in ~/.claude/circle/projects/<project>/config.yaml
+# Override per-project in ~/.circle/projects/<project>/config.yaml
 # under the "dependencies:" key.
 #
 # All dependencies are OPTIONAL. The ios-review skill degrades gracefully

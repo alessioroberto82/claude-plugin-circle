@@ -1,12 +1,6 @@
 # Circle for Codex
 
-## Layout
-
-- `plugin/` is the Claude Code implementation.
-- `plugins/circle/` is the Codex implementation.
-- `.agents/plugins/marketplace.json` exposes the Codex implementation as `circle@circle`.
-
-The two implementations are deliberately versioned side by side. Do not replace the Codex directory with a raw copy of `plugin/`: Codex uses different manifest fields, skill frontmatter, output paths, and delegation instructions.
+Circle uses one universal Agent Skills implementation in `plugins/circle/`. Claude Code and Codex have separate manifests in that directory, but share every core skill and resource.
 
 ## Install from a local checkout
 
@@ -17,9 +11,7 @@ codex plugin add circle@circle
 
 Start a new Codex thread after installation so it discovers the updated skills.
 
-## Update Circle for Codex
-
-When a change in `plugin/` affects a Circle workflow or shared resource, port the equivalent behavior to `plugins/circle/`. Then run:
+## Validate and reload during development
 
 ```bash
 python3 "$HOME/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py" plugins/circle
@@ -27,4 +19,4 @@ python3 "$HOME/.codex/skills/.system/plugin-creator/scripts/update_plugin_cacheb
 codex plugin add circle@circle
 ```
 
-The cachebuster preserves the semantic version and lets Codex reload the locally updated plugin. Keep the public version aligned with the Claude Code release when the two implementations have equivalent user-visible behavior.
+The cachebuster preserves the semantic version while letting Codex reload local changes. Keep both plugin manifests and the versioned Claude marketplace entry on the same public version.

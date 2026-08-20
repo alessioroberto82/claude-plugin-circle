@@ -10,20 +10,20 @@ If you just want to tweak how Circle works for your project, here are the most c
 |---|---|
 | **Make Circle understand your project** | **Create a Knowledge Pack (see Section 1 below)** |
 | Give a role extra instructions for your project | Create a config file (see Section 2 below) |
-| Change the team's working principles | Edit `plugin/resources/soul.md` — plain text, takes effect immediately |
-| Add a document template for the Documentation Steward | Drop a `.md` file in `plugin/resources/templates/docs/` |
+| Change the team's working principles | Edit `plugins/circle/resources/soul.md` — plain text, takes effect immediately |
+| Add a document template for the Documentation Steward | Drop a `.md` file in `plugins/circle/resources/templates/docs/` |
 | Add a new role to the circle | Create a folder and skill file (see Section 3 below) |
 
 ## Customization Layers
 
 | Layer | What | Where | Friction |
 |---|---|---|---|
-| **Soul** | Team principles | `plugin/resources/soul.md` | Edit file, instant effect |
+| **Soul** | Team principles | `plugins/circle/resources/soul.md` | Edit file, instant effect |
 | **Knowledge Pack** | Project-aware roles | `docs/circle/` in your repo | Create Markdown files |
-| **Per-project config** | Role overrides, templates | `~/.claude/circle/projects/<project>/config.yaml` | Create YAML file |
-| **Role behavior** | Role definitions | `plugin/skills/<name>/SKILL.md` | Edit SKILL.md |
-| **Templates** | Document templates | `plugin/resources/templates/` | Drop .md file |
-| **New role** | Add a circle member | `plugin/skills/<name>/SKILL.md` | Create directory + file |
+| **Per-project config** | Role overrides, templates | `~/.circle/projects/<project>/config.yaml` | Create YAML file |
+| **Role behavior** | Role definitions | `plugins/circle/skills/<name>/SKILL.md` | Edit SKILL.md |
+| **Templates** | Document templates | `plugins/circle/resources/templates/` | Drop .md file |
+| **New role** | Add a circle member | `plugins/circle/skills/<name>/SKILL.md` | Create directory + file |
 | **PR review** | PR review with CLAUDE.md compliance | `/circle:pr-review <PR>` | Invoke on any open PR |
 
 ---
@@ -124,7 +124,7 @@ agents:
 
 ### Step 3: Activate
 
-Run `/circle:init`. It detects the config template at `docs/circle/config.yaml` and copies it to `~/.claude/circle/projects/<project>/config.yaml`. Every Circle role now loads project knowledge automatically.
+Run `/circle:init`. It detects the config template at `docs/circle/config.yaml` and copies it to `~/.circle/projects/<project>/config.yaml`. Every Circle role now loads project knowledge automatically.
 
 New team members: clone the repo → `/circle:init` → done.
 
@@ -141,7 +141,7 @@ New team members: clone the repo → `/circle:init` → done.
 
 This is a settings file that tells Circle roles how to behave differently for a specific project. You can create it manually or use a Knowledge Pack config template (see above).
 
-Create `~/.claude/circle/projects/<project-name>/config.yaml`:
+Create `~/.circle/projects/<project-name>/config.yaml`:
 
 ```yaml
 # What kind of project this is (software, business, personal, or general)
@@ -184,25 +184,19 @@ handoff:
   digest: false           # Set to true to enable digest handoff
 ```
 
-See `plugin/resources/templates/config-example.yaml` for a full example with all available options.
+See `plugins/circle/resources/templates/config-example.yaml` for a full example with all available options.
 
 ---
 
 ## 3. Adding a New Role
 
-1. Create the directory: `plugin/skills/<name>/`
+1. Create the directory: `plugins/circle/skills/<name>/`
 2. Create `SKILL.md` with this template:
 
 ```yaml
 ---
 name: <name>
 description: "<Role Name> — <One-line purpose>. <When to use>."
-allowed-tools: Read, Grep, Glob, Bash
-metadata:
-  context: fork            # fork = isolated subagent | same = main conversation
-  agent: general-purpose   # Explore, Plan, qa, or general-purpose
-  model: sonnet             # use alias: opus, sonnet, or haiku
-  effort: medium           # low, medium, high, or max — do not use xhigh (Opus 4.7 only)
 ---
 
 # <Role Name>
@@ -210,7 +204,7 @@ metadata:
 You energize the **<Role Name>** role in the Circle.
 
 ## Soul
-Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
+Read and embody the principles in `../../resources/soul.md`.
 
 ## Your Role
 <2-3 sentences about the role's purpose and accountabilities>
@@ -223,7 +217,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 
 ## Process
 1. <Step-by-step execution>
-2. <Save output to ~/.claude/circle/projects/{project}/output/<name>/>
+2. <Save output to ~/.circle/projects/{project}/output/<name>/>
 
 ## Handoff
 > **<Role Name> — Complete.**
@@ -231,7 +225,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 > Next suggested role: <recommendation>
 ```
 
-3. Done. Claude Code auto-discovers the skill.
+3. Done. Claude Code and Codex discover the skill through the universal plugin.
 4. Optionally add to `greenfield/SKILL.md` workflow sequence.
 
 ---
@@ -239,8 +233,8 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 ## 4. Adding a New Template
 
 1. Drop a `.md` file in the appropriate directory:
-   - `plugin/resources/templates/docs/` — for the Documentation Steward
-   - `plugin/resources/templates/software/` — for roles (PRD, architecture, etc.)
+   - `plugins/circle/resources/templates/docs/` — for the Documentation Steward
+   - `plugins/circle/resources/templates/software/` — for roles (PRD, architecture, etc.)
 
 2. Use `{placeholder}` patterns for dynamic content.
 
@@ -250,7 +244,7 @@ Read and embody the principles in `${CLAUDE_PLUGIN_ROOT}/resources/soul.md`.
 
 ## 5. Modifying the Soul
 
-Edit `plugin/resources/soul.md`. Changes take effect on the next skill invocation.
+Edit `plugins/circle/resources/soul.md`. Changes take effect on the next skill invocation.
 
 The Soul is loaded by every role and sets the behavioral foundation. It includes both team principles and holacracy alignment guidelines. Keep it concise and principle-based.
 
@@ -260,83 +254,16 @@ The Soul is loaded by every role and sets the behavioral foundation. It includes
 
 To add a new role to the greenfield orchestrator:
 
-1. Edit `plugin/skills/greenfield/SKILL.md`
+1. Edit `plugins/circle/skills/greenfield/SKILL.md`
 2. Add the role to the workflow sequence
 3. Add to the "Role Sequence Detail" table
 4. Add checkpoint handling in the execution phase
 
 ---
 
-## 7. Model & Effort Routing
+## 7. Host Execution
 
-Circle assigns a default Claude model and effort level to each fork-context role based on task complexity. Model controls which Claude model runs; effort controls reasoning depth within that model.
-
-### Default Assignments
-
-As of v2.1.0, defaults are pinned to specific Claude model IDs (not family aliases) for cost predictability and stable behaviour across Anthropic releases. See CLAUDE.md "Pinned models — current" for the canonical list.
-
-| Role | Default Model | Default Effort | Rationale |
-|------|--------------|----------------|-----------|
-| Scope Clarifier | claude-sonnet-4-6 | medium | Structured requirements gathering |
-| Refiner | claude-sonnet-4-6 | medium | Feature prioritization |
-| Experience Designer | claude-sonnet-4-6 | medium | UX design patterns |
-| Architecture Owner | claude-opus-4-6 | high | Deep trade-off reasoning |
-| Security Guardian | claude-opus-4-6 | high | Adversarial threat modeling |
-| Facilitator | claude-haiku-4-5-20251001 | low | Lightweight coordination |
-| Implementer | claude-opus-4-6 | high | Code generation quality |
-| PRD Validator | claude-sonnet-4-6 | low | Checklist-based validation |
-| Quality Guardian | claude-sonnet-4-6 | medium | Criteria-based validation |
-
-PR review agents (spawned by `pr-review` via Task tool) default to: agent_a → `claude-sonnet-4-6`, agent_b → `claude-haiku-4-5-20251001`, platform_review → `claude-sonnet-4-6`. Configure via `pr_review.agent_a.model` / `pr_review.agent_b.model` in config.yaml (the legacy `code_review.*` namespace and the older flat keys `code_review.agent_a_model` / `code_review.agent_b_model` are still honoured as fallback). Note: `pr-review` itself is same-context and inherits the session model — only its spawned agents are configurable.
-
-### Override via config.yaml
-
-Override accepts either a pinned model ID (recommended — matches the v2.1.0 convention) or a family alias (`opus`/`sonnet`/`haiku`, which resolves to the latest version on the Anthropic API and to the previous-major on Bedrock/Vertex).
-
-```yaml
-agents:
-  arch:
-    model: claude-opus-4-6        # pinned ID (matches v2.1.0 default)
-    effort: high
-  scope:
-    model: claude-sonnet-4-6      # pinned ID
-    effort: medium
-  facilitate:
-    model: claude-haiku-4-5-20251001
-    effort: low
-
-# PR review agent models (use nested keys; legacy code_review.* namespace and flat keys still accepted)
-pr_review:
-  agent_a:
-    model: claude-sonnet-4-6
-    effort: medium
-  agent_b:
-    model: claude-haiku-4-5-20251001
-    effort: medium
-```
-
-### Effort Levels
-
-| Level | Use for |
-|-------|---------|
-| `low` | Checklist validation, lightweight coordination, boilerplate |
-| `medium` | Structured gathering, prioritization, criteria-based QA |
-| `high` | Architecture design, security modeling, code generation |
-| `max` | Complex multi-system reasoning (use sparingly) |
-
-**Precedence**: config.yaml > session-state.json > skill frontmatter default
-
-### How It Works
-
-- **Fork-context skills** (`context: fork`) specify `model:` and `effort:` in frontmatter metadata. Orchestrators pass these when presenting role invocations.
-- **Same-context skills** (`context: same`) inherit the session model and cannot be overridden.
-- **Config overrides** take precedence over frontmatter defaults for both model and effort.
-
-### Cost Implications
-
-Model and effort routing let you optimize cost without sacrificing quality where it matters. Approximate relative cost per token: Opus (5x), Sonnet (1x), Haiku (0.2x). Higher effort levels increase token usage within a session.
-
----
+Circle uses the model, tools, permissions, and delegation mechanism provided by the current host session. Skills must not require Claude- or Codex-specific model routing.
 
 ## 8. Parallel Implementation
 
@@ -370,39 +297,15 @@ Otherwise, greenfield falls back to sequential implementation silently.
 
 ---
 
-## For Developers: Context Model Reference
-
-> This section is for developers who are modifying or creating roles. You can skip this if you're just using Circle.
-
-| Context | When to Use | Effect |
-|---|---|---|
-| `fork` | Work roles (analysis, design, implementation) | Isolated subagent, clean context, no bleed between runs |
-| `same` | Orchestrators, interactive workflows, utilities | Runs in main conversation, supports multi-turn dialogue |
-
----
-
-## For Developers: Agent Type Reference
-
-> This section is for developers building custom roles.
-
-| Agent Type | When to Use |
-|---|---|
-| `Explore` | Discovery, analysis, codebase exploration |
-| `Plan` | Architecture, design, planning |
-| `qa` | Testing, validation, quality checks |
-| `general-purpose` | Implementation, coordination, anything else |
-
----
-
 ## For Developers: MCP Integration
 
 > This section is for developers who want to connect Circle roles to external services via MCP (Model Context Protocol).
 
-Roles reference MCP tools (Linear, claude-mem, and domain-specific servers) but degrade gracefully if unavailable. To configure:
+Roles can use integrations exposed by the current host but degrade gracefully when they are unavailable. To configure:
 
-- **Linear**: Set up Linear MCP server in Claude Code settings
-- **claude-mem**: Install claude-mem plugin for cross-session memory
-- **Domain-specific tools**: Configured via `deps-manifest.yaml` groups (e.g., Cupertino for iOS, installed automatically by `init` when domain markers are detected)
+- **Linear**: Connect the Linear plugin or MCP integration in the current host
+- **Notion**: Connect the Notion plugin or MCP integration in the current host
+- **Domain-specific tools**: Install the appropriate companion plugin; shared core skills never install them automatically
 
 Per-project Linear mapping in `config.yaml`:
 ```yaml

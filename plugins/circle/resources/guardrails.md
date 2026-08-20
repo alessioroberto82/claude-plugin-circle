@@ -5,7 +5,7 @@
 Before handoff, verify your output covers upstream requirements. This closes the feedback loop between roles and catches gaps before they compound downstream.
 
 ### When to Run
-- **Default**: enabled for all fork-context roles
+- **Default**: enabled for all work roles
 - **Skip if**: project config has `guardrails.self_check: false`
 - **Skip if**: upstream artifact does not exist (graceful degradation — do not block the role)
 
@@ -20,7 +20,7 @@ Before handoff, verify your output covers upstream requirements. This closes the
 | ux | `refine/PRD.md` | Each work item has UX coverage |
 | security | `arch/architecture.md` | Each component has threat analysis |
 
-Read the upstream artifact from `~/.codex/circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
+Read the upstream artifact from `~/.circle/projects/{project}/output/`. If the first path doesn't exist, try the alternative (e.g., PRD.md if requirements.md is missing).
 
 **Digest source (only if enabled)**: if `handoff.digest` is `true` in `config.yaml` AND the upstream role wrote a `handoff-digest.md`, take your checklist from that digest's `## Verifiable items` section instead of re-reading the full upstream doc. If the flag is off or no digest exists, use the full artifact as described above (default behavior). For PR-A this applies to the `arch` role reading `scope/handoff-digest.md`; other roles keep reading the full artifact.
 
@@ -44,7 +44,7 @@ Read the upstream artifact from `~/.codex/circle/projects/{project}/output/`. If
 
 ## Standards Compliance Protocol
 
-Project coding standards are LAW — they are the primary baseline for design and implementation and override Circle defaults, skills, and existing (legacy) patterns. This protocol makes standards ingestion and compliance MANDATORY for the fork-context roles that design or write code (`arch`, `impl`). It is DISTINCT from the Self-Verification Protocol above: that one checks upstream *requirement* coverage; this one checks *coding-standard* compliance.
+Project coding standards are LAW — they are the primary baseline for design and implementation and override Circle defaults, skills, and existing (legacy) patterns. This protocol makes standards ingestion and compliance MANDATORY for roles that design or write code (`arch`, `impl`). It is DISTINCT from the Self-Verification Protocol above: that one checks upstream *requirement* coverage; this one checks *coding-standard* compliance.
 
 ### When to Run
 - **Mandatory** for `arch` and `impl`. Recommended for `qa` and `triage` fixes.
@@ -53,11 +53,11 @@ Project coding standards are LAW — they are the primary baseline for design an
 
 ### Step 1 — Standards Ingestion (MANDATORY)
 Read the following, in order, and treat them as the authoritative baseline:
-1. Root `CLAUDE.md`. If it is only an import shim (e.g. a line like `@AGENTS.md`), follow the import and read the target file.
-2. Root `AGENTS.md` (if present).
-3. `Glob(".claude/rules/*.md")` — load every rule file whose YAML frontmatter `paths:` globs match the files in scope (for `impl`: the files being changed; for `arch`: the feature's target area). When in doubt, load them all.
+1. Root `AGENTS.md` (if present).
+2. Root `CLAUDE.md` (if present). If it is only an import shim (e.g. a line like `@AGENTS.md`), follow the import without loading the same content twice.
+3. Rules under `.agents/` and `.claude/rules/` whose YAML frontmatter `paths:` globs match the files in scope (for `impl`: the files being changed; for `arch`: the feature's target area). When in doubt, load them all.
 4. Nested `CLAUDE.md` / `AGENTS.md` in any directory touched by the work, tagged with their scope.
-5. Any other `.claude/**/*.md` project-standards docs.
+5. Any other Markdown project-standards docs under `.agents/` or `.claude/`.
 
 A standard may carry a scope tag — `Overall codebase` (applies to all touched code) vs `New code` (applies only to added/modified lines). Respect the tag. If the project defines `global_rules` in `config.yaml`, treat each entry as a MANDATORY rule with absolute precedence (see the role's Input Prerequisites).
 
@@ -66,7 +66,7 @@ Append a `## Standards Compliance` section to your output document (`architectur
 
 | Standard (source § heading) | Status | Evidence |
 |---|---|---|
-| `.claude/rules/architecture.md` § Use Dependency Injection | ✅/⚠️/❌ | `file:line` — how it complies, or where/how it violates |
+| `.agents/rules/architecture.md` § Use Dependency Injection | ✅/⚠️/❌ | `file:line` — how it complies, or where/how it violates |
 
 - ✅ **Compliant** — explicitly satisfied, with `file:line` evidence.
 - ⚠️ **Partial / at-risk** — satisfied loosely, or not verifiable.

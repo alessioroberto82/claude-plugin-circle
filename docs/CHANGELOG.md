@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.0.0 — Universal Agent Skills plugin
+
+Circle now ships one Agent Skills implementation for Claude Code and Codex instead of maintaining provider-specific copies.
+
+### Changed
+
+- **Single plugin root**: both `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` live under `plugin/`; both marketplaces point to that root.
+- **Shared skills**: all 20 core skills use the common `name` + `description` frontmatter and host-neutral execution instructions.
+- **Shared state**: Circle artifacts and configuration now live under `~/.circle/projects/<project>/` on every host.
+- **Host execution**: skills use the current host model, tools, permissions, and delegation mechanism instead of Claude-specific routing.
+- **Optional integrations**: removed provider-specific dependency installers; integrations are suggested through the current host and require explicit user confirmation.
+
+### Breaking Changes
+
+- Existing state under `~/.claude/circle/` or `~/.codex/circle/` is not read automatically. Copy the relevant project directories to `~/.circle/projects/` before continuing an existing workflow.
+- Per-role Claude model and effort overrides are no longer interpreted by shared core skills.
+
 ## v2.8.1 — `triage` publish gate
 
 `triage` used to reply to/resolve GitHub review threads and push commits automatically as soon as the user approved the verdict table or commit plan — there was no separate confirmation for the act of publishing itself.

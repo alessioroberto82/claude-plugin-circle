@@ -50,7 +50,7 @@ Accept parameter: `<unit-of-work>` — a description of what to implement. Can b
 - A work item: "Enable users to..."
 - A feature: "Add password validation to the login form"
 - A bugfix: "Fix null pointer when user has no profile"
-- A task shard: `TASK-001` (loaded from `~/.codex/circle/projects/{project}/shards/tasks/`)
+- A task shard: `TASK-001` (loaded from `~/.circle/projects/{project}/shards/tasks/`)
 
 If no parameter: ask the user what to implement.
 
@@ -197,7 +197,7 @@ These prefixes are used by `qa` to verify TDD compliance. Do NOT deviate from th
 
 ## MCP Integration (if available)
 
-- **Codex session summaries**: Search for past TDD patterns and test strategies. Save cycle decisions at completion.
+- **available session memory**: Search for past TDD patterns and test strategies. Save cycle decisions at completion.
 
 ## Circle Principles
 

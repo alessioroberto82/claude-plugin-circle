@@ -29,7 +29,7 @@ Circle works for everyone on the team: product people, designers, analysts, deve
 
 ## Soul
 
-The team principles live in [`plugin/resources/soul.md`](plugin/resources/soul.md) — every role reads them on every invocation. Growth over ego. Iteration over perfection. Impact over activity. No gold-plating. No fear-driven engineering. To understand the culture behind Circle, start there.
+The team principles live in [`plugins/circle/resources/soul.md`](plugins/circle/resources/soul.md) — every role reads them on every invocation. Growth over ego. Iteration over perfection. Impact over activity. No gold-plating. No fear-driven engineering. To understand the culture behind Circle, start there.
 
 ## The Circle
 
@@ -87,7 +87,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 
 ```bash
 # Load Circle for the current session (development/testing)
-claude --plugin-dir /path/to/claude-plugin-circle/plugin
+claude --plugin-dir /path/to/claude-plugin-circle/plugins/circle
 
 # Or install permanently via the marketplace
 claude plugin marketplace add /path/to/claude-plugin-circle
@@ -107,7 +107,7 @@ Use Circle through its slash commands:
 
 ### Codex
 
-The Codex implementation is versioned in [`plugins/circle`](plugins/circle) and is exposed by the repository marketplace as `circle@circle`.
+Codex installs the same universal plugin root and Agent Skills used by Claude Code. Its manifest lives at [`plugins/circle/.codex-plugin/plugin.json`](plugins/circle/.codex-plugin/plugin.json), and the repository marketplace exposes it as `circle@circle`.
 
 ```bash
 codex plugin marketplace add /path/to/claude-plugin-circle
@@ -128,7 +128,7 @@ Codex selects the relevant Circle skill, such as `circle:scope`, `circle:pr-revi
 
 `circle-ios` is a companion plugin that adds iOS/Swift expertise to `/circle:pr-review`. It ships in the same marketplace as core Circle.
 
-`circle-ios` currently supports Claude Code only; the Codex port in this repository includes the core `circle` plugin, not the iOS companion.
+`circle-ios` currently supports Claude Code only; the universal core supports both Claude Code and Codex, while the iOS companion remains provider-specific.
 
 ### Install
 
@@ -156,7 +156,7 @@ Full install commands are in [`plugin-ios/README.md`](plugin-ios/README.md) and 
 
 ### Building your own platform companion
 
-Any plugin can register as a platform-review target via the frontmatter contract in [`docs/extensibility.md`](docs/extensibility.md) — declare `metadata.platform_review: true` and a `platform_markers` glob list, and core's dispatcher picks it up on matching PRs.
+Any plugin can register as a platform-review target via the frontmatter contract in [`plugins/circle/resources/extensibility.md`](plugins/circle/resources/extensibility.md) — declare `metadata.platform_review: true` and a `platform_markers` glob list, and core's dispatcher picks it up on matching PRs.
 
 ## Dependencies
 
@@ -164,27 +164,15 @@ All dependencies are **optional** — roles work without them and adapt when too
 
 | Dependency | Type | Group | What it adds |
 |---|---|---|---|
-| Linear | Cloud MCP | Core | Issue tracking and cycle management for all roles |
-| claude-mem | Plugin | Core | Memory that persists across sessions for all roles |
-| Notion | Plugin | Extras | The Documentation Steward can publish docs to Notion |
-| bmad-mcp | npm | Extras | Additional workflow tools for Greenfield orchestrator |
+| Linear | Plugin/MCP | Core | Issue tracking and cycle management for all roles |
+| Notion | Plugin/MCP | Extras | Workspace documentation and knowledge management |
+| no-mistakes | Binary | Extras | Optional pre-push validation gate |
 
-**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios` — its own `deps-manifest.yaml` declares Cupertino MCP, SwiftUI Expert, Swift LSP, Swift Concurrency, and Swift Testing Expert, and its README has the setup steps. Core `/circle:init` and `install-deps.sh` read only `plugin/resources/deps-manifest.yaml` — they do **not** scan companion manifests, so they do not auto-detect iOS projects or prompt for companion deps. Any plugin can register as a platform-review target via the frontmatter contract documented in [`docs/extensibility.md`](docs/extensibility.md).
+**Platform-specific dependencies** ship with companion plugins. For iOS/Swift reviews, install `circle-ios`; its README contains the setup steps. Shared core skills never install integrations automatically. Any plugin can register as a platform-review target through the contract in [`plugins/circle/resources/extensibility.md`](plugins/circle/resources/extensibility.md).
 
-> **MCP** = Model Context Protocol — a way for Claude to connect to external services. Think of it as a plugin for the plugin.
+> **MCP** = Model Context Protocol — a way for an AI host to connect to external services.
 
-```bash
-# First-time setup (interactive — walks you through what to install)
-bash plugin/resources/scripts/install-deps.sh
-
-# Check what's installed
-bash plugin/resources/scripts/install-deps.sh --check-only
-
-# Update everything
-bash plugin/resources/scripts/update-deps.sh
-```
-
-The dependency manifest is at `plugin/resources/deps-manifest.yaml`. Per-project overrides go in `config.yaml` under the `dependencies:` key.
+The integration manifest is at `plugins/circle/resources/deps-manifest.yaml`. Connect integrations through the current host only after user confirmation.
 
 ## Project Knowledge Packs
 
@@ -198,14 +186,14 @@ your-repo/
     ├── architecture.md  # Layers, DI patterns, navigation, migration boundaries
     ├── build.md         # Build commands, CI pipelines, release process
     ├── integrations.md  # SDKs, APIs, analytics, auth, feature flags
-    └── config.yaml      # Template — init copies to ~/.claude/circle/projects/
+    └── config.yaml      # Template — init copies to ~/.circle/projects/
 ```
 
 ### How it works
 
 1. **Knowledge files live in your repo** — committed, versioned, available to the whole team
 2. **`config.yaml` maps files to roles** — each role loads only the slices relevant to its accountability
-3. **`/circle:init` auto-detects the config template** and copies it to `~/.claude/circle/projects/<project>/`
+3. **`/circle:init` auto-detects the config template** and copies it to `~/.circle/projects/<project>/`
 
 A new team member clones the repo, runs `/circle:init`, and Circle immediately knows the project. No manual setup.
 
@@ -240,7 +228,7 @@ See [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) for the full Knowledge Pack c
 Circle never adds files to your project repository. All outputs are stored in a separate directory on your machine:
 
 ```
-~/.claude/circle/projects/<project>/
+~/.circle/projects/<project>/
 ├── output/
 │   ├── scope/        # Requirements
 │   ├── arch/         # Architecture, ADRs
@@ -264,7 +252,7 @@ Circle never adds files to your project repository. All outputs are stored in a 
 
 ### Role Isolation
 
-Each work role runs in its own isolated context — it starts fresh every time with no leftover state from previous runs. This prevents confusion between phases. Orchestrators and interactive workflows run in your main conversation so they can have multi-turn discussions with you.
+Circle delegates independent work through the current host when useful. The shared skills do not require a specific subagent API, model family, or isolation mode.
 
 ### Quality Gates
 
@@ -296,8 +284,7 @@ Roles connect to external services through MCP (Model Context Protocol) when ava
 | MCP Server | Used By | What it provides |
 |---|---|---|
 | Linear | All roles | Issue tracking, cycle management |
-| claude-mem | All roles | Memory that persists across Claude Code sessions |
-| Platform-specific tools | Companion plugins (e.g., `circle-ios`) | Platform documentation and framework APIs — registered via the [extensibility contract](docs/extensibility.md) |
+| Platform-specific tools | Companion plugins (e.g., `circle-ios`) | Platform documentation and framework APIs — registered via the [extensibility contract](plugins/circle/resources/extensibility.md) |
 
 ## Customization
 
@@ -305,7 +292,7 @@ See [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) for the full guide.
 
 ### Per-Project Config
 
-Create `~/.claude/circle/projects/<project>/config.yaml` to change how roles behave for a specific project:
+Create `~/.circle/projects/<project>/config.yaml` to change how roles behave for a specific project:
 
 ```yaml
 agents:
@@ -322,11 +309,11 @@ agents:
 
 ### Adding Roles
 
-Drop a `SKILL.md` in `plugin/skills/<name>/`. Auto-discovered.
+Drop a `SKILL.md` in `plugins/circle/skills/<name>/`. Auto-discovered.
 
 ### Adding Templates
 
-Drop a `.md` in `plugin/resources/templates/docs/` or `software/`.
+Drop a `.md` in `plugins/circle/resources/templates/docs/` or `software/`.
 
 ## Workflows
 

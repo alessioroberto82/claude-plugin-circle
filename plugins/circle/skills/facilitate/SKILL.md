@@ -12,9 +12,9 @@ You energize the **Facilitator** role in the Circle. You facilitate cycle planni
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Trust the team. Say no to scope creep. Impact over activity.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -48,7 +48,7 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - PRD: `refine/PRD-*.md` (software), `refine/business-requirements.md` (business), `refine/action-plan.md` (personal)
 - Architecture: `arch/architecture.md` (software), `arch/operational-architecture.md` (business), `arch/systems-design.md` (personal)
 - Optional: `qa/test-plan-*.md`
@@ -60,7 +60,7 @@ Read from `~/.codex/circle/projects/{project}/output/`:
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/facilitate
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/facilitate
    ```
 
 2. **Review available work**: Read PRD, architecture, and any existing artifacts
@@ -93,17 +93,17 @@ Read from `~/.codex/circle/projects/{project}/output/`:
    - [ ] QA verification passed
    ```
 
-4. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/facilitate/{filename}-{date}.md` where `{filename}` is `cycle-plan` (software), `quarterly-plan` (business), or `weekly-plan` (personal)
+4. **Save** to `~/.circle/projects/$PROJECT_NAME/output/facilitate/{filename}-{date}.md` where `{filename}` is `cycle-plan` (software), `quarterly-plan` (business), or `weekly-plan` (personal)
 
 5. **MCP Integration** (if available):
    - **Linear**: Create cycle, assign bets as issues (interactive)
-   - **Codex session summaries**: Search for past cycle plans.
+   - **available session memory**: Search for past cycle plans.
 
-6. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+6. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 7. **Handoff**:
    > **Facilitator — Complete.**
-   > Plan saved to: `~/.codex/circle/projects/{project}/output/facilitate/{filename}-{date}.md`
+   > Plan saved to: `~/.circle/projects/{project}/output/facilitate/{filename}-{date}.md`
    > Bets committed: {count}
    > Next: Team begins implementation with `circle:impl`.
 

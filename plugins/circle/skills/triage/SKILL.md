@@ -30,7 +30,7 @@ Use the detected domain in Step 4 to choose the right build and test commands.
 
 ## Input
 
-Accept parameter: `$ARGUMENTS` — one of:
+Read one of these targets from the user's request:
 
 1. **A PR reference**: number (`19`, `#19`), cross-repo (`OWNER/REPO#NUMBER`), or GitHub URL
 2. **Inline review comments**: text with file references (`#L` line markers and `>` quoted comments)
@@ -201,7 +201,7 @@ When `circle:triage` is run again, previously unclear threads with new replies w
 
 ### Step 4: Implement Fixes
 
-**Load project instructions**: Before implementing, read `~/.codex/circle/projects/<project>/config.yaml`. If `extra_instructions.triage` exists, treat each entry as a mandatory rule for all fixes in this step. These rules take precedence over default behavior (e.g., which design tokens to use, which skills to invoke first).
+**Load project instructions**: Before implementing, read `~/.circle/projects/<project>/config.yaml`. If `extra_instructions.triage` exists, treat each entry as a mandatory rule for all fixes in this step. These rules take precedence over default behavior (e.g., which design tokens to use, which skills to invoke first).
 
 For each accepted comment:
 
@@ -277,9 +277,9 @@ Extract actionable learnings from the review:
    - **project** — codebase-specific conventions, architecture decisions
    - **user** — general coding practices applicable across projects
 
-3. **Derive project name**: Read `~/.codex/circle/projects/*/config.yaml` files to find the one whose `project.repo` matches the current repository's `OWNER/REPO` (from `gh repo view --json nameWithOwner`). Use that directory's name as `<project>`. Fallback: `basename "$PWD" | tr '[:upper:]' '[:lower:]'`.
+3. **Derive project name**: Read `~/.circle/projects/*/config.yaml` files to find the one whose `project.repo` matches the current repository's `OWNER/REPO` (from `gh repo view --json nameWithOwner`). Use that directory's name as `<project>`. Fallback: `basename "$PWD" | tr '[:upper:]' '[:lower:]'`.
 
-4. **Save learnings** to `~/.codex/circle/projects/<project>/output/triage/learnings-<date>.md`. Create the directory if it doesn't exist.
+4. **Save learnings** to `~/.circle/projects/<project>/output/triage/learnings-<date>.md`. Create the directory if it doesn't exist.
 
 5. If a project-level AGENTS.md or CLAUDE.md or learnings file exists, check for duplicates before adding. Never blindly append.
 
@@ -319,7 +319,7 @@ Run `circle:triage` again and confirm publishing, or push/reply manually, when r
 
 ## Work Summary
 
-Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 ## Handoff
 

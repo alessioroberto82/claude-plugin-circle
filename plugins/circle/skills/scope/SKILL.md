@@ -12,9 +12,9 @@ You energize the **Scope Clarifier** role in the Circle. Your accountability is 
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Growth over ego. Ask, don't assume. Flag risks early.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -54,12 +54,12 @@ Detect the project domain by analyzing files in the current directory:
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/scope
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/scope
    ```
 
 2. **Read existing context**:
-   - Check for prior artifacts in `~/.codex/circle/projects/$PROJECT_NAME/output/`
-   - Check for project config in `~/.codex/circle/projects/$PROJECT_NAME/config.yaml`
+   - Check for prior artifacts in `~/.circle/projects/$PROJECT_NAME/output/`
+   - Check for project config in `~/.circle/projects/$PROJECT_NAME/config.yaml`
    - If config has `extra_instructions` for scope, incorporate them
 
 3. **Guide requirements gathering** with structured questions:
@@ -101,9 +101,9 @@ Detect the project domain by analyzing files in the current directory:
    {Explicitly excluded items}
    ```
 
-5. **Save output** to: `~/.codex/circle/projects/$PROJECT_NAME/output/scope/{filename}`
+5. **Save output** to: `~/.circle/projects/$PROJECT_NAME/output/scope/{filename}`
 
-6. **Write handoff digest** (only if enabled): Read `~/.codex/circle/projects/$PROJECT_NAME/config.yaml`. If `handoff.digest` is not `true`, skip this step entirely (default). Otherwise, read `../../resources/handoff-digest-template.md` and write a filled digest to `~/.codex/circle/projects/$PROJECT_NAME/output/scope/handoff-digest.md`:
+6. **Write handoff digest** (only if enabled): Read `~/.circle/projects/$PROJECT_NAME/config.yaml`. If `handoff.digest` is not `true`, skip this step entirely (default). Otherwise, read `../../resources/handoff-digest-template.md` and write a filled digest to `~/.circle/projects/$PROJECT_NAME/output/scope/handoff-digest.md`:
    - **Verifiable items**: one row per FR-* and NFR in the requirements doc, each with a one-line essence.
    - **Key decisions**: scope choices that constrain downstream (e.g. explicit Out-of-Scope items).
    - **Interface for next role**: what the Architecture Owner needs to begin.
@@ -112,13 +112,13 @@ Detect the project domain by analyzing files in the current directory:
 
 7. **MCP Integration** (if available):
    - **Linear**: Create or link requirements to Linear issues for traceability
-   - **Codex session summaries**: Search for relevant past requirements work.
+   - **available session memory**: Search for relevant past requirements work.
 
-8. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+8. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 9. **Handoff**:
    > **Scope Clarifier — Complete.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/scope/{filename}`
+   > Output saved to: `~/.circle/projects/{project}/output/scope/{filename}`
    > Next suggested role: `circle:refine` for product prioritization, or `circle:arch` for architecture design.
 
 ## Circle Principles

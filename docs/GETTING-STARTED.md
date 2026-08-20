@@ -2,7 +2,7 @@
 
 Circle is a circle of AI roles that help you build software — from initial idea through to working code. Each role has a clear purpose and accountability, following holacracy principles.
 
-You talk to them using simple commands in Claude Code. No programming knowledge required.
+You talk to them using simple instructions in Claude Code or Codex. No programming knowledge required.
 
 ## Who is this for?
 
@@ -35,8 +35,8 @@ You don't need to be technical to use Circle. If you can type a sentence and pre
 
 The easiest way to start is by talking to the **Scope Clarifier**. It will ask you questions about what you want to build and help you think through the details.
 
-1. Open Claude Code
-2. Type this and press Enter:
+1. Open Claude Code or Codex
+2. In Claude Code, type this and press Enter; in Codex, ask to use the Circle Scope skill:
 
 ```
 /circle:scope
@@ -102,7 +102,7 @@ This walks through: Scope Clarifier (requirements) → Refiner (product plan) �
 
 ## Available commands
 
-Every command starts with `/circle:`. Just type it and press Enter.
+The table uses Claude Code's `/circle:` syntax. In Codex, mention the matching Circle skill or ask in natural language.
 
 | Command | What it does |
 |---------|-------------|
@@ -125,13 +125,13 @@ Every command starts with `/circle:`. Just type it and press Enter.
 | `/circle:skills-discovery` | Discover and install third-party skills with security validation |
 | `/circle:council` | Pressure-test a hard decision with multi-perspective analysis |
 | `/circle:init` | Set up Circle for your current project (run once) |
-| `/circle` | See project status and what's been done (pass `detailed` for version and dependency info) |
+| `/circle` or `circle:status` | See project status and what's been done (pass `detailed` for version and integration info) |
 
 ## Where does everything go?
 
 Circle keeps all its work in a folder on your computer, completely separate from your project files. Nothing gets added to your codebase unless you explicitly ask the Implementer to write code.
 
-All outputs are saved to: `~/.claude/circle/projects/<your-project>/output/`
+All outputs are saved to: `~/.circle/projects/<your-project>/output/`
 
 Each role saves their work in their own subfolder (e.g., `scope/`, `arch/`, `impl/`).
 

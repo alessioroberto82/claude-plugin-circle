@@ -17,11 +17,11 @@ Show the status of the Circle framework for the current project.
    - **personal**: if `goals.md`, `journal.md`, or `habits/` folder exists
    - **general**: default if no domain indicator found
 
-3. **Check workflow status**: Read `~/.codex/circle/projects/<project-name>/output/session-state.json` if it exists.
+3. **Check workflow status**: Read `~/.circle/projects/<project-name>/output/session-state.json` if it exists.
    - If it exists: show current phase, active workflow, completed steps
    - If it doesn't exist: indicate Circle is not yet initialized for this project
 
-4. **Check existing artifacts**: List files in `~/.codex/circle/projects/<project-name>/output/` if the directory exists. Show each role's output files.
+4. **Check existing artifacts**: List files in `~/.circle/projects/<project-name>/output/` if the directory exists. Show each role's output files.
 
 5. **Show simple view** (default):
 
@@ -67,7 +67,7 @@ Utilities:
   circle:shard        — Split large docs for faster processing
   circle:council      — Pressure-test a hard decision with 5 analytical lenses
 
-Tip: Type /circle detailed for version info and dependency status.
+Tip: Invoke `circle:status detailed` for version and integration status.
 ```
 
 6. **If the user requests "detailed" or "full" view**, also show:
@@ -87,7 +87,7 @@ Generated artifacts:
   triage/      <list of files or empty>
   docs/        <list of files or empty>
 
-Output directory: ~/.codex/circle/projects/<project-name>/output/
+Output directory: ~/.circle/projects/<project-name>/output/
 ```
 
 Active workflow details:
@@ -103,22 +103,15 @@ TDD:
   Enforcement: <hard/soft from config.yaml, default: hard>
 ```
 
-Check dependency versions: Read `Codex plugin inventory` and check system binaries to show current versions.
+Inspect integrations exposed by the current host and check local binaries to show their availability.
 
 ```
-Dependencies:
-  Core:
-    Codex session summaries      <version>
-    Linear          cloud (managed through Codex)
-
-  Extras:
-    bmad-mcp        <version from npm list -g bmad-mcp>
-    Notion          <version>
-
-  Domain-Specific (if detected):
-    <list installed domain deps from deps-manifest.yaml>
+Integrations:
+  Linear:      <connected/available/unavailable>
+  Notion:      <connected/available/unavailable>
+  no-mistakes: <version/unavailable>
 
   Local:
     circle  <version from plugin.json>
 
-  Integrations: inspect or connect them through Codex Plugins after user confirmation.
+Connect or install integrations only after user confirmation.

@@ -11,9 +11,9 @@ Initialize the Circle-METHOD framework for the current project. All outputs are 
 
 ### 0. Inspect optional integrations
 
-Use `codex plugin list` to inspect installed Codex plugins and check local binaries with `command -v`. Circle has no required external dependency.
+Inspect the integrations exposed by the current host and check local binaries with `command -v`. Circle has no required external dependency.
 
-If Linear, Notion, or another integration would materially help, explain why and offer the relevant Codex plugin. Never install or connect an integration without the user's explicit confirmation. Record any project-specific preferences in `~/.codex/circle/projects/$PROJECT_NAME/config.yaml`.
+If Linear, Notion, or another integration would materially help, explain why and offer it through the host plugin manager. Never install or connect an integration without the user's explicit confirmation. Record any project-specific preferences in `~/.circle/projects/$PROJECT_NAME/config.yaml`.
 
 ### 1. Detect project name
 
@@ -32,7 +32,7 @@ Analyze files in the current directory:
 Zero footprint — all in home directory:
 ```bash
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-BASE=~/.codex/circle/projects/$PROJECT_NAME
+BASE=~/.circle/projects/$PROJECT_NAME
 
 mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,refine,facilitate,docs,pr-review,triage}
 mkdir -p $BASE/output/sessions
@@ -43,7 +43,7 @@ mkdir -p $BASE/workspace
 
 ### 4. Create or migrate session state
 
-Check if `~/.codex/circle/projects/$PROJECT_NAME/output/session-state.json` already exists.
+Check if `~/.circle/projects/$PROJECT_NAME/output/session-state.json` already exists.
 
 **If it does NOT exist** — create a fresh v2 file:
 ```json
@@ -78,25 +78,25 @@ Check if `~/.codex/circle/projects/$PROJECT_NAME/output/session-state.json` alre
 
 ### 5. Check for project config
 
-- If `~/.codex/circle/projects/$PROJECT_NAME/config.yaml` exists, report it
+- If `~/.circle/projects/$PROJECT_NAME/config.yaml` exists, report it
 - If not, search for a config template in the repo:
   - Check: `docs/circle/config.yaml`, `Docs/circle/config.yaml`, `.circle/config.yaml`
-  - If found: copy it to `~/.codex/circle/projects/$PROJECT_NAME/config.yaml` and report:
+  - If found: copy it to `~/.circle/projects/$PROJECT_NAME/config.yaml` and report:
     ```
-    Found project Circle config template at <path>. Copied to ~/.codex/circle/projects/<project>/config.yaml
+    Found project Circle config template at <path>. Copied to ~/.circle/projects/<project>/config.yaml
     ```
-  - If not found: suggest: "Create `~/.codex/circle/projects/$PROJECT_NAME/config.yaml` for project-specific customization."
+  - If not found: suggest: "Create `~/.circle/projects/$PROJECT_NAME/config.yaml` for project-specific customization."
 
 ### 6. Confirm
 
 ```
 Circle initialized for: <project-name>
 Domain: <detected-domain>
-Output: ~/.codex/circle/projects/<project-name>/output/
+Output: ~/.circle/projects/<project-name>/output/
 
 Optional integrations:
   <summary of available integrations>
-  Add or connect integrations through Codex Plugins after user confirmation.
+  Add or connect integrations through the host plugin manager after user confirmation.
 
 Available roles:
   circle:scope       - Scope Clarifier (requirements, work items)

@@ -7,9 +7,9 @@ This document defines the security criteria for reviewing external skills before
 ### PASS (Low Risk)
 The skill is safe to install. It only reads information and does not modify files or execute commands.
 
-**Allowed tools**:
-- `Read`, `Grep`, `Glob` — read-only file access
-- `WebSearch` — search queries (no data sent)
+**Allowed capabilities**:
+- Read-only file access and search
+- Search-engine queries that do not transmit project data
 
 **Characteristics**:
 - No shell commands
@@ -20,11 +20,10 @@ The skill is safe to install. It only reads information and does not modify file
 ### WARN (Medium Risk)
 The skill modifies files or communicates externally. Review carefully before approving.
 
-**Flagged tools**:
-- `Write`, `Edit` — modifies files in the project
-- `web-browsing tool` — external HTTP communication
-- `Bash` with non-destructive commands (`ls`, `git status`, `npm test`, `npx`, `cat`)
-- `NotebookEdit` — modifies Jupyter notebooks
+**Flagged capabilities**:
+- File or notebook modification
+- External HTTP communication
+- Shell execution, including non-destructive commands (`ls`, `git status`, `npm test`, `npx`, `cat`)
 
 **Characteristics**:
 - File modifications are scoped to project directory
@@ -35,9 +34,9 @@ The skill modifies files or communicates externally. Review carefully before app
 The skill poses a security threat. Do NOT install.
 
 **Blocked patterns**:
-- `Bash` with destructive commands: `rm -rf`, `rm -f` on paths outside project
-- `Bash` with code execution from network: `curl | sh`, `curl | bash`, `wget | sh`
-- `Bash` with dynamic evaluation: `eval`, `exec`, `source` with untrusted input
+- Shell execution with destructive commands: `rm -rf`, `rm -f` on paths outside project
+- Shell execution of network content: `curl | sh`, `curl | bash`, `wget | sh`
+- Dynamic evaluation: `eval`, `exec`, `source` with untrusted input
 - Access to sensitive files: `.env`, `credentials`, `secrets`, `tokens`, API keys, SSH keys
 - Access to system paths: `~/.ssh/`, `~/.aws/`, `~/.config/`, `/etc/`, `/usr/`
 - Environment variable reading for secrets: `$API_KEY`, `$SECRET`, `$TOKEN`, `$PASSWORD`
@@ -48,7 +47,7 @@ The skill poses a security threat. Do NOT install.
 ## Detailed Patterns to Flag
 
 ### Shell Command Analysis
-When a skill uses `Bash`, inspect each command for:
+When a skill uses a shell, inspect each command for:
 
 | Pattern | Risk | Verdict |
 |---------|------|---------|
@@ -73,11 +72,11 @@ When a skill reads or writes files, check paths for:
 | Project-scoped paths | Normal | PASS |
 
 ### Network Analysis
-When a skill uses `web-browsing tool` or `Bash` with network commands:
+When a skill uses web access or shell network commands:
 
 | Pattern | Risk | Verdict |
 |---------|------|---------|
-| `web-browsing tool` to documented API | External comm | WARN |
+| Web access to documented API | External comm | WARN |
 | `curl` GET to known API | External comm | WARN |
 | `curl -X POST` with project data | Data exfiltration | BLOCK |
 | `nc`/`netcat` outbound | Data exfiltration | BLOCK |
@@ -93,8 +92,8 @@ Skill: <owner/repo>
 Verdict: PASS | WARN | BLOCK
 
 Risk Level: Low | Medium | High
-Tools Used: [list of tools declared or detected]
-Shell Commands: [list of Bash commands found]
+Capabilities Used: [list of capabilities declared or detected]
+Shell Commands: [list of shell commands found]
 Files Accessed: [list of file paths referenced]
 Network Calls: [list of URLs or endpoints]
 

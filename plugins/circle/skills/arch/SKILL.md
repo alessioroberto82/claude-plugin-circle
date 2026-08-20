@@ -12,9 +12,9 @@ You energize the **Architecture Owner** role in the Circle. You design scalable,
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Data over opinions. Document trade-offs honestly. No fear-driven engineering.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -30,13 +30,13 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read requirements from `~/.codex/circle/projects/{project}/output/`:
-- **Digest-first (only if enabled)**: read `~/.codex/circle/projects/{project}/config.yaml`. If `handoff.digest` is `true` AND `scope/handoff-digest.md` exists, read the digest as your PRIMARY input instead of the full doc. **Escalation rule**: if a decision depends on a detail not present in the digest, open the source doc named in the digest (use its Escalation hints to jump to the right section) before proceeding — do not guess. If the flag is off or the digest is absent, fall back to the full doc below (default behavior).
+Read requirements from `~/.circle/projects/{project}/output/`:
+- **Digest-first (only if enabled)**: read `~/.circle/projects/{project}/config.yaml`. If `handoff.digest` is `true` AND `scope/handoff-digest.md` exists, read the digest as your PRIMARY input instead of the full doc. **Escalation rule**: if a decision depends on a detail not present in the digest, open the source doc named in the digest (use its Escalation hints to jump to the right section) before proceeding — do not guess. If the flag is off or the digest is absent, fall back to the full doc below (default behavior).
 - Check for (if the digest is not used): `scope/requirements.md`
 - Also check: `refine/PRD.md` (if Refiner has refined requirements)
 - If none found: "Requirements missing. Run `circle:scope` first to gather requirements."
 
-Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
+Also check for project config: `~/.circle/projects/{project}/config.yaml`
 - If `global_rules` exists, treat EACH entry as a MANDATORY rule with absolute precedence over Circle defaults, skills, and existing patterns — apply them throughout the design.
 - If `extra_instructions` for arch exists, treat each entry as a MANDATORY rule for this session; these take precedence over default behavior.
 - If `context_files` defined, read those files for additional architectural context
@@ -64,9 +64,9 @@ Also check for project config: `~/.codex/circle/projects/{project}/config.yaml`
 
 Check `../../resources/deps-manifest.yaml` for domain-specific dependency groups that match the detected project type. (Core currently has no domain-specific groups; companion plugins — e.g., `circle-ios` — carry their own `deps-manifest.yaml` with platform groups.) For each dependency in a matching group that has a `suggest_in` entry for this role (`arch`), suggest:
 
-> "Consider invoking `/<dep-id>` for <suggest_in text>"
+> "Consider invoking the `<dep-id>` skill for <suggest_in text>"
 
-These are suggestions, not blocks — proceed with or without them. If a suggested skill is not installed, note: "Not installed. Run: `<install_command>` from deps-manifest."
+These are suggestions, not blocks — proceed with or without them. If a suggested integration is unavailable, offer it through the host plugin manager and wait for user confirmation.
 
 ### Business Strategy
 **Focus**: Operational architecture, process design, organizational structure, systems thinking
@@ -103,7 +103,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    REPO_ID=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)
    PROJECT_NAME=""
    if [ -n "$REPO_ID" ]; then
-     for c in ~/.codex/circle/projects/*/config.yaml; do
+     for c in ~/.circle/projects/*/config.yaml; do
        grep -qi "repo:.*$REPO_ID" "$c" 2>/dev/null && { PROJECT_NAME=$(basename "$(dirname "$c")"); break; }
      done
    fi
@@ -112,7 +112,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
      [ -n "$COMMON_GIT" ] && PROJECT_NAME=$(basename "$(dirname "$COMMON_GIT")" | tr '[:upper:]' '[:lower:]')
    fi
    PROJECT_NAME=${PROJECT_NAME:-$(basename "$PWD" | tr '[:upper:]' '[:lower:]')}
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/arch
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/arch
    ```
 
 2. **Analyze requirements**: Read the Scope Clarifier's output and identify key architectural concerns
@@ -122,7 +122,7 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    - Map dependencies (internal and external)
    - Understand the current state before proposing changes
 
-3b. **Standards Baseline (MANDATORY)**: Run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`. Read the project's coding standards — root `AGENTS.md or CLAUDE.md`/`AGENTS.md`, the `.agents or .claude/rules/*.md` whose `paths` frontmatter matches the feature's target area, nested standards, and `global_rules` — and treat them as the authoritative baseline. Your design MUST conform: where a standard forces a choice (DI container, MV vs screen-level ViewModel, protocol dependencies, no singletons, design tokens, localization, persistence/migration, test framework), the standard wins over convenience or nearby legacy code. Proximity to legacy is not a licence to extend it.
+3b. **Standards Baseline (MANDATORY)**: Run the Ingestion step (Step 1) of the **Standards Compliance Protocol** in `../../resources/guardrails.md`. Read the project's coding standards — root `AGENTS.md` and `CLAUDE.md`, matching rules under `.agents/` and `.claude/rules/`, nested standards, and `global_rules` — and treat them as the authoritative baseline. Your design MUST conform: where a standard forces a choice (DI container, MV vs screen-level ViewModel, protocol dependencies, no singletons, design tokens, localization, persistence/migration, test framework), the standard wins over convenience or nearby legacy code. Proximity to legacy is not a licence to extend it.
 
 4. **Evaluate alternatives**: For each significant decision, consider 2-3 options with trade-offs
 
@@ -147,20 +147,20 @@ These are suggestions, not blocks — proceed with or without them. If a suggest
    > → `circle:council {paste the decision question}`
    > Optional — proceed with your chosen option if you're confident.
 
-6. **Generate architecture document**: Write to `~/.codex/circle/projects/$PROJECT_NAME/output/arch/{filename}`
+6. **Generate architecture document**: Write to `~/.circle/projects/$PROJECT_NAME/output/arch/{filename}`
 
 7. **Self-Verification**: Read and follow the self-verification protocol in `../../resources/guardrails.md`. Upstream artifact: `scope/handoff-digest.md` if `handoff.digest` is `true` and it exists (see guardrails.md "Digest source"); otherwise `scope/requirements.md` or `refine/PRD.md`. **Additionally, run the Standards Compliance Protocol** in the same file and append the `## Standards Compliance` section to `architecture.md` — each applicable standard marked ✅/⚠️/❌ with a per-rule citation. This is MANDATORY and gates handoff: any undisclosed ⚠️/❌ must be surfaced as a tension, not hidden.
 
 8. **MCP Integration** (if available):
    - **Domain-specific tools**: If domain-specific MCP tools are available (configured via deps-manifest.yaml), use them to look up framework documentation and platform best practices.
    - **Linear**: Reference project context and link architecture decisions to issues
-   - **Codex session summaries**: Search for past architectural decisions in similar projects.
+   - **available session memory**: Search for past architectural decisions in similar projects.
 
-9. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+9. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 10. **Handoff**:
    > **Architecture Owner — Complete.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/arch/{filename}`
+   > Output saved to: `~/.circle/projects/{project}/output/arch/{filename}`
    > ADRs documented: {count}
    > Next suggested role: `circle:security` for security audit (required before implementation), or `circle:ux` for UX design.
 

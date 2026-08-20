@@ -26,7 +26,7 @@ shaping_review → appetite_sizing → cycle_commitment → quality_notes
 
 ## Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - PRD: `sessions/*/refine/PRD-*.md` (session-scoped, preferred). Fallback: `refine/PRD-*.md` (legacy).
 - Requirements: `sessions/*/scope/requirements*.md` (session-scoped, preferred). Fallback: `scope/requirements*.md` (legacy).
 - Previous cycle: `facilitate/cycle-plan-*.md`
@@ -35,11 +35,11 @@ If no PRD found: "No PRD or pitch found. Run `circle:refine` to create one, or d
 
 ## State Management
 
-Session state location: `~/.codex/circle/projects/{project}/output/session-state.json`
+Session state location: `~/.circle/projects/{project}/output/session-state.json`
 
 **Defensive v1 migration**: On startup, read `session-state.json`. If the `version` field is absent or `1`:
 1. Copy the file to `session-state.v1-backup.json` (safety net)
-2. Run the v1 → v2 migration algorithm (see `init/SKILL.md` step 4 for full details)
+2. Run the v1 → v2 migration algorithm (see `../init/SKILL.md` step 4 for full details)
 
 **Session creation**: When starting a new cycle, prompt for a session ID:
 ```
@@ -61,7 +61,7 @@ mkdir -p $BASE/output/sessions/$SESSION_ID/{facilitate,scope,refine}
 **Check existing cycle sessions** (on startup):
 - Filter `sessions` for entries where `type == "cycle"`
 - If active cycle sessions exist, offer resume/new/cancel (same UX as greenfield)
-- If `$ARGUMENTS` contains "resume": present selection menu if >1 active cycle session, auto-select if 1
+- If the user asks to resume: present a selection menu if more than one cycle session is active; auto-select if exactly one is active
 
 Ceremony-specific state — write to `sessions[SESSION_ID]`:
 ```json
@@ -103,7 +103,7 @@ Step 1/4: Shaping Review | Session: {SESSION_ID}
 ```
 
 1. Read PRD and pitches, extract features as shaped ideas
-2. If shards exist in `~/.codex/circle/projects/{project}/shards/tasks/`, list them
+2. If shards exist in `~/.circle/projects/{project}/shards/tasks/`, list them
 3. Display ideas with shaped status:
 
 ```
@@ -222,9 +222,9 @@ Optional step for recording:
 User types items or `done` to finish.
 
 On completion:
-1. Save cycle plan to `~/.codex/circle/projects/{project}/output/sessions/{SESSION_ID}/facilitate/cycle-plan-{date}.md`
+1. Save cycle plan to `~/.circle/projects/{project}/output/sessions/{SESSION_ID}/facilitate/cycle-plan-{date}.md`
 2. Update session entry: `sessions[SESSION_ID].ceremony_data.committed = true`
-3. **Generate workflow summary**: Save to `~/.codex/circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md` (outside session directory — persists after cleanup)
+3. **Generate workflow summary**: Save to `~/.circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md` (outside session directory — persists after cleanup)
 4. **Cleanup session artifacts**:
    - Validate the delete path is under `$BASE/output/sessions/` and does not contain `..`
    - Delete `$BASE/output/sessions/{SESSION_ID}/` recursively
@@ -237,7 +237,7 @@ On completion:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Cycle Planning — COMPLETE | Session: {SESSION_ID}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Summary: ~/.codex/circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md
+Summary: ~/.circle/projects/{project}/output/workflow-summary-{SESSION_ID}.md
 Session artifacts cleaned up.
 
 Start implementation: circle:impl BET-001
@@ -262,11 +262,11 @@ At any step:
 ## MCP Integration (if available)
 
 - **Linear**: "Want me to help create a Linear cycle with these bets?" (interactive, never automatic)
-- **Codex session summaries**: Search past cycle plans.
+- **available session memory**: Search past cycle plans.
 
 ## Work Summary
 
-Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 ## Circle Principles
 

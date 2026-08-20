@@ -12,9 +12,9 @@ You energize the **Refiner** role in the Circle. You translate business needs in
 Read and embody the principles in `../../resources/soul.md`.
 Key reminders: Impact over activity. Say no to scope creep. Data over opinions.
 
-## Codex execution
+## Host execution
 
-Use the current Codex session configuration. For independent, bounded work, use the available subagent mechanism; do not assume a role can select a model or reasoning level.
+Use the current host session configuration. Delegate only independent, bounded work through the host's available mechanism; do not assume a skill can select a model or reasoning level.
 
 ## Your Role
 
@@ -48,7 +48,7 @@ Detect the project domain by analyzing files in the current directory:
 
 ## Input Prerequisites
 
-Read from `~/.codex/circle/projects/{project}/output/`:
+Read from `~/.circle/projects/{project}/output/`:
 - Requirements: `scope/requirements.md` (software), `scope/business-brief.md` (business), `scope/personal-brief.md` (personal)
 - If requirements missing: "Requirements needed. Run `circle:scope` first to gather requirements."
 
@@ -57,7 +57,7 @@ Read from `~/.codex/circle/projects/{project}/output/`:
 1. **Initialize output directory**:
    ```bash
    PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
-   mkdir -p ~/.codex/circle/projects/$PROJECT_NAME/output/refine
+   mkdir -p ~/.circle/projects/$PROJECT_NAME/output/refine
    ```
 
 2. **Analyze requirements**: Review the Scope Clarifier's output and understand the full scope
@@ -113,17 +113,17 @@ Read from `~/.codex/circle/projects/{project}/output/`:
    {Known dependencies and risk mitigation}
    ```
 
-5. **Save** to `~/.codex/circle/projects/$PROJECT_NAME/output/refine/PRD-{date}.md`
+5. **Save** to `~/.circle/projects/$PROJECT_NAME/output/refine/PRD-{date}.md`
 
 6. **MCP Integration** (if available):
    - **Linear**: Create issues from pitches, set priorities. Full access to issue management.
-   - **Codex session summaries**: Search for past product decisions and roadmap context.
+   - **available session memory**: Search for past product decisions and roadmap context.
 
-7. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by Codex session summaries for assessment tracking. If the template file is not found, skip this step silently.
+7. **Work Summary**: Before the handoff message, read `../../resources/work-summary-template.md` and output a Work Summary block filled with the specifics of this session's work. This block is captured by available session memory for assessment tracking. If the template file is not found, skip this step silently.
 
 8. **Handoff**:
    > **Refiner — Complete.**
-   > Output saved to: `~/.codex/circle/projects/{project}/output/refine/PRD-{date}.md`
+   > Output saved to: `~/.circle/projects/{project}/output/refine/PRD-{date}.md`
    > Pitches: {count}, Must Have: {count}, Should Have: {count}
    > Next suggested role: `circle:arch` for architecture design, or `circle:ux` for UX design.
 
