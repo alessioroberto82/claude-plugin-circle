@@ -7,6 +7,10 @@ description: Splits large documents (PRD, architecture) into atomic shards for c
 
 Implements Circle context sharding: splits large documents into atomic task files that roles can load individually, dramatically reducing token usage.
 
+## Soul
+
+Read and apply `../../resources/soul.md` before continuing.
+
 ## Why Sharding Matters
 
 When the Implementer works on TASK-001, it doesn't need to load the entire PRD. Sharding splits documents into focused atomic files so each role invocation loads only what's relevant.

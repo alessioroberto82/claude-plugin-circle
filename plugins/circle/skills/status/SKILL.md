@@ -7,6 +7,10 @@ description: Circle status dashboard for the current project.
 
 Show the status of the Circle framework for the current project.
 
+## Soul
+
+Read and apply `../../resources/soul.md` before continuing.
+
 ## Process
 
 1. **Detect project name**: `basename "$PWD" | tr '[:upper:]' '[:lower:]'`

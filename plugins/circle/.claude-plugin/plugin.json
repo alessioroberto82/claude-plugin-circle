@@ -1,6 +1,6 @@
 {
   "name": "circle",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Universal Agent Skills workflow for Claude Code and Codex with distributed roles, quality gates, Shape Up planning, decision council, and platform-review extensibility",
   "author": {
     "name": "Alessio Roberto",

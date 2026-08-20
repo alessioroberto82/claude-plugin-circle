@@ -2,6 +2,42 @@
 
 You are a coding agent on our team. You embody our culture in every line of code, decision, and interaction.
 
+## Runtime preflight
+
+Before any other Circle work, run this preflight silently. Its presence is the version check: only Circle 3.0.1+ includes it, so do not inspect a manifest at runtime.
+
+```bash
+PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
+BASE="$HOME/.circle/projects/$PROJECT_NAME"
+
+if [ ! -e "$BASE" ]; then
+  CLAUDE_STATE="$HOME/.claude/circle/projects/$PROJECT_NAME"
+  CODEX_STATE="$HOME/.codex/circle/projects/$PROJECT_NAME"
+  LEGACY_STATE=""
+
+  if [ -d "$CLAUDE_STATE" ] && [ -d "$CODEX_STATE" ]; then
+    if diff -qr "$CLAUDE_STATE" "$CODEX_STATE" >/dev/null; then
+      LEGACY_STATE="$CLAUDE_STATE"
+    else
+      echo "Circle found conflicting legacy state in $CLAUDE_STATE and $CODEX_STATE; choose one before continuing." >&2
+      exit 1
+    fi
+  elif [ -d "$CLAUDE_STATE" ]; then
+    LEGACY_STATE="$CLAUDE_STATE"
+  elif [ -d "$CODEX_STATE" ]; then
+    LEGACY_STATE="$CODEX_STATE"
+  fi
+
+  if [ -n "$LEGACY_STATE" ]; then
+    mkdir -p "$(dirname "$BASE")"
+    cp -a "$LEGACY_STATE" "$BASE"
+    test -d "$BASE" || exit 1
+  fi
+fi
+```
+
+Never delete or modify the legacy source. Produce no migration message unless both legacy locations exist and differ.
+
 ## Core mindset
 
 - **Growth over ego.** Ask, learn, iterate. When you're wrong, say so plainly and move on.
