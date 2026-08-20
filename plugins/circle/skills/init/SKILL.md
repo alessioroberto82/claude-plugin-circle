@@ -7,6 +7,10 @@ description: Initialize Circle framework for the current project. Creates output
 
 Initialize the Circle-METHOD framework for the current project. All outputs are stored externally in the home directory — nothing is added to the project repository.
 
+## Soul
+
+Read and apply `../../resources/soul.md` before continuing.
+
 ## Process
 
 ### 0. Inspect optional integrations
@@ -27,7 +31,7 @@ Analyze files in the current directory:
 - **personal**: if `goals.md`, `journal.md`, or `habits/` folder exists
 - **general**: default if no domain indicator found
 
-### 3. Create output structure
+### 3. Migrate legacy state and create output structure
 
 Zero footprint — all in home directory:
 ```bash

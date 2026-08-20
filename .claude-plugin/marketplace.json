@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "circle",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "source": "./plugins/circle",
       "description": "20 shared Agent Skills (9 holacracy roles + 11 utilities) for Claude Code and Codex — domain-agnostic core with extensibility contract for platform-review companion plugins; structured workflows, quality gates, multi-perspective decision council, self-verification guardrails, anti-overcomplication checks, TDD enforcement, and security audits"
     },
