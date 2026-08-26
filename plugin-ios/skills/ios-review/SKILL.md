@@ -2,11 +2,11 @@
 name: ios-review
 description: "iOS Code Review — Platform-specific review using Apple documentation, SwiftUI, Swift Concurrency, and Swift Testing best practices. Auto-activated by /circle:pr-review when iOS markers are detected."
 allowed-tools: Read, Grep, Glob, Bash(gh pr diff:*), Bash(gh pr view:*), Bash(gh pr comment:*), Bash(mkdir -p ~/.circle/*), mcp__cupertino__search, mcp__cupertino__read_document, mcp__cupertino__search_symbols, mcp__cupertino__search_concurrency, mcp__cupertino__search_conformances, mcp__cupertino__search_property_wrappers, mcp__cupertino__list_frameworks
+context: fork
+agent: general-purpose
+model: sonnet
+effort: medium
 metadata:
-  context: fork
-  agent: general-purpose
-  model: sonnet
-  effort: medium
   platform_review: true
   platform_markers:
     - "**/Package.swift"

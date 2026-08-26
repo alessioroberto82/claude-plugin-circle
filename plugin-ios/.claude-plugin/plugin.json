@@ -1,6 +1,6 @@
 {
   "name": "circle-ios",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "iOS platform-review companion plugin for Circle — auto-activates under /circle:pr-review when iOS markers are detected, or standalone via /circle-ios:ios-review",
   "author": {
     "name": "Alessio Roberto",
