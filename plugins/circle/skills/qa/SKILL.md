@@ -37,6 +37,11 @@ Read from `~/.circle/projects/{project}/output/`:
 - If requirements missing: "Requirements needed for test planning. Run `circle:scope` first."
 - **Upstream for self-verification**: `scope/requirements.md` or `refine/PRD.md` (loaded before handoff if guardrails enabled)
 
+Also check for project config: `~/.circle/projects/{project}/config.yaml`
+- If `global_rules` exists, treat EACH entry as a MANDATORY rule with absolute precedence over Circle defaults, skills, and existing patterns.
+- If `extra_instructions` for qa exists, treat each entry as a MANDATORY rule for this session; these take precedence over default behavior.
+- If `context_files` defined, read those for additional context
+
 ## Domain-Specific Behavior
 
 ### Software Development
