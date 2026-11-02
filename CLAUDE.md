@@ -36,7 +36,7 @@ plugin-ios/                            # Claude-only iOS companion
 
 **Version alignment**: Keep both plugin manifests and the versioned Claude marketplace entry aligned. The Codex marketplace entry must continue to point to `./plugins/circle`.
 
-**Workflow order**: arch → security → impl → qa → commit → push → PR → pr-review. Security P0 blocks implementation; QA rejection returns to implementation.
+**Workflow order**: arch → security → impl → qa → e2e → commit → push → PR → pr-review. Security P0 blocks implementation; QA rejection returns to implementation.
 
 **TDD**: Enabled by default. Disable with `tdd.enabled: false` in `~/.circle/projects/<project>/config.yaml`.
 

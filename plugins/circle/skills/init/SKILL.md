@@ -38,7 +38,7 @@ Zero footprint — all in home directory:
 PROJECT_NAME=$(basename "$PWD" | tr '[:upper:]' '[:lower:]')
 BASE=~/.circle/projects/$PROJECT_NAME
 
-mkdir -p $BASE/output/{scope,arch,impl,qa,security,ux,refine,facilitate,docs,pr-review,triage}
+mkdir -p $BASE/output/{scope,arch,impl,qa,e2e,security,ux,refine,facilitate,docs,pr-review,triage}
 mkdir -p $BASE/output/sessions
 mkdir -p $BASE/shards/{requirements,architecture,tasks}
 mkdir -p $BASE/shards/sessions
@@ -107,6 +107,7 @@ Available roles:
   circle:arch        - Architecture Owner (design, ADRs, trade-offs)
   circle:impl        - Implementer (implementation, code review)
   circle:qa          - Quality Guardian (test strategy, QA)
+  circle:e2e         - E2E Author (end-to-end tests in the E2E suite)
   circle:ux          - Experience Designer (UI/UX design)
   circle:refine      - Refiner (prioritization, roadmap)
   circle:facilitate  - Facilitator (cycle planning, coordination)
@@ -127,6 +128,7 @@ Utilities:
   circle:shard            - Split large documents into shards
   circle:skills-discovery - Discover and install external skills (security-gated)
   circle:council          - Pressure-test a hard decision (5 lenses + chairman)
+  circle:status           - Project status dashboard
   circle:init             - Project initialization (already done)
 
 Start with: circle:scope to gather requirements, or circle:greenfield for the full workflow.

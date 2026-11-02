@@ -26,6 +26,7 @@ Before proposing a new role, verify the gap is real. These roles already exist:
 - **pr-review**: Multi-agent PR review with context
 - **cycle**: Cycle planning ceremony (Shape Up)
 - **docs**: Documentation generation from templates
+- **e2e**: End-to-end tests for acceptance scenarios in the E2E suite
 - **facilitate**: Cycle planning, coordination, blockers
 - **greenfield**: Full workflow orchestration
 - **impl**: Code implementation, action execution

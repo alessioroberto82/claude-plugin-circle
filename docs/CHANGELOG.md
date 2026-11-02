@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.1.0 — E2E Author role
+
+### Added
+
+- **`circle:e2e`**: new E2E Author role. Turns a ticket's acceptance scenarios (and the QA report's "E2E coverage" section, when present) into end-to-end tests in the project's E2E suite, in a worktree branch named after the ticket. Reuses the suite's pages and its own skills, marks scenarios without a stable test identifier as "Not covered", runs the tests locally, and writes `e2e/e2e-report-{date}.md` with a coverage table and a PR body draft. Never pushes, opens a PR, or comments. Suite location and conventions come from `global_rules` and `extra_instructions.e2e` in the project config.
+- **Greenfield**: optional `e2e` step after `qa` (step 10*), skippable for work without a user-visible flow.
+
+### Fixed
+
+- **`qa`**: now reads `global_rules`, `extra_instructions.qa`, and `context_files` from the project config, like `impl`.
+
 ## circle-ios v1.2.1 — Fix `ios-review` model/effort/fork routing
 
 `context`, `agent`, `model`, and `effort` were nested under `metadata:` in `plugin-ios/skills/ios-review/SKILL.md`. Claude Code only honors those four fields as top-level SKILL.md frontmatter — `metadata:` is a free-form map it never reads — so `ios-review` never actually forked into an isolated subagent and never pinned a model or effort level when dispatched (it ran inline on the caller's session model instead). This predates and is unrelated to the v3.0.0 core unification, which intentionally dropped these fields from the *shared* `plugins/circle/` skills; `plugin-ios` stays Claude-only and is expected to keep using them.

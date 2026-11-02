@@ -27,6 +27,7 @@ You don't need to be technical to use Circle. If you can type a sentence and pre
 | **Architecture Owner** | Plans how the software will be structured |
 | **Implementer** | Writes and reviews the actual code |
 | **Quality Guardian** | Makes sure everything works correctly |
+| **E2E Author** | Turns acceptance scenarios into automated end-to-end tests |
 | **Facilitator** | Plans work cycles using Shape Up methodology |
 | **Security Guardian** | Audits security, models threats, checks compliance |
 | **Documentation Steward** | Creates project documentation |
@@ -98,7 +99,7 @@ The greenfield command runs the entire process from start to finish, with you ma
 /circle:greenfield
 ```
 
-This walks through: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security Guardian (security audit) → Facilitator (cycle planning) → Implementer (simplicity assessment + implementation with TDD) → Quality Guardian (testing + TDD compliance + coherence & scope drift check). You can skip optional steps.
+This walks through: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security Guardian (security audit) → Facilitator (cycle planning) → Implementer (simplicity assessment + implementation with TDD) → Quality Guardian (testing + TDD compliance + coherence & scope drift check) → E2E Author (end-to-end tests, optional). You can skip optional steps.
 
 ## Available commands
 
@@ -112,6 +113,7 @@ The table uses Claude Code's `/circle:` syntax. In Codex, mention the matching C
 | `/circle:arch` | Plan software architecture |
 | `/circle:impl` | Implement code |
 | `/circle:qa` | Test and validate quality |
+| `/circle:e2e` | Write end-to-end tests for the acceptance scenarios |
 | `/circle:facilitate` | Plan cycles and coordinate |
 | `/circle:security` | Audit security and model threats |
 | `/circle:docs` | Generate documentation |

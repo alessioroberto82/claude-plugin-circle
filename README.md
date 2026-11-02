@@ -39,6 +39,7 @@ The team principles live in [`plugins/circle/resources/soul.md`](plugins/circle/
 | `/circle:arch` | Architecture Owner | Plans how software is structured, documents design decisions (ADRs) |
 | `/circle:impl` | Implementer | Writes code, reviews implementations |
 | `/circle:qa` | Quality Guardian | Plans testing strategy, validates quality |
+| `/circle:e2e` | E2E Author | Turns acceptance scenarios into end-to-end tests in the project's E2E suite |
 | `/circle:ux` | Experience Designer | Designs user interfaces and user journeys |
 | `/circle:refine` | Refiner | Refines requirements into PRDs, prioritizes features |
 | `/circle:facilitate` | Facilitator | Plans cycles, coordinates the team |
@@ -61,7 +62,7 @@ These run multi-step workflows, guiding you through each phase with decision poi
 
 | Command | What it does |
 |---|---|
-| `/circle:greenfield` | Runs the full workflow: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security review → Facilitator (cycle plan) → Implementer (code) → Quality Guardian (tests). You can skip optional steps. |
+| `/circle:greenfield` | Runs the full workflow: Scope Clarifier (requirements) → Refiner (product plan) → PRD Validator (quality check) → Experience Designer (design) → Architecture Owner (architecture) → Security review → Facilitator (cycle plan) → Implementer (code) → Quality Guardian (tests) → E2E Author (end-to-end tests). You can skip optional steps. |
 | `/circle:cycle` | Interactive cycle planning ceremony — 4-step Shape Up process from shaping review to cycle commitment |
 
 > **Shape Up**: Circle uses [Shape Up](https://basecamp.com/shapeup) for work planning — appetite-based sizing (☕ cappuccino, 🥪 sandwich, 🍲 hutspot) instead of story points, and 4-week cycles instead of sprints.
@@ -236,6 +237,7 @@ Circle never adds files to your project repository. All outputs are stored in a 
 │   ├── pr-review/    # PR review reports
 │   ├── triage/       # Triage learnings
 │   ├── qa/           # Test plans, reports
+│   ├── e2e/          # E2E coverage reports
 │   ├── security/     # Security audits
 │   ├── ux/           # UX designs
 │   ├── refine/       # PRDs
@@ -319,7 +321,7 @@ Drop a `.md` in `plugins/circle/resources/templates/docs/` or `software/`.
 
 ### New Feature
 ```
-Scope Clarifier → Refiner → [PRD Validator] → [Experience Designer] → Architecture Owner → [Security] → [Facilitator] → Implementer (with TDD) → Quality Guardian
+Scope Clarifier → Refiner → [PRD Validator] → [Experience Designer] → Architecture Owner → [Security] → [Facilitator] → Implementer (with TDD) → Quality Guardian → [E2E Author]
 ```
 Steps in brackets are optional.
 
