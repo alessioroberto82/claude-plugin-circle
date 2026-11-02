@@ -15,7 +15,7 @@
     },
     {
       "name": "circle-ios",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "source": "./plugin-ios",
       "description": "iOS platform-review companion for Circle — auto-activates under /circle:pr-review on iOS PRs (Package.swift, *.xcodeproj, *.swift markers), or runs standalone via /circle-ios:ios-review"
     }

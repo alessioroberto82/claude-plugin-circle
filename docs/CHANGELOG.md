@@ -1,5 +1,13 @@
 # Changelog
 
+## circle-ios v1.2.1 — Fix `ios-review` model/effort/fork routing
+
+`context`, `agent`, `model`, and `effort` were nested under `metadata:` in `plugin-ios/skills/ios-review/SKILL.md`. Claude Code only honors those four fields as top-level SKILL.md frontmatter — `metadata:` is a free-form map it never reads — so `ios-review` never actually forked into an isolated subagent and never pinned a model or effort level when dispatched (it ran inline on the caller's session model instead). This predates and is unrelated to the v3.0.0 core unification, which intentionally dropped these fields from the *shared* `plugins/circle/` skills; `plugin-ios` stays Claude-only and is expected to keep using them.
+
+### Fixed
+
+- **`ios-review`**: moved `context: fork`, `agent: general-purpose`, `model: sonnet`, and `effort: medium` to top-level frontmatter. `metadata:` now holds only `platform_review`/`platform_markers`, which are Circle's own data read by `pr-review`'s dispatch logic, not native Claude Code fields.
+
 ## v3.0.1 — Automatic state migration
 
 - Every Circle skill now silently copies existing project state from `~/.claude/circle/` or `~/.codex/circle/` into `~/.circle/` on first use. The legacy copy is preserved.
