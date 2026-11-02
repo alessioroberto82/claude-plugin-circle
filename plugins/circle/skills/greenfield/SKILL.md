@@ -19,16 +19,17 @@ You are the conductor — you don't play the instruments, you ensure the orchest
 init → scope → refine → arch → security → impl → qa
 ```
 
-**Optional Phases** (3 optional steps):
+**Optional Phases** (4 optional steps):
 ```
 + validate-prd (after refine, before arch)
 + ux (after refine, before arch)
 + facilitate (before impl)
++ e2e (after qa, only for work with a user-visible flow)
 ```
 
-**Full Workflow** (10 steps with all options):
+**Full Workflow** (11 steps with all options):
 ```
-init → scope → refine → validate-prd → ux → arch → security → facilitate → impl → qa
+init → scope → refine → validate-prd → ux → arch → security → facilitate → impl → qa → e2e
 ```
 
 ## Commands
@@ -110,7 +111,7 @@ Link a Linear issue? (paste ID like ENG-42, or press Enter to auto-generate)
 **Create session artifact directory**:
 ```bash
 SESSION_ID="{the chosen session ID}"
-mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,security,ux,refine,facilitate,docs}
+mkdir -p $BASE/output/sessions/$SESSION_ID/{scope,arch,impl,qa,e2e,security,ux,refine,facilitate,docs}
 mkdir -p $BASE/shards/sessions/$SESSION_ID/{requirements,architecture,tasks}
 ```
 
@@ -128,6 +129,7 @@ Optional phases:
 1. Experience Designer (UX Design) — Include? [y/n]
 2. Facilitator (Cycle Planning) — Include? [y/n]
 3. PRD Validation — Include? [Y/n]
+4. E2E Tests (user-visible flows only) — Include? [y/n]
 ```
 
 **Generate step sequence** based on selections.
@@ -149,7 +151,8 @@ Optional phases:
       "optional_phases": {
         "ux": true/false,
         "facilitate": true/false,
-        "validate_prd": true/false
+        "validate_prd": true/false,
+        "e2e": true/false
       },
       "step_sequence": ["init", "scope", "refine", ...],
       "artifacts": [],
@@ -212,6 +215,7 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 | 7* | **Facilitator** | haiku | low | Cycle planning | PRD + Architecture | `facilitate/cycle-plan.md` |
 | 8 | **Implementer** | opus | high | Implement | Architecture + PRD | Code in repo |
 | 9 | **Quality Guardian** | sonnet | medium | Test & validate | Requirements + Code | `qa/test-report-{date}.md` |
+| 10* | **E2E Author** | sonnet | medium | Automate acceptance scenarios in the E2E suite | Scenarios + QA report | `e2e/e2e-report-{date}.md` + tests in the suite worktree |
 
 *Optional steps
 
@@ -225,7 +229,7 @@ All output paths below are relative to `sessions/{SESSION_ID}/`:
 3. If file exists: update the session entry in `sessions[SESSION_ID]` (checkpoint, current_step, completed_steps, artifacts), advance to next step
 
 **`skip`**:
-- Only allowed for optional phases (ux, facilitate, validate-prd)
+- Only allowed for optional phases (ux, facilitate, validate-prd, e2e)
 - If mandatory phase: "This phase is mandatory. Please run the role or type 'exit' to leave the workflow."
 - If optional: record as skipped in session-state, advance
 
@@ -401,9 +405,11 @@ When all steps are completed:
    | Cycle Plan | Facilitator | ✓/skipped | cycle-plan.md |
    | Implementation | Implementer | ✓ | (code in repo) |
    | QA | Quality Guardian | ✓ | test-report.md |
+   | E2E | E2E Author | ✓/skipped | e2e-report.md (tests on the suite branch) |
 
    ## Next Steps
    - [ ] Commit changes
+   - [ ] If the E2E step ran: push the E2E suite branch and open its PR with the drafted body (merge the app PR first)
    - [ ] Push: if `no-mistakes` is installed (check with `command -v no-mistakes`), push via `git push no-mistakes <branch>` to run the pre-PR validation gate (review/test/lint/docs); otherwise `git push origin <branch>`
    - [ ] Create a pull request (with `no-mistakes`, the gate opens a clean PR for you once every check is green)
    - [ ] Run `circle:pr-review <PR>` for multi-agent review with AGENTS.md or CLAUDE.md compliance

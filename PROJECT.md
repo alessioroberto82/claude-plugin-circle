@@ -4,7 +4,7 @@ Holacracy-based Agent Skills plugin for Claude Code and Codex with distributed r
 
 ## Overview
 
-Circle is a pure Markdown plugin that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin ships 20 shared Agent Skills: 9 holacracy roles and 11 utilities, including the status dashboard.
+Circle is a pure Markdown plugin that provides a circle of AI roles to help build software — from initial idea through to working code. The core plugin ships 21 shared Agent Skills: 10 holacracy roles and 11 utilities, including the status dashboard.
 
 The core is domain-agnostic: platform-specific review capabilities are packaged as companion plugins that register via a frontmatter extensibility contract. The companion plugin `circle-ios` ships alongside core in this repository and supplies iOS/Swift review via the same monorepo marketplace listing. See [`plugins/circle/resources/extensibility.md`](plugins/circle/resources/extensibility.md) for the contract.
 
@@ -37,11 +37,12 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 │   │   ├── deps-manifest.yaml — Core dependency registry (source of truth)
 │   │   ├── work-summary-template.md — Assessment-aware work summary
 │   │   └── templates/     — Output templates (docs/, software/, business/, personal/)
-│   └── skills/            — 20 shared Agent Skills
+│   └── skills/            — 21 shared Agent Skills
 │       ├── arch/          — Architecture Owner
 │       ├── pr-review/     — Multi-agent PR review with platform-review dispatch
 │       ├── cycle/         — Cycle planning ceremony
 │       ├── docs/          — Documentation Steward
+│       ├── e2e/           — E2E Author
 │       ├── facilitate/    — Facilitator
 │       ├── greenfield/    — Full workflow orchestrator
 │       ├── impl/          — Implementer
@@ -81,7 +82,7 @@ The plugin follows a zero-footprint principle: it never adds files to the user's
 - **Zero footprint**: All outputs written to `~/.circle/projects/<project>/`, never to the repo
 - **Domain-agnostic core**: Skills never name-drop domain-specific tools in SKILL.md body; domain deps live only in `deps-manifest.yaml`
 - **Version bump**: Both core manifests and the versioned Claude marketplace entry must match; the Codex marketplace must point to `./plugins/circle`
-- **Workflow order**: arch → security → impl → qa → commit → push → PR → pr-review
+- **Workflow order**: arch → security → impl → qa → e2e → commit → push → PR → pr-review
 - **Host execution**: Skills use the current host model, permissions, tools, and delegation mechanism
 - **Holacracy**: Roles have purposes, not personas. Reference roles, not names. External comms use team voice
 

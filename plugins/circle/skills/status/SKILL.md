@@ -49,6 +49,7 @@ Your circle:
   circle:arch        — Architecture Owner (design, trade-offs)
   circle:impl        — Implementer (implementation, code review)
   circle:qa          — Quality Guardian (testing, quality)
+  circle:e2e         — E2E Author (end-to-end tests in the E2E suite)
   circle:ux          — Experience Designer (UI/UX design)
   circle:refine      — Refiner (prioritization, roadmap)
   circle:facilitate  — Facilitator (cycle planning)
@@ -83,6 +84,7 @@ Generated artifacts:
   arch/        <list of files or empty>
   impl/        <list of files or empty>
   qa/          <list of files or empty>
+  e2e/         <list of files or empty>
   security/    <list of files or empty>
   ux/          <list of files or empty>
   refine/      <list of files or empty>
