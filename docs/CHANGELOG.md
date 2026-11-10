@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.2.0 — Per-agent model for `pr-review`
+
+### Added
+
+- **`pr-review`**: new keys `pr_review.agent_a.model` and `pr_review.agent_b.model` choose the model for Agent A (standards/bugs) and Agent B (security) without changing the session. `inherit` keeps the session model. On hosts whose delegation cannot select a model per agent, the keys are ignored and a one-line notice is logged.
+- **`pr-review`**: the `Reviewers:` line now shows the model each agent ran on, e.g. `Agent A (sonnet) | Agent B (sonnet)`.
+
+### Changed (behavior)
+
+- Agents A and B now default to `sonnet` instead of the session model. Set both keys to `inherit` to restore v3.1.0 behavior. This partially reverses the v3.0.0 note that shared skills no longer interpret per-role model overrides, scoped to these two agents only.
+
 ## v3.1.0 — E2E Author role
 
 ### Added

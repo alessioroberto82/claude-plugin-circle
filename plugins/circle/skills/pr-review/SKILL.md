@@ -130,7 +130,19 @@ If `platform_review_target != null`, dispatch the target skill **in the same mes
 
 A and B **always run regardless** of dispatch success or failure — a dispatched skill cannot suppress or replace them. If the relevant installed skill dispatch errors, log `⚠️ Platform dispatch failed: <error>. Running A + B only.` and continue.
 
-Use the current host session configuration for Agents A and B. Dispatch them through the host's available delegation mechanism without assuming support for per-agent model or reasoning-level selection.
+**Agent model**: read `pr_review.agent_a.model` and `pr_review.agent_b.model` from the project `config.yaml` (default for both: `sonnet`). Dispatch Agents A and B through the host's available delegation mechanism:
+- Value `inherit`: use the current host session configuration (no model passed).
+- Any other value: pass it as the model for that agent in the delegation call. If the host's delegation mechanism cannot select a model per agent, ignore the key without error, run the agent on the session configuration, and log once: `ℹ️ Per-agent model not supported by host — Agents A and B use the session model.`
+- Record the model each agent actually ran on (`agent_a_model`, `agent_b_model`; `inherit` or an ignored key → `session`) for the Reviewers line.
+
+```yaml
+# ~/.circle/projects/<project>/config.yaml
+pr_review:
+  agent_a:
+    model: sonnet   # default; `inherit` = current session model
+  agent_b:
+    model: sonnet   # default; `inherit` = current session model
+```
 
 **Confidence scale** (each agent scores its own findings):
 - **0-25**: Uncertain, might be false positive or pre-existing
@@ -305,7 +317,7 @@ Found {N} issues:
 2. ...
 
 ---
-Reviewers: Agent A | Agent B{if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
+Reviewers: Agent A ({agent_a_model}) | Agent B ({agent_b_model}){if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
 Context: root AGENTS.md and CLAUDE.md{, .agents/ and .claude/ ({N} files)}{, {N} nested AGENTS.md and CLAUDE.md files}{, {N} language skills}
 {truncation_warning if applicable}
 
@@ -322,7 +334,7 @@ Generated with Circle | Circle PR Review
 No issues found. Checked for bugs, security, AGENTS.md or CLAUDE.md compliance{if platform_review_target: ", and platform best practices via " + platform_review_target}.
 
 ---
-Reviewers: Agent A | Agent B{if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
+Reviewers: Agent A ({agent_a_model}) | Agent B ({agent_b_model}){if platform_review_target: " | " + platform_review_target} | Threshold: 90/100 (75 for foundational files)
 Context: root AGENTS.md and CLAUDE.md{, .agents/ and .claude/ ({N} files)}{, {N} nested AGENTS.md and CLAUDE.md files}{, {N} language skills}
 
 Generated with Circle | Circle PR Review
