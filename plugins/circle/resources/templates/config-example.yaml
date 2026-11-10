@@ -39,6 +39,15 @@ agents:
     extra_instructions: |
       Follow project coding standards and existing conventions.
 
+# PR review (circle:pr-review)
+pr_review:
+  agent_a:
+    model: sonnet   # standards/bugs reviewer; `inherit` = current session model
+  agent_b:
+    model: sonnet   # security reviewer; `inherit` = current session model
+  platform_review:
+    enabled: true   # set false to disable platform-review dispatch
+
 # Parallel implementation of independent sharded tasks
 parallel:
   enabled: true
