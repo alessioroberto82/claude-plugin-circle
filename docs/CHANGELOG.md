@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.3.0 — Advisor model for `council`
+
+### Added
+
+- **`council`**: new key `council.advisors.model` chooses the model for the five advisors and the five peer reviewers. The chairman keeps the session model. `inherit` keeps the session model for all. On hosts whose delegation cannot select a model per agent, the key is ignored and a one-line notice is logged.
+
+### Changed (behavior)
+
+- Council advisors and peer reviewers now default to `sonnet` instead of the session model. Set `council.advisors.model: inherit` to restore v3.2.0 behavior.
+
 ## v3.2.0 — Per-agent model for `pr-review`
 
 ### Added
