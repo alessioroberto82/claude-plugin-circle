@@ -48,6 +48,11 @@ pr_review:
   platform_review:
     enabled: true   # set false to disable platform-review dispatch
 
+# Decision council (circle:council)
+council:
+  advisors:
+    model: sonnet   # 5 advisors + 5 peer reviewers; the chairman uses the session model; `inherit` = session model
+
 # Parallel implementation of independent sharded tasks
 parallel:
   enabled: true
